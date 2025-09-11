@@ -117,6 +117,12 @@ export default function Home({ showToast }) {
               <p className="text-gray-600 mt-1">Discover and share powerful AI prompts</p>
             </div>
             <div className="flex items-center space-x-4">
+              <a
+                href="/admin/login"
+                className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Admin
+              </a>
               <button
                 onClick={() => fetchPrompts(true)}
                 disabled={refreshing}

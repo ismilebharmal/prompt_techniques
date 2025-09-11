@@ -85,6 +85,20 @@ export default async function handler(req, res) {
         message: 'Prompt created successfully', 
         id: promptId 
       })
+    } else if (req.method === 'DELETE') {
+      const { id } = req.query
+
+      if (!id) {
+        return res.status(400).json({ error: 'Prompt ID is required' })
+      }
+
+      // Import deletePrompt function
+      const { deletePrompt } = await import('../../lib/neon')
+      await deletePrompt(id)
+
+      return res.status(200).json({ 
+        message: 'Prompt deleted successfully' 
+      })
     }
 
     return res.status(405).json({ error: 'Method not allowed' })
