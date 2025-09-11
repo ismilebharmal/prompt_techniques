@@ -22,6 +22,18 @@ export default function AdminDashboard() {
   })
   const router = useRouter()
 
+  const fetchPrompts = useCallback(async () => {
+    try {
+      const response = await fetch('/api/prompts-neon')
+      const data = await response.json()
+      setPrompts(data)
+    } catch (error) {
+      console.error('Error fetching prompts:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   // Check authentication on component mount
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('admin_authenticated')
@@ -37,18 +49,6 @@ export default function AdminDashboard() {
 
     fetchPrompts()
   }, [router, fetchPrompts])
-
-  const fetchPrompts = useCallback(async () => {
-    try {
-      const response = await fetch('/api/prompts-neon')
-      const data = await response.json()
-      setPrompts(data)
-    } catch (error) {
-      console.error('Error fetching prompts:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
