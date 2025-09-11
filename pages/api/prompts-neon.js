@@ -56,12 +56,12 @@ export default async function handler(req, res) {
           }
         ]
         
-        res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300, stale-while-revalidate=60')
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
         return res.status(200).json(fallbackPrompts)
       }
 
-      // Set cache headers for better performance
-      res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300, stale-while-revalidate=60')
+      // Disable caching to ensure fresh data
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
       return res.status(200).json(prompts)
 
     } else if (req.method === 'POST') {
@@ -134,8 +134,8 @@ export default async function handler(req, res) {
         }
       ];
 
-      // Set cache headers for better performance
-      res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300, stale-while-revalidate=60')
+      // Disable caching to ensure fresh data
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
 
       return res.status(200).json(fallbackPrompts)
     }

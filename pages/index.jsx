@@ -32,8 +32,9 @@ export default function Home({ showToast }) {
         setLoading(true)
       }
       
-      const response = await fetch('/api/prompts-neon')
+      const response = await fetch(`/api/prompts-neon?t=${Date.now()}`)
       const data = await response.json()
+      console.log('Fetched data:', data.length, 'prompts')
       setPrompts(data)
       setFilteredPrompts(data)
       
