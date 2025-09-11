@@ -14,7 +14,6 @@ export default function Home({ showToast }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedPrompt, setSelectedPrompt] = useState(null)
   const [favorites, setFavorites] = useState(new Set())
-  const [refreshing, setRefreshing] = useState(false)
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -25,33 +24,52 @@ export default function Home({ showToast }) {
   }, [])
 
   // Fetch prompts from API
-  const fetchPrompts = useCallback(async (showRefreshing = false) => {
+  const fetchPrompts = useCallback(async () => {
     try {
-      if (showRefreshing) {
-        setRefreshing(true)
-      } else {
-        setLoading(true)
-      }
+      setLoading(true)
       
       const response = await fetch(`/api/prompts-neon?t=${Date.now()}`)
       const data = await response.json()
       console.log('Fetched data:', data.length, 'prompts')
       setPrompts(data)
       setFilteredPrompts(data)
-      
-      if (showRefreshing) {
-        showToast(`Refreshed! Found ${data.length} prompts`)
-      }
     } catch (error) {
       console.error('Error fetching prompts:', error)
     } finally {
       setLoading(false)
-      setRefreshing(false)
     }
-  }, [showToast])
+  }, [])
 
   useEffect(() => {
     fetchPrompts()
+  }, [fetchPrompts])
+
+  // Auto-refresh when page becomes visible (user returns to tab)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchPrompts()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [fetchPrompts])
+
+  // Auto-refresh on window focus (user switches back to window)
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchPrompts()
+    }
+
+    window.addEventListener('focus', handleFocus)
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus)
+    }
   }, [fetchPrompts])
 
   // Filter prompts based on category and search
@@ -124,28 +142,6 @@ export default function Home({ showToast }) {
               >
                 Admin
               </Link>
-              <button
-                onClick={() => fetchPrompts(true)}
-                disabled={refreshing}
-                className="flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {refreshing ? (
-                  <>
-                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Refreshing...</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    <span>Refresh Data</span>
-                  </>
-                )}
-              </button>
               <span className="text-sm text-gray-500">
                 {filteredPrompts.length} prompts
               </span>
