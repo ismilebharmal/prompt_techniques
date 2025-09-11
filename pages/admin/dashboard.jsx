@@ -47,12 +47,8 @@ export default function AdminDashboard() {
       console.error('Error fetching prompts:', error)
     } finally {
       setLoading(false)
-      if (editingPrompt) {
-        setShowEditModal(false)
-        setEditingPrompt(null)
-      }
     }
-  }, [editingPrompt])
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -153,6 +149,20 @@ export default function AdminDashboard() {
     })
   }
 
+  const handleCloseModal = () => {
+    setShowEditModal(false)
+    setEditingPrompt(null)
+    setFormData({
+      title: '',
+      category: '',
+      tags: '',
+      description: '',
+      prompt: '',
+      exampleInput: '',
+      exampleOutput: ''
+    })
+  }
+
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this prompt?')) return
 
@@ -209,7 +219,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const handleEscKey = (event) => {
       if (event.key === 'Escape' && showEditModal) {
-        handleCancelEdit()
+        handleCloseModal()
       }
     }
 
@@ -772,7 +782,7 @@ export default function AdminDashboard() {
         {showEditModal && (
           <div 
             className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
-            onClick={handleCancelEdit}
+            onClick={handleCloseModal}
           >
             <div 
               className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white"
@@ -782,7 +792,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-gray-900">Edit Prompt</h3>
                   <button
-                    onClick={handleCancelEdit}
+                    onClick={handleCloseModal}
                     className="text-gray-400 hover:text-gray-600"
                   >
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -884,7 +894,7 @@ export default function AdminDashboard() {
                   <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
                     <button
                       type="button"
-                      onClick={handleCancelEdit}
+                      onClick={handleCloseModal}
                       className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       Cancel
