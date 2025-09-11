@@ -87,14 +87,6 @@ export default function AdminLogin() {
             </div>
           </form>
 
-          <div className="mt-6">
-            <div className="text-center text-sm text-gray-600">
-              <p>Default admin password: <code className="bg-gray-100 px-2 py-1 rounded">admin123</code></p>
-              <p className="mt-2 text-xs text-gray-500">
-                Change this in your environment variables for production
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
