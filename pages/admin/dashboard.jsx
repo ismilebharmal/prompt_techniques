@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
@@ -6,6 +6,7 @@ export default function AdminDashboard() {
   const [prompts, setPrompts] = useState([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [editingPrompt, setEditingPrompt] = useState(null)
   const [activeTab, setActiveTab] = useState('overview')
   const [searchTerm, setSearchTerm] = useState('')
@@ -35,9 +36,9 @@ export default function AdminDashboard() {
     }
 
     fetchPrompts()
-  }, [router])
+  }, [router, fetchPrompts])
 
-  const fetchPrompts = async () => {
+  const fetchPrompts = useCallback(async () => {
     try {
       const response = await fetch('/api/prompts-neon')
       const data = await response.json()
@@ -46,8 +47,12 @@ export default function AdminDashboard() {
       console.error('Error fetching prompts:', error)
     } finally {
       setLoading(false)
+      if (editingPrompt) {
+        setShowEditModal(false)
+        setEditingPrompt(null)
+      }
     }
-  }
+  }, [editingPrompt])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -71,6 +76,7 @@ export default function AdminDashboard() {
         if (response.ok) {
           setEditingPrompt(null)
           setShowAddForm(false)
+          setShowEditModal(false)
           setFormData({
             title: '',
             category: '',
@@ -129,12 +135,13 @@ export default function AdminDashboard() {
       exampleInput: prompt.exampleInput || '',
       exampleOutput: prompt.exampleOutput || ''
     })
-    setShowAddForm(true)
+    setShowEditModal(true)
   }
 
   const handleCancelEdit = () => {
     setEditingPrompt(null)
     setShowAddForm(false)
+    setShowEditModal(false)
     setFormData({
       title: '',
       category: '',
@@ -197,6 +204,25 @@ export default function AdminDashboard() {
   }
 
   const categories = ['All', 'Code', 'Mail', 'Data', 'Content', 'Role', 'Verifier']
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape' && showEditModal) {
+        handleCancelEdit()
+      }
+    }
+
+    if (showEditModal) {
+      document.addEventListener('keydown', handleEscKey)
+      document.body.style.overflow = 'hidden' // Prevent background scrolling
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey)
+      document.body.style.overflow = 'unset'
+    }
+  }, [showEditModal])
 
   if (loading) {
     return (
@@ -483,14 +509,12 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Add/Edit Form */}
+            {/* Add Form */}
             {showAddForm && (
               <div className="bg-white shadow rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-gray-900">
-                      {editingPrompt ? 'Edit Prompt' : 'Add New Prompt'}
-                    </h2>
+                    <h2 className="text-xl font-bold text-gray-900">Add New Prompt</h2>
                     <button
                       onClick={handleCancelEdit}
                       className="text-gray-400 hover:text-gray-600"
@@ -603,7 +627,7 @@ export default function AdminDashboard() {
                         type="submit"
                         className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       >
-                        {editingPrompt ? 'Update Prompt' : 'Add Prompt'}
+                        Add Prompt
                       </button>
                     </div>
                   </form>
@@ -739,6 +763,140 @@ export default function AdminDashboard() {
                     Configuration options and preferences will be available in a future update.
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Modal */}
+        {showEditModal && (
+          <div 
+            className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+            onClick={handleCancelEdit}
+          >
+            <div 
+              className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mt-3">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-gray-900">Edit Prompt</h3>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({...formData, title: e.target.value})}
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Enter prompt title"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                      <select
+                        value={formData.category}
+                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        required
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Code">Code</option>
+                        <option value="Mail">Mail</option>
+                        <option value="Data">Data</option>
+                        <option value="Content">Content</option>
+                        <option value="Role">Role</option>
+                        <option value="Verifier">Verifier</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                    <input
+                      type="text"
+                      value={formData.tags}
+                      onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="e.g., email, professional, business (comma-separated)"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      rows={3}
+                      placeholder="Brief description of what this prompt does"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Prompt Template</label>
+                    <textarea
+                      value={formData.prompt}
+                      onChange={(e) => setFormData({...formData, prompt: e.target.value})}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-mono"
+                      rows={6}
+                      placeholder="Enter the prompt template with placeholders like <<INPUT>>"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Example Input</label>
+                      <textarea
+                        value={formData.exampleInput}
+                        onChange={(e) => setFormData({...formData, exampleInput: e.target.value})}
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        rows={3}
+                        placeholder="Example input for the prompt"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Example Output</label>
+                      <textarea
+                        value={formData.exampleOutput}
+                        onChange={(e) => setFormData({...formData, exampleOutput: e.target.value})}
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        rows={3}
+                        placeholder="Expected output from the prompt"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Update Prompt
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
