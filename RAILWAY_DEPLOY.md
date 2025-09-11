@@ -52,9 +52,38 @@ NODE_ENV = production
 - **Unlimited builds**
 
 ## Troubleshooting
-If you have any issues:
-1. Check the **"Deployments"** tab for build logs
-2. Check the **"Variables"** tab to ensure environment variables are set
-3. Check the **"Metrics"** tab for app performance
+
+### If Railway deployment fails:
+
+1. **Check Build Logs**:
+   - Go to **"Deployments"** tab
+   - Click on the failed deployment
+   - Look for MongoDB connection errors
+
+2. **Check Environment Variables**:
+   - Go to **"Variables"** tab
+   - Ensure these are set:
+     ```
+     MONGODB_URI = mongodb+srv://smile463bharmal463_db_user:GNyzuCCumul8bVhB@prompttechnique.pql8lmx.mongodb.net/?retryWrites=true&w=majority&appName=promptTechnique
+     MONGODB_DB = prompt-hub
+     NODE_ENV = production
+     ```
+
+3. **Check Health Check**:
+   - Visit `https://your-app.railway.app/api/health`
+   - Should return: `{"status":"healthy"}`
+
+4. **If MongoDB still fails**:
+   - The app will use fallback data (3 prompts)
+   - This is normal and your app will still work!
+
+### Common Issues:
+
+- **500 Internal Server Error**: Usually MongoDB connection timeout
+- **Health check failed**: App not starting properly
+- **Build failed**: Check package.json and dependencies
+
+### Fallback System:
+Even if MongoDB fails, your app will work with fallback data! 🎉
 
 Your app will work perfectly with MongoDB Atlas on Railway! 🚀
