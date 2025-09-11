@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import PromptCard from '../components/PromptCard'
 import PromptModal from '../components/PromptModal'
 import FilterTabs from '../components/FilterTabs'
@@ -24,7 +25,7 @@ export default function Home({ showToast }) {
   }, [])
 
   // Fetch prompts from API
-  const fetchPrompts = async (showRefreshing = false) => {
+  const fetchPrompts = useCallback(async (showRefreshing = false) => {
     try {
       if (showRefreshing) {
         setRefreshing(true)
@@ -47,11 +48,11 @@ export default function Home({ showToast }) {
       setLoading(false)
       setRefreshing(false)
     }
-  }
+  }, [showToast])
 
   useEffect(() => {
     fetchPrompts()
-  }, [])
+  }, [fetchPrompts])
 
   // Filter prompts based on category and search
   useEffect(() => {
@@ -117,12 +118,12 @@ export default function Home({ showToast }) {
               <p className="text-gray-600 mt-1">Discover and share powerful AI prompts</p>
             </div>
             <div className="flex items-center space-x-4">
-              <a
+              <Link
                 href="/admin/login"
                 className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Admin
-              </a>
+              </Link>
               <button
                 onClick={() => fetchPrompts(true)}
                 disabled={refreshing}
