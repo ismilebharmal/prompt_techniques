@@ -55,34 +55,92 @@ export default function AdminDashboard() {
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
       }
 
-      const response = await fetch('/api/prompts-neon', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(promptData),
-      })
-
-      if (response.ok) {
-        setShowAddForm(false)
-        setFormData({
-          title: '',
-          category: '',
-          tags: '',
-          description: '',
-          prompt: '',
-          exampleInput: '',
-          exampleOutput: ''
+      if (editingPrompt) {
+        // Update existing prompt
+        const response = await fetch(`/api/prompts-neon?id=${editingPrompt._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(promptData),
         })
-        fetchPrompts()
-        alert('Prompt added successfully!')
+
+        if (response.ok) {
+          setEditingPrompt(null)
+          setShowAddForm(false)
+          setFormData({
+            title: '',
+            category: '',
+            tags: '',
+            description: '',
+            prompt: '',
+            exampleInput: '',
+            exampleOutput: ''
+          })
+          fetchPrompts()
+          alert('Prompt updated successfully!')
+        } else {
+          alert('Error updating prompt')
+        }
       } else {
-        alert('Error adding prompt')
+        // Create new prompt
+        const response = await fetch('/api/prompts-neon', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(promptData),
+        })
+
+        if (response.ok) {
+          setShowAddForm(false)
+          setFormData({
+            title: '',
+            category: '',
+            tags: '',
+            description: '',
+            prompt: '',
+            exampleInput: '',
+            exampleOutput: ''
+          })
+          fetchPrompts()
+          alert('Prompt added successfully!')
+        } else {
+          alert('Error adding prompt')
+        }
       }
     } catch (error) {
-      console.error('Error adding prompt:', error)
-      alert('Error adding prompt')
+      console.error('Error saving prompt:', error)
+      alert('Error saving prompt')
     }
+  }
+
+  const handleEdit = (prompt) => {
+    setEditingPrompt(prompt)
+    setFormData({
+      title: prompt.title,
+      category: prompt.category,
+      tags: prompt.tags.join(', '),
+      description: prompt.description,
+      prompt: prompt.prompt,
+      exampleInput: prompt.exampleInput || '',
+      exampleOutput: prompt.exampleOutput || ''
+    })
+    setShowAddForm(true)
+  }
+
+  const handleCancelEdit = () => {
+    setEditingPrompt(null)
+    setShowAddForm(false)
+    setFormData({
+      title: '',
+      category: '',
+      tags: '',
+      description: '',
+      prompt: '',
+      exampleInput: '',
+      exampleOutput: ''
+    })
   }
 
   const handleDelete = async (id) => {
@@ -184,10 +242,12 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {/* Add Form */}
+        {/* Add/Edit Form */}
         {showAddForm && (
           <div className="bg-white p-6 rounded-lg shadow mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Add New Prompt</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              {editingPrompt ? 'Edit Prompt' : 'Add New Prompt'}
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -276,7 +336,7 @@ export default function AdminDashboard() {
               <div className="flex justify-end space-x-4">
                 <button
                   type="button"
-                  onClick={() => setShowAddForm(false)}
+                  onClick={handleCancelEdit}
                   className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Cancel
@@ -285,7 +345,7 @@ export default function AdminDashboard() {
                   type="submit"
                   className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                 >
-                  Add Prompt
+                  {editingPrompt ? 'Update Prompt' : 'Add Prompt'}
                 </button>
               </div>
             </form>
@@ -322,7 +382,7 @@ export default function AdminDashboard() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => setEditingPrompt(prompt)}
+                      onClick={() => handleEdit(prompt)}
                       className="px-3 py-1 text-sm text-primary-600 hover:text-primary-900 transition-colors"
                     >
                       Edit

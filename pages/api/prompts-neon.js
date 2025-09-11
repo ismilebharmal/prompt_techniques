@@ -85,6 +85,33 @@ export default async function handler(req, res) {
         message: 'Prompt created successfully', 
         id: promptId 
       })
+    } else if (req.method === 'PUT') {
+      const { id } = req.query
+      const { title, category, tags, description, prompt, exampleInput, exampleOutput } = req.body
+
+      if (!id) {
+        return res.status(400).json({ error: 'Prompt ID is required' })
+      }
+
+      if (!title || !category || !description || !prompt) {
+        return res.status(400).json({ error: 'Missing required fields' })
+      }
+
+      // Import updatePrompt function
+      const { updatePrompt } = await import('../../lib/neon')
+      await updatePrompt(id, {
+        title,
+        category,
+        tags: tags || [],
+        description,
+        prompt,
+        exampleInput: exampleInput || '',
+        exampleOutput: exampleOutput || ''
+      })
+
+      return res.status(200).json({ 
+        message: 'Prompt updated successfully' 
+      })
     } else if (req.method === 'DELETE') {
       const { id } = req.query
 
