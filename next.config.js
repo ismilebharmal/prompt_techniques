@@ -2,9 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    appDir: false, // Using pages directory
-  },
+  // appDir is no longer experimental in Next.js 13.4+
+  // Using pages directory (default)
   // Enable static optimization for better performance
   trailingSlash: false,
   // Configure headers for API routes
