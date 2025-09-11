@@ -26,7 +26,7 @@ export default function Home({ showToast }) {
   useEffect(() => {
     const fetchPrompts = async () => {
       try {
-        const response = await fetch('/api/prompts')
+        const response = await fetch('/api/prompts-supabase')
         const data = await response.json()
         setPrompts(data)
         setFilteredPrompts(data)

@@ -1,5 +1,5 @@
 import '../styles/globals.css'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 // Toast notification component
 function Toast({ message, show, onClose }) {
