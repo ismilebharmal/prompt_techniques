@@ -1,44 +1,42 @@
 # 🗄️ Database Setup Guide
 
-## 🏆 **Recommended: PlanetScale** (Easiest & Most Vercel-Friendly)
+## 🏆 **Recommended: Neon** (Easiest & Most Vercel-Friendly)
 
-### Step 1: Create PlanetScale Account
-1. Go to [https://planetscale.com](https://planetscale.com)
-2. Sign up with GitHub (2 minutes)
-3. Create a new database called `prompt_techniques`
+### Step 1: Create Neon Account
+1. Go to [https://neon.tech](https://neon.tech)
+2. Sign up with GitHub (1 minute)
+3. Create a new project called `prompt_techniques`
 
-### Step 2: Get Connection Details
-1. Go to your database dashboard
-2. Click "Connect" → "Connect with PlanetScale CLI"
-3. Copy the connection string (looks like: `mysql://username:password@host/database`)
+### Step 2: Get Connection String
+1. Go to your project dashboard
+2. Click "Connection Details"
+3. Copy the connection string (looks like: `postgresql://username:password@host/database`)
 
 ### Step 3: Create Table
-Run this SQL in PlanetScale's SQL editor:
+Run this SQL in Neon's SQL editor:
 
 ```sql
 CREATE TABLE prompts (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   category VARCHAR(50) NOT NULL,
-  tags JSON,
+  tags JSONB,
   description TEXT,
   prompt TEXT NOT NULL,
   example_input TEXT,
   example_output TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
 ### Step 4: Add Environment Variables to Vercel
 1. Go to your Vercel dashboard
 2. Select your project → Settings → Environment Variables
-3. Add these variables:
+3. Add this variable:
 
 ```
-DATABASE_HOST=your-host-from-planetscale
-DATABASE_USERNAME=your-username
-DATABASE_PASSWORD=your-password
+DATABASE_URL=your-connection-string-from-neon
 ```
 
 ### Step 5: Update Your App
@@ -48,7 +46,7 @@ Change your frontend to use the new API endpoint:
 // In your frontend code, change:
 const response = await fetch('/api/prompts-supabase')
 // To:
-const response = await fetch('/api/prompts-planetscale')
+const response = await fetch('/api/prompts-neon')
 ```
 
 ---
