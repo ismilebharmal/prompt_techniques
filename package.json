@@ -20,6 +20,7 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
+    "@planetscale/database": "^1.19.0",
     "@supabase/supabase-js": "^2.57.4",
     "mongodb": "^6.3.0",
     "next": "^14.0.0",
