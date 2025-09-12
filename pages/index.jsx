@@ -285,6 +285,12 @@ model = keras.Sequential([
                 View My Work
               </button>
               <button
+                onClick={() => window.open('/api/resume-download', '_blank')}
+                className="px-8 py-3 bg-gradient-to-r from-green-500 to-teal-600 rounded-full font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                📄 Download Resume
+              </button>
+              <button
                 onClick={() => scrollToSection('contact')}
                 className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
@@ -597,14 +603,14 @@ model = keras.Sequential([
                   📧
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Email</h3>
-                <p className="text-gray-400">ismile@example.com</p>
+                <p className="text-gray-400">ismileofficebharmal@gmail.com</p>
               </div>
               <div className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
                 <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
                   💼
                 </div>
                 <h3 className="text-lg font-semibold mb-2">LinkedIn</h3>
-                <p className="text-gray-400">linkedin.com/in/ismilebharmal</p>
+                <p className="text-gray-400">linkedin.com/in/ismile-bharmal-3b82241ab</p>
               </div>
               <div className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
                 <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
@@ -616,17 +622,17 @@ model = keras.Sequential([
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="mailto:ismile@example.com"
+                href="mailto:ismileofficebharmal@gmail.com"
                 className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
               >
                 Send Email
               </a>
-              <a
-                href="/resume.pdf"
+              <button
+                onClick={() => window.open('/api/resume-download', '_blank')}
                 className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300"
               >
-                Download Resume
-              </a>
+                📄 Download Resume
+              </button>
             </div>
           </div>
         </section>

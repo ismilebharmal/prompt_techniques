@@ -74,6 +74,8 @@ export default function AdminDashboard() {
     textPosition: 'bottom-left' // 'bottom-left', 'bottom-center', 'bottom-right', 'center', 'top-left', etc.
   })
   const [editingHeroSlide, setEditingHeroSlide] = useState(null)
+  const [resumes, setResumes] = useState([])
+  const [uploadingResume, setUploadingResume] = useState(false)
   const router = useRouter()
 
   const fetchPrompts = useCallback(async () => {
@@ -117,6 +119,86 @@ export default function AdminDashboard() {
       console.error('Error fetching hero slides:', error)
     }
   }, [])
+
+  const fetchResumes = useCallback(async () => {
+    try {
+      const response = await fetch('/api/resumes')
+      const data = await response.json()
+      setResumes(data || [])
+    } catch (error) {
+      console.error('Error fetching resumes:', error)
+    }
+  }, [])
+
+  const uploadResume = async (file) => {
+    setUploadingResume(true)
+    try {
+      const formData = new FormData()
+      formData.append('resume', file)
+
+      const response = await fetch('/api/upload-resume', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (response.ok) {
+        fetchResumes()
+        alert('Resume uploaded successfully!')
+      } else {
+        const error = await response.json()
+        alert(`Failed to upload resume: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error uploading resume:', error)
+      alert('Failed to upload resume')
+    } finally {
+      setUploadingResume(false)
+    }
+  }
+
+  const handleSetActiveResume = async (id) => {
+    try {
+      const response = await fetch('/api/resumes', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, setActive: true })
+      })
+
+      if (response.ok) {
+        fetchResumes()
+        alert('Resume set as active!')
+      } else {
+        alert('Failed to set active resume')
+      }
+    } catch (error) {
+      console.error('Error setting active resume:', error)
+      alert('Failed to set active resume')
+    }
+  }
+
+  const handleDeleteResume = async (id) => {
+    if (!confirm('Are you sure you want to delete this resume?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/resumes?id=${id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        fetchResumes()
+        alert('Resume deleted successfully!')
+      } else {
+        alert('Failed to delete resume')
+      }
+    } catch (error) {
+      console.error('Error deleting resume:', error)
+      alert('Failed to delete resume')
+    }
+  }
 
   const uploadImage = async (file) => {
     setUploadingImage(true)
@@ -389,7 +471,8 @@ export default function AdminDashboard() {
     fetchProjects()
     fetchSlides()
     fetchHeroSlides()
-  }, [router, fetchPrompts, fetchProjects, fetchSlides, fetchHeroSlides])
+    fetchResumes()
+  }, [router, fetchPrompts, fetchProjects, fetchSlides, fetchHeroSlides, fetchResumes])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -658,6 +741,7 @@ export default function AdminDashboard() {
               { id: 'projects', name: 'Featured Projects', icon: '🚀' },
               { id: 'slides', name: 'Work Slides', icon: '🖼️' },
               { id: 'hero-slides', name: 'Hero Slides', icon: '🎨' },
+              { id: 'resume', name: 'Resume Management', icon: '📄' },
               { id: 'analytics', name: 'Analytics', icon: '📈' },
               { id: 'settings', name: 'Settings', icon: '⚙️' }
             ].map((tab) => (
@@ -1476,6 +1560,105 @@ export default function AdminDashboard() {
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Resume Management Tab */}
+        {activeTab === 'resume' && (
+          <div className="space-y-6">
+            {/* Resume Header */}
+            <div className="bg-white shadow rounded-lg p-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Resume Management</h2>
+                  <p className="text-gray-600 mt-1">Upload and manage your resume files</p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <label className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md cursor-pointer transition-colors">
+                    {uploadingResume ? 'Uploading...' : 'Upload Resume'}
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      onChange={(e) => {
+                        const file = e.target.files[0]
+                        if (file) {
+                          uploadResume(file)
+                        }
+                      }}
+                      className="hidden"
+                      disabled={uploadingResume}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Resume List */}
+            <div className="bg-white shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+                  All Resumes ({(resumes || []).length})
+                </h3>
+                
+                {(resumes || []).length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                      <span className="text-2xl">📄</span>
+                    </div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No resumes uploaded</h3>
+                    <p className="text-gray-500">Upload your first resume to get started</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {(resumes || []).map((resume) => (
+                      <div
+                        key={resume.id}
+                        className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                              <span className="text-red-600 font-bold">PDF</span>
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-900">
+                                {resume.original_name}
+                              </h4>
+                              <p className="text-sm text-gray-500">
+                                {(resume.size / 1024).toFixed(1)} KB • {new Date(resume.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {resume.is_active && (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                              </span>
+                            )}
+                            <div className="flex space-x-2">
+                              {!resume.is_active && (
+                                <button
+                                  onClick={() => handleSetActiveResume(resume.id)}
+                                  className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                                >
+                                  Set Active
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleDeleteResume(resume.id)}
+                                className="text-red-600 hover:text-red-900 text-sm font-medium"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
