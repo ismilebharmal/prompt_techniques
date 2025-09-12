@@ -107,13 +107,9 @@ const HeroSlides = () => {
     console.log('⏳ Showing loading state')
     return (
       <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-700 rounded w-1/3 mx-auto mb-4"></div>
-              <div className="h-4 bg-gray-700 rounded w-1/2 mx-auto"></div>
-            </div>
-          </div>
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+          <p className="mt-4 text-white">Loading slides...</p>
         </div>
       </section>
     )

@@ -13,6 +13,7 @@ export default function DatabaseImage({
 
   // If there's no imageId, fall back to imageUrl or fallback
   if (!imageId) {
+    console.log('❌ DatabaseImage: No imageId provided')
     if (imageUrl) {
       return (
         <img
@@ -35,6 +36,8 @@ export default function DatabaseImage({
       </div>
     )
   }
+
+  console.log('🖼️ DatabaseImage: Loading image with ID:', imageId)
 
   // If image failed to load, show fallback
   if (imageError) {
@@ -60,8 +63,12 @@ export default function DatabaseImage({
         src={`/api/images/${imageId}`}
         alt={alt}
         className={`${className} ${imageLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-        onLoad={() => setImageLoading(false)}
-        onError={() => {
+        onLoad={() => {
+          console.log('✅ DatabaseImage: Image loaded successfully:', imageId)
+          setImageLoading(false)
+        }}
+        onError={(e) => {
+          console.error('❌ DatabaseImage: Image failed to load:', imageId, e)
           setImageError(true)
           setImageLoading(false)
         }}
