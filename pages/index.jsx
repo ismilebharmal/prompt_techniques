@@ -21,40 +21,40 @@ export default function Portfolio() {
   }, [scrollPosition])
 
   // Fetch projects and slides from database
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [projectsRes, slidesRes] = await Promise.all([
-          fetch('/api/projects?featured=true'),
-          fetch('/api/slides')
-        ])
-        
-        const projectsData = await projectsRes.json()
-        const slidesData = await slidesRes.json()
-        
-        setProjects(projectsData.data || [])
-        setSlides(slidesData.data || [])
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        // Fallback to hardcoded data if API fails
-        setProjects([
-          {
-            id: 1,
-            title: 'Prompt Techniques Hub',
-            description: 'A comprehensive AI prompt library with advanced filtering, admin dashboard, and database management.',
-            shortDescription: 'AI prompt library with search and filtering',
-            technologies: ['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt'],
-            imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
-            liveUrl: '/',
-            githubUrl: 'https://github.com/ismilebharmal/prompt_techniques',
-            featured: true
-          }
-        ])
-      } finally {
-        setLoading(false)
-      }
+  const fetchData = async () => {
+    try {
+      const [projectsRes, slidesRes] = await Promise.all([
+        fetch('/api/projects?featured=true'),
+        fetch('/api/slides')
+      ])
+      
+      const projectsData = await projectsRes.json()
+      const slidesData = await slidesRes.json()
+      
+      setProjects(projectsData.data || [])
+      setSlides(slidesData.data || [])
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      // Fallback to hardcoded data if API fails
+      setProjects([
+        {
+          id: 1,
+          title: 'Prompt Techniques Hub',
+          description: 'A comprehensive AI prompt library with advanced filtering, admin dashboard, and database management.',
+          shortDescription: 'AI prompt library with search and filtering',
+          technologies: ['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt'],
+          imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
+          liveUrl: '/',
+          githubUrl: 'https://github.com/ismilebharmal/prompt_techniques',
+          featured: true
+        }
+      ])
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchData()
   }, [])
 
