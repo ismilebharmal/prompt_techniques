@@ -60,7 +60,7 @@ async function setupProjectsTable() {
         short_description: 'AI prompt library with search and filtering',
         image_url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
         github_url: 'https://github.com/ismilebharmal/prompt_techniques',
-        live_url: 'https://prompt-techniques.vercel.app',
+        live_url: 'https://ismile-bharmal.vercel.app',
         technologies: ['Next.js', 'React', 'PostgreSQL', 'TailwindCSS', 'Neon'],
         category: 'Web Application',
         featured: true,

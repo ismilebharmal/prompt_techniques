@@ -8,7 +8,7 @@ Your Neon database is now populated with **12 prompts** from your `prompts.json`
 
 ### Step 1: Go to Vercel Dashboard
 1. Visit [https://vercel.com/dashboard](https://vercel.com/dashboard)
-2. Select your `prompt-techniques-hub` project
+2. Select your `ismile-bharmal` project
 
 ### Step 2: Add Environment Variable
 1. Click **Settings** tab
