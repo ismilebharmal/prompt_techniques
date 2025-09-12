@@ -14,18 +14,31 @@ const HeroSlides = () => {
 
   const fetchSlides = async () => {
     try {
+      console.log('🔄 Fetching hero slides...')
       const response = await fetch('/api/hero-slides')
+      console.log('📡 Response status:', response.status)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const data = await response.json()
-      console.log('Hero slides data:', data) // Debug log
-      console.log('First slide image settings:', data[0] ? {
-        image_fit: data[0].image_fit,
-        image_position: data[0].image_position,
-        text_position: data[0].text_position
-      } : 'No slides')
+      console.log('✅ Hero slides data:', data)
+      console.log('📊 Number of slides:', data?.length || 0)
+      
+      if (data && data.length > 0) {
+        console.log('🖼️ First slide image settings:', {
+          image_fit: data[0].image_fit,
+          image_position: data[0].image_position,
+          text_position: data[0].text_position,
+          image_id: data[0].image_id
+        })
+      }
+      
       setSlides(data || [])
       setLoading(false)
     } catch (error) {
-      console.error('Error fetching hero slides:', error)
+      console.error('❌ Error fetching hero slides:', error)
       setLoading(false)
     }
   }
@@ -88,7 +101,10 @@ const HeroSlides = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
   }
 
+  console.log('🎬 HeroSlides render - loading:', loading, 'slides:', slides.length)
+
   if (loading) {
+    console.log('⏳ Showing loading state')
     return (
       <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <div className="max-w-6xl mx-auto">
@@ -104,8 +120,21 @@ const HeroSlides = () => {
   }
 
   if (slides.length === 0) {
-    return null // Don't show section if no slides
+    console.log('❌ No slides available - showing empty state')
+    return (
+      <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
+            <span className="text-2xl">📸</span>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-4">No Slides Available</h2>
+          <p className="text-gray-300">Check back later for updates!</p>
+        </div>
+      </section>
+    )
   }
+
+  console.log('✅ Rendering slideshow with', slides.length, 'slides')
 
   return (
     <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 relative overflow-hidden">
