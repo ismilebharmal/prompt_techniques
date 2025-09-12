@@ -1394,7 +1394,6 @@ export default function AdminDashboard() {
                       <div className="aspect-w-16 aspect-h-9">
                         <DatabaseImage
                           imageId={slide.image_id}
-                          imageUrl={slide.image_url}
                           alt={slide.title}
                           className="w-full h-48 object-cover"
                           fallback={

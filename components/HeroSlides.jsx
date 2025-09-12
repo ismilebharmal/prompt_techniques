@@ -95,7 +95,6 @@ const HeroSlides = () => {
               >
                 <DatabaseImage
                   imageId={slide.image_id}
-                  imageUrl={slide.image_url}
                   alt={slide.title}
                   className="w-full h-full object-cover"
                   fallback={
