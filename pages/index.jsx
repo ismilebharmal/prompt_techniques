@@ -600,8 +600,8 @@ export default function Portfolio() {
                       {slide.images && slide.images.length > 0 && (
                         <div className="absolute top-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
                           {slide.images.length} slide{slide.images.length !== 1 ? 's' : ''}
-                        </div>
-                      )}
+            </div>
+          )}
                       
                       {/* Hover overlay */}
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
@@ -610,9 +610,9 @@ export default function Portfolio() {
                             View Details
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    
+        </div>
+      </div>
+
                     <div className="p-6">
                       <div className="flex items-start justify-between mb-3">
                         <h3 className="text-xl font-semibold text-white group-hover:text-blue-300 transition-colors">
