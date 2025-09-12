@@ -6,6 +6,7 @@ import DatabaseImage from '../components/DatabaseImage'
 import ImageSlideshow from '../components/ImageSlideshow'
 import ProjectDetailModal from '../components/ProjectDetailModal'
 import WorkshopDetailModal from '../components/WorkshopDetailModal'
+import HeroSlides from '../components/HeroSlides'
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home')
@@ -293,6 +294,9 @@ model = keras.Sequential([
           </div>
         </section>
 
+        {/* Hero Slides Section */}
+        <HeroSlides />
+
         {/* About Section */}
         <section id="about" className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
@@ -303,9 +307,9 @@ model = keras.Sequential([
               <div>
                 <h3 className="text-2xl font-semibold mb-6">Hello, I'm Ismile! 👋</h3>
                 <p className="text-gray-300 mb-4 text-lg leading-relaxed">
-                  I'm a passionate Flutter & AI/ML Developer with more than two years of experience 
+                  I'm a passionate Flutter & AI/ML Developer with more than 3+ years of experience 
                   in designing, developing, and deploying mobile applications and AI/ML-driven solutions. 
-                  I specialize in building cross-platform applications with Flutter for both mobile and web.
+                  I specialize in building cross-platform applications with Flutter for both mobile and web and in AI.
                 </p>
                 <p className="text-gray-300 mb-6 text-lg leading-relaxed">
                   My expertise covers the full development lifecycle, from architecture and design to 

@@ -62,6 +62,15 @@ export default function AdminDashboard() {
   })
   const [uploadingImage, setUploadingImage] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
+  const [heroSlides, setHeroSlides] = useState([])
+  const [heroSlideFormData, setHeroSlideFormData] = useState({
+    title: '',
+    description: '',
+    imageId: null,
+    displayOrder: 0,
+    isActive: true
+  })
+  const [editingHeroSlide, setEditingHeroSlide] = useState(null)
   const router = useRouter()
 
   const fetchPrompts = useCallback(async () => {
@@ -93,6 +102,16 @@ export default function AdminDashboard() {
       setSlides(data.data || [])
     } catch (error) {
       console.error('Error fetching slides:', error)
+    }
+  }, [])
+
+  const fetchHeroSlides = useCallback(async () => {
+    try {
+      const response = await fetch('/api/hero-slides')
+      const data = await response.json()
+      setHeroSlides(data || [])
+    } catch (error) {
+      console.error('Error fetching hero slides:', error)
     }
   }, [])
 
@@ -236,6 +255,99 @@ export default function AdminDashboard() {
     }
   }
 
+  // Hero Slides Management Functions
+  const handleHeroSlideSubmit = async (e) => {
+    e.preventDefault()
+    
+    try {
+      if (editingHeroSlide) {
+        // Update existing hero slide
+        const response = await fetch('/api/hero-slides', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: editingHeroSlide.id,
+            ...heroSlideFormData
+          })
+        })
+
+        if (response.ok) {
+          fetchHeroSlides()
+          setHeroSlideFormData({
+            title: '',
+            description: '',
+            imageId: null,
+            displayOrder: 0,
+            isActive: true
+          })
+          setEditingHeroSlide(null)
+          alert('Hero slide updated successfully!')
+        } else {
+          alert('Failed to update hero slide')
+        }
+      } else {
+        // Create new hero slide
+        const response = await fetch('/api/hero-slides', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(heroSlideFormData)
+        })
+
+        if (response.ok) {
+          fetchHeroSlides()
+          setHeroSlideFormData({
+            title: '',
+            description: '',
+            imageId: null,
+            displayOrder: 0,
+            isActive: true
+          })
+          alert('Hero slide created successfully!')
+        } else {
+          alert('Failed to create hero slide')
+        }
+      }
+    } catch (error) {
+      console.error('Error saving hero slide:', error)
+      alert('Error saving hero slide')
+    }
+  }
+
+  const handleEditHeroSlide = (slide) => {
+    setEditingHeroSlide(slide)
+    setHeroSlideFormData({
+      title: slide.title || '',
+      description: slide.description || '',
+      imageId: slide.image_id || null,
+      displayOrder: slide.display_order || 0,
+      isActive: slide.is_active !== false
+    })
+  }
+
+  const handleDeleteHeroSlide = async (id) => {
+    if (confirm('Are you sure you want to delete this hero slide?')) {
+      try {
+        const response = await fetch(`/api/hero-slides?id=${id}`, {
+          method: 'DELETE'
+        })
+
+        if (response.ok) {
+          fetchHeroSlides()
+          alert('Hero slide deleted successfully!')
+        } else {
+          alert('Failed to delete hero slide')
+        }
+      } catch (error) {
+        console.error('Error deleting hero slide:', error)
+        alert('Error deleting hero slide')
+      }
+    }
+  }
+
   // Check authentication on component mount
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('admin_authenticated')
@@ -264,7 +376,8 @@ export default function AdminDashboard() {
     fetchPrompts()
     fetchProjects()
     fetchSlides()
-  }, [router, fetchPrompts, fetchProjects, fetchSlides])
+    fetchHeroSlides()
+  }, [router, fetchPrompts, fetchProjects, fetchSlides, fetchHeroSlides])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -532,6 +645,7 @@ export default function AdminDashboard() {
               { id: 'prompts', name: 'Manage Prompts', icon: '📝' },
               { id: 'projects', name: 'Featured Projects', icon: '🚀' },
               { id: 'slides', name: 'Work Slides', icon: '🖼️' },
+              { id: 'hero-slides', name: 'Hero Slides', icon: '🎨' },
               { id: 'analytics', name: 'Analytics', icon: '📈' },
               { id: 'settings', name: 'Settings', icon: '⚙️' }
             ].map((tab) => (
@@ -1231,6 +1345,117 @@ export default function AdminDashboard() {
                   {(slides || []).length === 0 && (
                     <div className="col-span-full text-center text-gray-500 py-8">
                       No slides found. Add your first slide to get started.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Hero Slides Tab */}
+        {activeTab === 'hero-slides' && (
+          <div className="space-y-6">
+            {/* Hero Slides Header */}
+            <div className="bg-white shadow rounded-lg p-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Hero Slides</h2>
+                  <p className="text-gray-600 mt-1">Manage the slideshow images displayed above the About section</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setEditingHeroSlide(null)
+                    setHeroSlideFormData({
+                      title: '',
+                      description: '',
+                      imageId: null,
+                      displayOrder: 0,
+                      isActive: true
+                    })
+                    setShowAddForm(true)
+                  }}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                >
+                  Add New Hero Slide
+                </button>
+              </div>
+            </div>
+
+            {/* Hero Slides Grid */}
+            <div className="bg-white shadow rounded-lg">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">All Hero Slides ({(heroSlides || []).length})</h3>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {(heroSlides || []).map((slide) => (
+                    <div key={slide.id} className="bg-gray-50 rounded-lg overflow-hidden">
+                      <div className="aspect-w-16 aspect-h-9">
+                        <DatabaseImage
+                          imageId={slide.image_id}
+                          imageUrl={slide.image_url}
+                          alt={slide.title}
+                          className="w-full h-48 object-cover"
+                          fallback={
+                            <div className="w-full h-48 bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                              <span className="text-white text-2xl">🖼️</span>
+                            </div>
+                          }
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-2">{slide.title}</h4>
+                        {slide.description && (
+                          <p className="text-gray-600 text-sm mb-3 line-clamp-2">{slide.description}</p>
+                        )}
+                        <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
+                          <span>Order: {slide.display_order}</span>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            slide.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {slide.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                        </div>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleEditHeroSlide(slide)}
+                            className="flex-1 bg-blue-600 text-white px-3 py-2 rounded text-sm hover:bg-blue-700 transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteHeroSlide(slide.id)}
+                            className="flex-1 bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700 transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {(heroSlides || []).length === 0 && (
+                    <div className="col-span-full text-center py-12">
+                      <div className="text-gray-400 text-6xl mb-4">🖼️</div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">No Hero Slides</h3>
+                      <p className="text-gray-500 mb-4">Get started by adding your first hero slide</p>
+                      <button
+                        onClick={() => {
+                          setEditingHeroSlide(null)
+                          setHeroSlideFormData({
+                            title: '',
+                            description: '',
+                            imageId: null,
+                            displayOrder: 0,
+                            isActive: true
+                          })
+                          setShowAddForm(true)
+                        }}
+                        className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                      >
+                        Add First Hero Slide
+                      </button>
                     </div>
                   )}
                 </div>
@@ -2110,6 +2335,133 @@ export default function AdminDashboard() {
                       className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       {editingSlide ? 'Update Slide' : 'Add Slide'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Hero Slide Form Modal */}
+        {showAddForm && (editingHeroSlide !== null || activeTab === 'hero-slides') && (
+          <div 
+            className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+            onClick={handleCloseModal}
+          >
+            <div 
+              className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mt-3">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {editingHeroSlide ? 'Edit Hero Slide' : 'Add New Hero Slide'}
+                  </h3>
+                  <button
+                    onClick={handleCloseModal}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <form onSubmit={handleHeroSlideSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Title *</label>
+                    <input
+                      type="text"
+                      value={heroSlideFormData.title}
+                      onChange={(e) => setHeroSlideFormData({...heroSlideFormData, title: e.target.value})}
+                      required
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Enter slide title"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea
+                      value={heroSlideFormData.description}
+                      onChange={(e) => setHeroSlideFormData({...heroSlideFormData, description: e.target.value})}
+                      rows={3}
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Enter slide description (optional)"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Image *</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files[0]
+                        if (file) {
+                          const uploadedImage = await uploadImage(file)
+                          if (uploadedImage) {
+                            setHeroSlideFormData({
+                              ...heroSlideFormData,
+                              imageId: uploadedImage.id
+                            })
+                          }
+                        }
+                      }}
+                      className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                    />
+                    {uploadingImage && (
+                      <div className="mt-2 text-sm text-blue-600">Uploading image...</div>
+                    )}
+                    {heroSlideFormData.imageId && (
+                      <div className="mt-2">
+                        <DatabaseImage
+                          imageId={heroSlideFormData.imageId}
+                          alt="Preview"
+                          className="w-32 h-20 object-cover rounded"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Display Order</label>
+                      <input
+                        type="number"
+                        value={heroSlideFormData.displayOrder}
+                        onChange={(e) => setHeroSlideFormData({...heroSlideFormData, displayOrder: parseInt(e.target.value) || 0})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        min="0"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Status</label>
+                      <select
+                        value={heroSlideFormData.isActive}
+                        onChange={(e) => setHeroSlideFormData({...heroSlideFormData, isActive: e.target.value === 'true'})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        <option value={true}>Active</option>
+                        <option value={false}>Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      type="button"
+                      onClick={handleCloseModal}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      {editingHeroSlide ? 'Update Hero Slide' : 'Add Hero Slide'}
                     </button>
                   </div>
                 </form>
