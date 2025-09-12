@@ -36,7 +36,14 @@ export default function AdminDashboard() {
     technologies: '',
     category: '',
     featured: false,
-    orderIndex: 0
+    orderIndex: 0,
+    detailedDescription: '',
+    toolsUsed: '',
+    projectDate: '',
+    clientName: '',
+    projectStatus: '',
+    coverImageId: null,
+    images: []
   })
   const [slideFormData, setSlideFormData] = useState({
     title: '',
@@ -44,8 +51,18 @@ export default function AdminDashboard() {
     imageUrl: '',
     imageId: null,
     category: '',
-    orderIndex: 0
+    orderIndex: 0,
+    detailedDescription: '',
+    workshopDate: '',
+    durationHours: '',
+    participantsCount: '',
+    workshopType: '',
+    coverImageId: null,
+    images: []
   })
+  const [projectImages, setProjectImages] = useState([])
+  const [slideImages, setSlideImages] = useState([])
+  const [selectedCoverImage, setSelectedCoverImage] = useState(null)
   const [uploadingImage, setUploadingImage] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const router = useRouter()
@@ -64,9 +81,9 @@ export default function AdminDashboard() {
 
   const fetchProjects = useCallback(async () => {
     try {
-      const response = await fetch('/api/projects')
+      const response = await fetch('/api/projects-enhanced?withImages=true')
       const data = await response.json()
-      setProjects(data.data || [])
+      setProjects(data || [])
     } catch (error) {
       console.error('Error fetching projects:', error)
     }
@@ -74,9 +91,9 @@ export default function AdminDashboard() {
 
   const fetchSlides = useCallback(async () => {
     try {
-      const response = await fetch('/api/slides')
+      const response = await fetch('/api/slides-enhanced?withImages=true')
       const data = await response.json()
-      setSlides(data.data || [])
+      setSlides(data || [])
     } catch (error) {
       console.error('Error fetching slides:', error)
     }
@@ -106,6 +123,82 @@ export default function AdminDashboard() {
       return null
     } finally {
       setUploadingImage(false)
+    }
+  }
+
+  // Image management functions
+  const addImageToProject = async (projectId, imageId, isCover = false) => {
+    try {
+      const response = await fetch('/api/project-images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId, imageId, isCover })
+      })
+      return response.ok
+    } catch (error) {
+      console.error('Error adding image to project:', error)
+      return false
+    }
+  }
+
+  const addImageToSlide = async (slideId, imageId, isCover = false) => {
+    try {
+      const response = await fetch('/api/slide-images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slideId, imageId, isCover })
+      })
+      return response.ok
+    } catch (error) {
+      console.error('Error adding image to slide:', error)
+      return false
+    }
+  }
+
+  const removeImageFromProject = async (projectId, imageId) => {
+    try {
+      const response = await fetch('/api/project-images', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId, imageId })
+      })
+      return response.ok
+    } catch (error) {
+      console.error('Error removing image from project:', error)
+      return false
+    }
+  }
+
+  const removeImageFromSlide = async (slideId, imageId) => {
+    try {
+      const response = await fetch('/api/slide-images', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slideId, imageId })
+      })
+      return response.ok
+    } catch (error) {
+      console.error('Error removing image from slide:', error)
+      return false
+    }
+  }
+
+  const setCoverImage = async (type, itemId, imageId) => {
+    try {
+      const endpoint = type === 'project' ? '/api/project-images' : '/api/slide-images'
+      const response = await fetch(endpoint, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          [type === 'project' ? 'projectId' : 'slideId']: itemId, 
+          imageId, 
+          action: 'setCover' 
+        })
+      })
+      return response.ok
+    } catch (error) {
+      console.error('Error setting cover image:', error)
+      return false
     }
   }
 
@@ -258,20 +351,39 @@ export default function AdminDashboard() {
       description: '',
       shortDescription: '',
       imageUrl: '',
+      imageId: null,
       githubUrl: '',
       liveUrl: '',
       technologies: '',
       category: '',
       featured: false,
-      orderIndex: 0
+      orderIndex: 0,
+      detailedDescription: '',
+      toolsUsed: '',
+      projectDate: '',
+      clientName: '',
+      projectStatus: '',
+      coverImageId: null,
+      images: []
     })
     setSlideFormData({
       title: '',
       description: '',
       imageUrl: '',
+      imageId: null,
       category: '',
-      orderIndex: 0
+      orderIndex: 0,
+      detailedDescription: '',
+      workshopDate: '',
+      durationHours: '',
+      participantsCount: '',
+      workshopType: '',
+      coverImageId: null,
+      images: []
     })
+    setProjectImages([])
+    setSlideImages([])
+    setSelectedCoverImage(null)
   }
 
   const handleDelete = async (id) => {
@@ -906,11 +1018,19 @@ export default function AdminDashboard() {
                               Featured
                             </span>
                           )}
+                          {project.images && project.images.length > 0 && (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              {project.images.length} image{project.images.length !== 1 ? 's' : ''}
+                            </span>
+                          )}
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">{project.shortDescription}</p>
+                        <p className="text-sm text-gray-600 mt-1">{project.shortDescription || project.description}</p>
                         <div className="flex items-center space-x-4 mt-2">
                           <span className="text-sm text-gray-500">Category: {project.category}</span>
                           <span className="text-sm text-gray-500">Order: {project.orderIndex}</span>
+                          {project.projectStatus && (
+                            <span className="text-sm text-gray-500">Status: {project.projectStatus}</span>
+                          )}
                           {project.technologies && project.technologies.length > 0 && (
                             <div className="flex space-x-1">
                               {project.technologies.slice(0, 3).map((tech, index) => (
@@ -1036,10 +1156,25 @@ export default function AdminDashboard() {
                         />
                       </div>
                       <div className="p-4">
-                        <h4 className="text-lg font-medium text-gray-900">{slide.title}</h4>
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h4 className="text-lg font-medium text-gray-900">{slide.title}</h4>
+                          {slide.images && slide.images.length > 0 && (
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              {slide.images.length} slide{slide.images.length !== 1 ? 's' : ''}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-gray-600 mt-1">{slide.description}</p>
                         <div className="flex items-center justify-between mt-3">
-                          <span className="text-xs text-gray-500">{slide.category}</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs text-gray-500">{slide.category}</span>
+                            {slide.workshopType && (
+                              <span className="text-xs text-gray-500">• {slide.workshopType}</span>
+                            )}
+                            {slide.durationHours && (
+                              <span className="text-xs text-gray-500">• {slide.durationHours}h</span>
+                            )}
+                          </div>
                           <div className="flex space-x-2">
                             <button
                               onClick={() => {
@@ -1301,9 +1436,11 @@ export default function AdminDashboard() {
                   try {
                     const projectData = {
                       ...projectFormData,
-                      technologies: projectFormData.technologies.split(',').map(tech => tech.trim()).filter(tech => tech)
+                      technologies: projectFormData.technologies.split(',').map(tech => tech.trim()).filter(tech => tech),
+                      toolsUsed: projectFormData.toolsUsed.split(',').map(tool => tool.trim()).filter(tool => tool)
                     }
 
+                    let projectId
                     if (editingProject) {
                       const response = await fetch(`/api/projects?id=${editingProject.id}`, {
                         method: 'PUT',
@@ -1311,10 +1448,11 @@ export default function AdminDashboard() {
                         body: JSON.stringify(projectData)
                       })
                       if (response.ok) {
-                        fetchProjects()
+                        projectId = editingProject.id
                         alert('Project updated successfully!')
                       } else {
                         alert('Error updating project')
+                        return
                       }
                     } else {
                       const response = await fetch('/api/projects', {
@@ -1323,12 +1461,25 @@ export default function AdminDashboard() {
                         body: JSON.stringify(projectData)
                       })
                       if (response.ok) {
-                        fetchProjects()
+                        const result = await response.json()
+                        projectId = result.id
                         alert('Project added successfully!')
                       } else {
                         alert('Error adding project')
+                        return
                       }
                     }
+
+                    // Handle multiple images
+                    if (projectImages.length > 0 && projectId) {
+                      for (let i = 0; i < projectImages.length; i++) {
+                        const image = projectImages[i]
+                        const isCover = selectedCoverImage === image.id
+                        await addImageToProject(projectId, image.id, isCover)
+                      }
+                    }
+
+                    fetchProjects()
                     handleCloseModal()
                   } catch (error) {
                     console.error('Error saving project:', error)
@@ -1387,42 +1538,122 @@ export default function AdminDashboard() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Project Image</label>
-                      <div className="mt-1">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={async (e) => {
-                            const file = e.target.files[0]
-                            if (file) {
-                              const uploadedImage = await uploadImage(file)
-                              if (uploadedImage) {
-                                setProjectFormData({
-                                  ...projectFormData, 
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Project Images</label>
+                    <div className="mt-1">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={async (e) => {
+                          const files = Array.from(e.target.files)
+                          for (const file of files) {
+                            const uploadedImage = await uploadImage(file)
+                            if (uploadedImage) {
+                              const newImage = {
+                                id: uploadedImage.id,
+                                filename: uploadedImage.filename,
+                                mime_type: uploadedImage.mime_type,
+                                size: uploadedImage.size,
+                                is_cover: projectImages.length === 0 // First image is cover by default
+                              }
+                              setProjectImages(prev => [...prev, newImage])
+                              if (projectImages.length === 0) {
+                                setSelectedCoverImage(uploadedImage.id)
+                                setProjectFormData(prev => ({
+                                  ...prev,
+                                  coverImageId: uploadedImage.id,
                                   imageId: uploadedImage.id,
                                   imageUrl: `/api/images/${uploadedImage.id}`
-                                })
+                                }))
                               }
                             }
-                          }}
-                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                        />
-                        {projectFormData.imageId && (
-                          <div className="mt-2">
-                            <img
-                              src={`/api/images/${projectFormData.imageId}`}
-                              alt="Preview"
-                              className="h-20 w-20 object-cover rounded-md"
-                            />
-                          </div>
-                        )}
-                        {uploadingImage && (
-                          <div className="mt-2 text-sm text-blue-600">Uploading image...</div>
-                        )}
-                      </div>
+                          }
+                        }}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                      />
+                      {uploadingImage && (
+                        <div className="mt-2 text-sm text-blue-600">Uploading images...</div>
+                      )}
                     </div>
+                    
+                    {/* Image Gallery */}
+                    {projectImages.length > 0 && (
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Uploaded Images</label>
+                        <div className="grid grid-cols-4 gap-4">
+                          {projectImages.map((image, index) => (
+                            <div key={image.id} className="relative group">
+                              <img
+                                src={`/api/images/${image.id}`}
+                                alt={`Project image ${index + 1}`}
+                                className="w-full h-20 object-cover rounded-md border-2 border-gray-200"
+                              />
+                              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all rounded-md flex items-center justify-center">
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedCoverImage(image.id)
+                                      setProjectFormData(prev => ({
+                                        ...prev,
+                                        coverImageId: image.id,
+                                        imageId: image.id,
+                                        imageUrl: `/api/images/${image.id}`
+                                      }))
+                                    }}
+                                    className={`px-2 py-1 text-xs rounded ${
+                                      selectedCoverImage === image.id
+                                        ? 'bg-yellow-500 text-white'
+                                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
+                                  >
+                                    {selectedCoverImage === image.id ? 'Cover' : 'Set Cover'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setProjectImages(prev => prev.filter(img => img.id !== image.id))
+                                      if (selectedCoverImage === image.id) {
+                                        const remainingImages = projectImages.filter(img => img.id !== image.id)
+                                        if (remainingImages.length > 0) {
+                                          setSelectedCoverImage(remainingImages[0].id)
+                                          setProjectFormData(prev => ({
+                                            ...prev,
+                                            coverImageId: remainingImages[0].id,
+                                            imageId: remainingImages[0].id,
+                                            imageUrl: `/api/images/${remainingImages[0].id}`
+                                          }))
+                                        } else {
+                                          setSelectedCoverImage(null)
+                                          setProjectFormData(prev => ({
+                                            ...prev,
+                                            coverImageId: null,
+                                            imageId: null,
+                                            imageUrl: ''
+                                          }))
+                                        }
+                                      }
+                                    }}
+                                    className="px-2 py-1 text-xs rounded bg-red-500 text-white hover:bg-red-600"
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </div>
+                              {selectedCoverImage === image.id && (
+                                <div className="absolute top-1 right-1 bg-yellow-500 text-white text-xs px-1 py-0.5 rounded">
+                                  Cover
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Technologies (comma-separated)</label>
                       <input
@@ -1483,6 +1714,66 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
+                  {/* Enhanced Project Fields */}
+                  <div className="border-t pt-6">
+                    <h4 className="text-lg font-medium text-gray-900 mb-4">Additional Details</h4>
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Detailed Description</label>
+                        <textarea
+                          value={projectFormData.detailedDescription}
+                          onChange={(e) => setProjectFormData({...projectFormData, detailedDescription: e.target.value})}
+                          rows={3}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Comprehensive project description"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Tools Used (comma-separated)</label>
+                        <input
+                          type="text"
+                          value={projectFormData.toolsUsed}
+                          onChange={(e) => setProjectFormData({...projectFormData, toolsUsed: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="React, Node.js, MongoDB"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Project Date</label>
+                        <input
+                          type="date"
+                          value={projectFormData.projectDate}
+                          onChange={(e) => setProjectFormData({...projectFormData, projectDate: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Client Name</label>
+                        <input
+                          type="text"
+                          value={projectFormData.clientName}
+                          onChange={(e) => setProjectFormData({...projectFormData, clientName: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Client or company name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Project Status</label>
+                        <select
+                          value={projectFormData.projectStatus}
+                          onChange={(e) => setProjectFormData({...projectFormData, projectStatus: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                          <option value="">Select Status</option>
+                          <option value="Completed">Completed</option>
+                          <option value="In Progress">In Progress</option>
+                          <option value="On Hold">On Hold</option>
+                          <option value="Planning">Planning</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="flex justify-end space-x-3">
                     <button
                       type="button"
@@ -1532,6 +1823,7 @@ export default function AdminDashboard() {
                 <form onSubmit={async (e) => {
                   e.preventDefault()
                   try {
+                    let slideId
                     if (editingSlide) {
                       const response = await fetch(`/api/slides?id=${editingSlide.id}`, {
                         method: 'PUT',
@@ -1539,10 +1831,11 @@ export default function AdminDashboard() {
                         body: JSON.stringify(slideFormData)
                       })
                       if (response.ok) {
-                        fetchSlides()
+                        slideId = editingSlide.id
                         alert('Slide updated successfully!')
                       } else {
                         alert('Error updating slide')
+                        return
                       }
                     } else {
                       const response = await fetch('/api/slides', {
@@ -1551,12 +1844,25 @@ export default function AdminDashboard() {
                         body: JSON.stringify(slideFormData)
                       })
                       if (response.ok) {
-                        fetchSlides()
+                        const result = await response.json()
+                        slideId = result.id
                         alert('Slide added successfully!')
                       } else {
                         alert('Error adding slide')
+                        return
                       }
                     }
+
+                    // Handle multiple images
+                    if (slideImages.length > 0 && slideId) {
+                      for (let i = 0; i < slideImages.length; i++) {
+                        const image = slideImages[i]
+                        const isCover = selectedCoverImage === image.id
+                        await addImageToSlide(slideId, image.id, isCover)
+                      }
+                    }
+
+                    fetchSlides()
                     handleCloseModal()
                   } catch (error) {
                     console.error('Error saving slide:', error)
@@ -1586,40 +1892,118 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Slide Image</label>
+                    <label className="block text-sm font-medium text-gray-700">Workshop Images</label>
                     <div className="mt-1">
                       <input
                         type="file"
                         accept="image/*"
+                        multiple
                         onChange={async (e) => {
-                          const file = e.target.files[0]
-                          if (file) {
+                          const files = Array.from(e.target.files)
+                          for (const file of files) {
                             const uploadedImage = await uploadImage(file)
                             if (uploadedImage) {
-                              setSlideFormData({
-                                ...slideFormData, 
-                                imageId: uploadedImage.id,
-                                imageUrl: `/api/images/${uploadedImage.id}`
-                              })
+                              const newImage = {
+                                id: uploadedImage.id,
+                                filename: uploadedImage.filename,
+                                mime_type: uploadedImage.mime_type,
+                                size: uploadedImage.size,
+                                is_cover: slideImages.length === 0 // First image is cover by default
+                              }
+                              setSlideImages(prev => [...prev, newImage])
+                              if (slideImages.length === 0) {
+                                setSelectedCoverImage(uploadedImage.id)
+                                setSlideFormData(prev => ({
+                                  ...prev,
+                                  coverImageId: uploadedImage.id,
+                                  imageId: uploadedImage.id,
+                                  imageUrl: `/api/images/${uploadedImage.id}`
+                                }))
+                              }
                             }
                           }
                         }}
                         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                        required
                       />
-                      {slideFormData.imageId && (
-                        <div className="mt-2">
-                          <img
-                            src={`/api/images/${slideFormData.imageId}`}
-                            alt="Preview"
-                            className="h-20 w-20 object-cover rounded-md"
-                          />
-                        </div>
-                      )}
                       {uploadingImage && (
-                        <div className="mt-2 text-sm text-blue-600">Uploading image...</div>
+                        <div className="mt-2 text-sm text-blue-600">Uploading images...</div>
                       )}
                     </div>
+                    
+                    {/* Image Gallery */}
+                    {slideImages.length > 0 && (
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Uploaded Images</label>
+                        <div className="grid grid-cols-4 gap-4">
+                          {slideImages.map((image, index) => (
+                            <div key={image.id} className="relative group">
+                              <img
+                                src={`/api/images/${image.id}`}
+                                alt={`Slide image ${index + 1}`}
+                                className="w-full h-20 object-cover rounded-md border-2 border-gray-200"
+                              />
+                              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all rounded-md flex items-center justify-center">
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedCoverImage(image.id)
+                                      setSlideFormData(prev => ({
+                                        ...prev,
+                                        coverImageId: image.id,
+                                        imageId: image.id,
+                                        imageUrl: `/api/images/${image.id}`
+                                      }))
+                                    }}
+                                    className={`px-2 py-1 text-xs rounded ${
+                                      selectedCoverImage === image.id
+                                        ? 'bg-yellow-500 text-white'
+                                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    }`}
+                                  >
+                                    {selectedCoverImage === image.id ? 'Cover' : 'Set Cover'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSlideImages(prev => prev.filter(img => img.id !== image.id))
+                                      if (selectedCoverImage === image.id) {
+                                        const remainingImages = slideImages.filter(img => img.id !== image.id)
+                                        if (remainingImages.length > 0) {
+                                          setSelectedCoverImage(remainingImages[0].id)
+                                          setSlideFormData(prev => ({
+                                            ...prev,
+                                            coverImageId: remainingImages[0].id,
+                                            imageId: remainingImages[0].id,
+                                            imageUrl: `/api/images/${remainingImages[0].id}`
+                                          }))
+                                        } else {
+                                          setSelectedCoverImage(null)
+                                          setSlideFormData(prev => ({
+                                            ...prev,
+                                            coverImageId: null,
+                                            imageId: null,
+                                            imageUrl: ''
+                                          }))
+                                        }
+                                      }
+                                    }}
+                                    className="px-2 py-1 text-xs rounded bg-red-500 text-white hover:bg-red-600"
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </div>
+                              {selectedCoverImage === image.id && (
+                                <div className="absolute top-1 right-1 bg-yellow-500 text-white text-xs px-1 py-0.5 rounded">
+                                  Cover
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -1648,6 +2032,66 @@ export default function AdminDashboard() {
                         className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         min="0"
                       />
+                    </div>
+                  </div>
+
+                  {/* Enhanced Slide Fields */}
+                  <div className="border-t pt-6">
+                    <h4 className="text-lg font-medium text-gray-900 mb-4">Workshop Details</h4>
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Detailed Description</label>
+                        <textarea
+                          value={slideFormData.detailedDescription}
+                          onChange={(e) => setSlideFormData({...slideFormData, detailedDescription: e.target.value})}
+                          rows={3}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Comprehensive workshop description"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Workshop Type</label>
+                        <select
+                          value={slideFormData.workshopType}
+                          onChange={(e) => setSlideFormData({...slideFormData, workshopType: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                          <option value="">Select Type</option>
+                          <option value="Technical">Technical</option>
+                          <option value="Workshop">Workshop</option>
+                          <option value="Presentation">Presentation</option>
+                          <option value="Training">Training</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Workshop Date</label>
+                        <input
+                          type="date"
+                          value={slideFormData.workshopDate}
+                          onChange={(e) => setSlideFormData({...slideFormData, workshopDate: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Duration (hours)</label>
+                        <input
+                          type="number"
+                          value={slideFormData.durationHours}
+                          onChange={(e) => setSlideFormData({...slideFormData, durationHours: parseInt(e.target.value) || 0})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Participants Count</label>
+                        <input
+                          type="number"
+                          value={slideFormData.participantsCount}
+                          onChange={(e) => setSlideFormData({...slideFormData, participantsCount: parseInt(e.target.value) || 0})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                          min="0"
+                        />
+                      </div>
                     </div>
                   </div>
 
