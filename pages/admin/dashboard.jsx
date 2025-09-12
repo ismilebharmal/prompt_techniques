@@ -102,9 +102,9 @@ export default function AdminDashboard() {
 
   const fetchSlides = useCallback(async () => {
     try {
-      const response = await fetch('/api/slides')
+      const response = await fetch('/api/slides-enhanced?withImages=true')
       const data = await response.json()
-      setSlides(data.data || [])
+      setSlides(data || [])
     } catch (error) {
       console.error('Error fetching slides:', error)
     }
@@ -2249,16 +2249,29 @@ export default function AdminDashboard() {
                   e.preventDefault()
                   try {
                     if (editingSlide) {
-                      const response = await fetch(`/api/slides?id=${editingSlide.id}`, {
+                      const response = await fetch(`/api/slides-enhanced?id=${editingSlide.id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(slideFormData)
+                        body: JSON.stringify({
+                          id: editingSlide.id,
+                          title: slideFormData.title,
+                          description: slideFormData.description,
+                          detailed_description: slideFormData.detailedDescription,
+                          workshop_date: slideFormData.workshopDate,
+                          duration_hours: slideFormData.durationHours,
+                          participants_count: slideFormData.participantsCount,
+                          workshop_type: slideFormData.workshopType,
+                          category: slideFormData.category,
+                          order_index: slideFormData.orderIndex,
+                          image_id: slideFormData.imageId,
+                          cover_image_id: slideFormData.coverImageId
+                        })
                       })
                       if (response.ok) {
                         // Handle image associations for existing slides
                         if ((slideFormData.images || []).length > 0) {
                           for (const image of slideFormData.images) {
-                            await addImageToSlide(image.id, image.is_cover)
+                            await addImageToSlide(editingSlide.id, image.id, image.is_cover, image.display_order)
                           }
                         }
                         fetchSlides()
@@ -2267,17 +2280,29 @@ export default function AdminDashboard() {
                         alert('Error updating slide')
                       }
                     } else {
-                      const response = await fetch('/api/slides', {
+                      const response = await fetch('/api/slides-enhanced', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(slideFormData)
+                        body: JSON.stringify({
+                          title: slideFormData.title,
+                          description: slideFormData.description,
+                          detailed_description: slideFormData.detailedDescription,
+                          workshop_date: slideFormData.workshopDate,
+                          duration_hours: slideFormData.durationHours,
+                          participants_count: slideFormData.participantsCount,
+                          workshop_type: slideFormData.workshopType,
+                          category: slideFormData.category,
+                          order_index: slideFormData.orderIndex,
+                          image_id: slideFormData.imageId,
+                          cover_image_id: slideFormData.coverImageId
+                        })
                       })
                       if (response.ok) {
                         const newSlide = await response.json()
                         // Handle image associations for new slides
                         if ((slideFormData.images || []).length > 0) {
                           for (const image of slideFormData.images) {
-                            await addImageToSlide(newSlide.id, image.is_cover)
+                            await addImageToSlide(newSlide.id, image.id, image.is_cover, image.display_order)
                           }
                         }
                         fetchSlides()
