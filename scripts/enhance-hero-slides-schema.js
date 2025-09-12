@@ -5,54 +5,37 @@ const sql = neon(process.env.DATABASE_URL)
 
 async function enhanceHeroSlidesSchema() {
   try {
-    console.log('🚀 Enhancing hero_slides table with image settings...')
+    console.log('🚀 Enhancing hero_slides table with image display options...')
 
-    // Add new columns for image customization
-    try {
-      await sql`ALTER TABLE hero_slides ADD COLUMN image_position VARCHAR(20) DEFAULT 'center'`
-    } catch (e) {
-      console.log('Column image_position already exists or error:', e.message)
-    }
+    // Add new columns for image display settings
+    await sql`
+      ALTER TABLE hero_slides 
+      ADD COLUMN IF NOT EXISTS image_fit VARCHAR(20) DEFAULT 'cover'
+    `
 
-    try {
-      await sql`ALTER TABLE hero_slides ADD COLUMN image_fit VARCHAR(20) DEFAULT 'cover'`
-    } catch (e) {
-      console.log('Column image_fit already exists or error:', e.message)
-    }
+    await sql`
+      ALTER TABLE hero_slides 
+      ADD COLUMN IF NOT EXISTS image_position VARCHAR(20) DEFAULT 'center'
+    `
 
-    try {
-      await sql`ALTER TABLE hero_slides ADD COLUMN image_opacity INTEGER DEFAULT 100`
-    } catch (e) {
-      console.log('Column image_opacity already exists or error:', e.message)
-    }
-
-    try {
-      await sql`ALTER TABLE hero_slides ADD COLUMN text_position VARCHAR(20) DEFAULT 'bottom-left'`
-    } catch (e) {
-      console.log('Column text_position already exists or error:', e.message)
-    }
-
-    try {
-      await sql`ALTER TABLE hero_slides ADD COLUMN custom_css TEXT`
-    } catch (e) {
-      console.log('Column custom_css already exists or error:', e.message)
-    }
-
-    console.log('✅ Hero slides schema enhanced successfully!')
+    await sql`
+      ALTER TABLE hero_slides 
+      ADD COLUMN IF NOT EXISTS text_position VARCHAR(20) DEFAULT 'bottom-left'
+    `
 
     // Update existing records with default values
     await sql`
       UPDATE hero_slides 
       SET 
-        image_position = 'center',
         image_fit = 'cover',
-        image_opacity = 100,
+        image_position = 'center',
         text_position = 'bottom-left'
-      WHERE image_position IS NULL OR image_position = ''
+      WHERE image_fit IS NULL OR image_position IS NULL OR text_position IS NULL
     `
 
-    console.log('✅ Updated existing hero slides with default values!')
-    console.log('🎉 Hero slides enhancement completed!')
+    console.log('✅ Hero slides schema enhanced successfully!')
+    console.log('📝 Added columns: image_fit, image_position, text_position')
+    
   } catch (error) {
     console.error('❌ Error enhancing hero slides schema:', error)
   }

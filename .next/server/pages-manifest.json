@@ -1,6 +1,10 @@
 {
   "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/hero-slides": "pages/api/hero-slides.js"
+  "/_error": "pages/_error.js",
+  "/api/hero-slides": "pages/api/hero-slides.js",
+  "/": "pages/index.js",
+  "/api/slides-enhanced": "pages/api/slides-enhanced.js",
+  "/api/projects-enhanced": "pages/api/projects-enhanced.js",
+  "/api/images/[id]": "pages/api/images/[id].js"
 }

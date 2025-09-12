@@ -69,9 +69,8 @@ export default function AdminDashboard() {
     imageId: null,
     displayOrder: 0,
     isActive: true,
-    imagePosition: 'center', // 'center', 'top', 'bottom', 'left', 'right'
     imageFit: 'cover', // 'cover', 'contain', 'fill', 'scale-down'
-    imageOpacity: 100, // 0-100
+    imagePosition: 'center', // 'center', 'top', 'bottom', 'left', 'right'
     textPosition: 'bottom-left' // 'bottom-left', 'bottom-center', 'bottom-right', 'center', 'top-left', etc.
   })
   const [editingHeroSlide, setEditingHeroSlide] = useState(null)
@@ -273,16 +272,7 @@ export default function AdminDashboard() {
           },
           body: JSON.stringify({
             id: editingHeroSlide.id,
-            title: heroSlideFormData.title,
-            description: heroSlideFormData.description,
-            imageId: heroSlideFormData.imageId,
-            displayOrder: heroSlideFormData.displayOrder,
-            isActive: heroSlideFormData.isActive,
-            imagePosition: heroSlideFormData.imagePosition,
-            imageFit: heroSlideFormData.imageFit,
-            imageOpacity: heroSlideFormData.imageOpacity,
-            textPosition: heroSlideFormData.textPosition,
-            customCss: heroSlideFormData.customCss
+            ...heroSlideFormData
           })
         })
 
@@ -293,7 +283,10 @@ export default function AdminDashboard() {
             description: '',
             imageId: null,
             displayOrder: 0,
-            isActive: true
+            isActive: true,
+            imageFit: 'cover',
+            imagePosition: 'center',
+            textPosition: 'bottom-left'
           })
           setEditingHeroSlide(null)
           alert('Hero slide updated successfully!')
@@ -307,18 +300,7 @@ export default function AdminDashboard() {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            title: heroSlideFormData.title,
-            description: heroSlideFormData.description,
-            imageId: heroSlideFormData.imageId,
-            displayOrder: heroSlideFormData.displayOrder,
-            isActive: heroSlideFormData.isActive,
-            imagePosition: heroSlideFormData.imagePosition,
-            imageFit: heroSlideFormData.imageFit,
-            imageOpacity: heroSlideFormData.imageOpacity,
-            textPosition: heroSlideFormData.textPosition,
-            customCss: heroSlideFormData.customCss
-          })
+          body: JSON.stringify(heroSlideFormData)
         })
 
         if (response.ok) {
@@ -328,7 +310,10 @@ export default function AdminDashboard() {
             description: '',
             imageId: null,
             displayOrder: 0,
-            isActive: true
+            isActive: true,
+            imageFit: 'cover',
+            imagePosition: 'center',
+            textPosition: 'bottom-left'
           })
           alert('Hero slide created successfully!')
         } else {
@@ -349,11 +334,9 @@ export default function AdminDashboard() {
       imageId: slide.image_id || null,
       displayOrder: slide.display_order || 0,
       isActive: slide.is_active !== false,
-      imagePosition: slide.image_position || 'center',
       imageFit: slide.image_fit || 'cover',
-      imageOpacity: slide.image_opacity || 100,
-      textPosition: slide.text_position || 'bottom-left',
-      customCss: slide.custom_css || ''
+      imagePosition: slide.image_position || 'center',
+      textPosition: slide.text_position || 'bottom-left'
     })
   }
 
@@ -1400,7 +1383,10 @@ export default function AdminDashboard() {
                       description: '',
                       imageId: null,
                       displayOrder: 0,
-                      isActive: true
+                      isActive: true,
+                      imageFit: 'cover',
+                      imagePosition: 'center',
+                      textPosition: 'bottom-left'
                     })
                     setShowAddForm(true)
                   }}
@@ -1476,7 +1462,10 @@ export default function AdminDashboard() {
                             description: '',
                             imageId: null,
                             displayOrder: 0,
-                            isActive: true
+                            isActive: true,
+                            imageFit: 'cover',
+                            imagePosition: 'center',
+                            textPosition: 'bottom-left'
                           })
                           setShowAddForm(true)
                         }}
@@ -2449,11 +2438,10 @@ export default function AdminDashboard() {
                           <DatabaseImage
                             imageId={heroSlideFormData.imageId}
                             alt="Preview"
-                            className="w-full h-full object-cover"
+                            className="w-full h-full"
                             style={{
                               objectFit: heroSlideFormData.imageFit,
-                              objectPosition: heroSlideFormData.imagePosition,
-                              opacity: heroSlideFormData.imageOpacity / 100
+                              objectPosition: heroSlideFormData.imagePosition
                             }}
                           />
                         </div>
@@ -2463,7 +2451,7 @@ export default function AdminDashboard() {
 
                   {/* Image Settings */}
                   <div className="border-t pt-6">
-                    <h4 className="text-lg font-medium text-gray-900 mb-4">Image Settings</h4>
+                    <h4 className="text-lg font-medium text-gray-900 mb-4">Image Display Settings</h4>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Image Fit</label>
@@ -2496,17 +2484,6 @@ export default function AdminDashboard() {
                           <option value="bottom-left">Bottom Left</option>
                           <option value="bottom-right">Bottom Right</option>
                         </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Image Opacity: {heroSlideFormData.imageOpacity}%</label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={heroSlideFormData.imageOpacity}
-                          onChange={(e) => setHeroSlideFormData({...heroSlideFormData, imageOpacity: parseInt(e.target.value)})}
-                          className="mt-1 block w-full"
-                        />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Text Position</label>
@@ -2555,19 +2532,6 @@ export default function AdminDashboard() {
                         </select>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Custom CSS */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Custom CSS (Advanced)</label>
-                    <textarea
-                      value={heroSlideFormData.customCss || ''}
-                      onChange={(e) => setHeroSlideFormData({...heroSlideFormData, customCss: e.target.value})}
-                      rows={3}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
-                      placeholder="/* Custom CSS for this slide */&#10;.slide-container {&#10;  /* Your custom styles */&#10;}"
-                    />
-                    <p className="mt-1 text-sm text-gray-500">Add custom CSS for advanced styling (optional)</p>
                   </div>
 
                   <div className="flex justify-end space-x-3">

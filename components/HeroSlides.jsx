@@ -93,6 +93,7 @@ const HeroSlides = () => {
                   index === currentSlide ? 'opacity-100' : 'opacity-0'
                 }`}
               >
+                {/* Image Container with Proper Aspect Ratio */}
                 <div className="relative w-full h-full">
                   <DatabaseImage
                     imageId={slide.image_id}
@@ -100,8 +101,7 @@ const HeroSlides = () => {
                     className="w-full h-full"
                     style={{
                       objectFit: slide.image_fit || 'cover',
-                      objectPosition: slide.image_position || 'center center',
-                      opacity: (slide.image_opacity || 100) / 100
+                      objectPosition: slide.image_position || 'center center'
                     }}
                     fallback={
                       <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
@@ -117,19 +117,10 @@ const HeroSlides = () => {
                   
                   {/* Image Overlay for Better Text Readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
-                  
-                  {/* Custom CSS Overlay */}
-                  {slide.custom_css && (
-                    <style jsx>{`
-                      .slide-${slide.id} {
-                        ${slide.custom_css}
-                      }
-                    `}</style>
-                  )}
                 </div>
                 
-                {/* Slide Overlay Content */}
-                <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent ${
+                {/* Slide Overlay Content with Dynamic Positioning */}
+                <div className={`absolute inset-0 ${
                   slide.text_position === 'center' ? 'flex items-center justify-center' :
                   slide.text_position === 'top-left' ? 'flex items-start justify-start' :
                   slide.text_position === 'top-center' ? 'flex items-start justify-center' :
@@ -146,11 +137,11 @@ const HeroSlides = () => {
                     slide.text_position === 'top-right' || slide.text_position === 'right' || slide.text_position === 'bottom-right' ? 'text-right' :
                     'text-left' // default
                   }`}>
-                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
                       {slide.title}
                     </h3>
                     {slide.description && (
-                      <p className="text-lg text-gray-200 max-w-2xl">
+                      <p className="text-lg text-gray-200 max-w-2xl drop-shadow-md">
                         {slide.description}
                       </p>
                     )}
