@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Head from 'next/head'
 import { useScrollPosition } from '../hooks/useScrollAnimation'
 import DatabaseImage from '../components/DatabaseImage'
+import WorkSlidesSection from '../components/WorkSlidesSection'
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home')
@@ -99,7 +100,7 @@ export default function Portfolio() {
               
               {/* Desktop Menu */}
               <div className="hidden md:flex space-x-8">
-                {['home', 'about', 'skills', 'projects', 'prompts', 'contact'].map((item) => (
+                {['home', 'about', 'skills', 'projects', 'slides', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -126,7 +127,7 @@ export default function Portfolio() {
             {/* Mobile Menu */}
             {isMenuOpen && (
               <div className="md:hidden bg-gray-900/95 backdrop-blur-md rounded-lg mt-2 p-4">
-                {['home', 'about', 'skills', 'projects', 'prompts', 'contact'].map((item) => (
+                {['home', 'about', 'skills', 'projects', 'slides', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -450,6 +451,9 @@ export default function Portfolio() {
             </div>
           </div>
         </section>
+
+        {/* Work & Workshop Slides Section */}
+        <WorkSlidesSection />
 
         {/* Contact Section */}
         <section id="contact" className="py-20 px-4 bg-gray-800/30">
