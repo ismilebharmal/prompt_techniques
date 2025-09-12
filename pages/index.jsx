@@ -3,7 +3,9 @@ import Link from 'next/link'
 import Head from 'next/head'
 import { useScrollPosition } from '../hooks/useScrollAnimation'
 import DatabaseImage from '../components/DatabaseImage'
-import WorkSlidesSection from '../components/WorkSlidesSection'
+import ImageSlideshow from '../components/ImageSlideshow'
+import ProjectDetailModal from '../components/ProjectDetailModal'
+import WorkshopDetailModal from '../components/WorkshopDetailModal'
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home')
@@ -13,6 +15,10 @@ export default function Portfolio() {
   const [projects, setProjects] = useState([])
   const [slides, setSlides] = useState([])
   const [loading, setLoading] = useState(true)
+  const [selectedProject, setSelectedProject] = useState(null)
+  const [selectedSlide, setSelectedSlide] = useState(null)
+  const [showProjectModal, setShowProjectModal] = useState(false)
+  const [showSlideModal, setShowSlideModal] = useState(false)
   const scrollPosition = useScrollPosition()
 
   useEffect(() => {
@@ -20,41 +26,42 @@ export default function Portfolio() {
     setShowBackToTop(scrollPosition > 300)
   }, [scrollPosition])
 
-  // Fetch projects and slides from database
-  const fetchData = async () => {
-    try {
-      const [projectsRes, slidesRes] = await Promise.all([
-        fetch('/api/projects?featured=true'),
-        fetch('/api/slides')
-      ])
-      
-      const projectsData = await projectsRes.json()
-      const slidesData = await slidesRes.json()
-      
-      setProjects(projectsData.data || [])
-      setSlides(slidesData.data || [])
-    } catch (error) {
-      console.error('Error fetching data:', error)
-      // Fallback to hardcoded data if API fails
-      setProjects([
-        {
-          id: 1,
-          title: 'Prompt Techniques Hub',
-          description: 'A comprehensive AI prompt library with advanced filtering, admin dashboard, and database management.',
-          shortDescription: 'AI prompt library with search and filtering',
-          technologies: ['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt'],
-          imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
-          liveUrl: '/',
-          githubUrl: 'https://github.com/ismilebharmal/prompt_techniques',
-          featured: true
-        }
-      ])
-    } finally {
-      setLoading(false)
-    }
-  }
-
+  // Fetch projects and slides from database with enhanced data
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [projectsRes, slidesRes] = await Promise.all([
+          fetch('/api/projects-enhanced?withImages=true'),
+          fetch('/api/slides-enhanced?withImages=true')
+        ])
+        
+        const projectsData = await projectsRes.json()
+        const slidesData = await slidesRes.json()
+        
+        setProjects(projectsData || [])
+        setSlides(slidesData || [])
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        // Fallback to hardcoded data if API fails
+        setProjects([
+          {
+            id: 1,
+            title: 'Prompt Techniques Hub',
+            description: 'A comprehensive AI prompt library with advanced filtering, admin dashboard, and database management.',
+            short_description: 'AI prompt library with search and filtering',
+            technologies: ['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt'],
+            image_url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
+            live_url: '/',
+            github_url: 'https://github.com/ismilebharmal/prompt_techniques',
+            featured: true,
+            images: []
+          }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
     fetchData()
   }, [])
 
@@ -64,6 +71,26 @@ export default function Portfolio() {
       element.scrollIntoView({ behavior: 'smooth' })
     }
     setIsMenuOpen(false)
+  }
+
+  const handleProjectClick = (project) => {
+    setSelectedProject(project)
+    setShowProjectModal(true)
+  }
+
+  const handleSlideClick = (slide) => {
+    setSelectedSlide(slide)
+    setShowSlideModal(true)
+  }
+
+  const closeProjectModal = () => {
+    setShowProjectModal(false)
+    setSelectedProject(null)
+  }
+
+  const closeSlideModal = () => {
+    setShowSlideModal(false)
+    setSelectedSlide(null)
   }
 
   const skills = [
@@ -92,7 +119,7 @@ export default function Portfolio() {
         <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
           isScrolled ? 'bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
         }`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Ismile Bharmal
@@ -100,7 +127,7 @@ export default function Portfolio() {
               
               {/* Desktop Menu */}
               <div className="hidden md:flex space-x-8">
-                {['home', 'about', 'skills', 'projects', 'slides', 'prompts', 'contact'].map((item) => (
+                {['home', 'about', 'skills', 'projects', 'workshops', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -127,7 +154,7 @@ export default function Portfolio() {
             {/* Mobile Menu */}
             {isMenuOpen && (
               <div className="md:hidden bg-gray-900/95 backdrop-blur-md rounded-lg mt-2 p-4">
-                {['home', 'about', 'skills', 'projects', 'slides', 'prompts', 'contact'].map((item) => (
+                {['home', 'about', 'skills', 'projects', 'workshops', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -207,10 +234,10 @@ export default function Portfolio() {
                   </div>
                   <div className="bg-gray-800/50 rounded-lg px-4 py-2">
                     <span className="text-purple-400">🎯</span> Open to Collaborations
-                  </div>
-                </div>
-              </div>
-              <div className="relative">
+            </div>
+          </div>
+        </div>
+          <div className="relative">
                 <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl p-8 backdrop-blur-sm">
                   <h4 className="text-xl font-semibold mb-4">Quick Stats</h4>
                   <div className="space-y-4">
@@ -265,8 +292,8 @@ export default function Portfolio() {
                   </div>
                 </div>
               ))}
-            </div>
           </div>
+        </div>
         </section>
 
         {/* Projects Section */}
@@ -285,28 +312,40 @@ export default function Portfolio() {
                 {projects.map((project, index) => (
                   <div
                     key={project.id}
-                    className={`bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 ${
+                    className={`bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 cursor-pointer ${
                       project.featured ? 'md:col-span-2 lg:col-span-1' : ''
                     }`}
                     style={{ animationDelay: `${index * 0.2}s` }}
+                    onClick={() => handleProjectClick(project)}
                   >
                     <div className="h-48 relative overflow-hidden">
-                      <DatabaseImage
-                        imageId={project.imageId}
-                        imageUrl={project.imageUrl}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                        fallback={
-                          <div className="h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                            <div className="text-center">
-                              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
-                                <span className="text-2xl">🚀</span>
+                      {project.images && project.images.length > 0 ? (
+                        <ImageSlideshow
+                          images={project.images}
+                          autoPlay={true}
+                          interval={3000}
+                          showThumbnails={false}
+                          showControls={false}
+                          className="h-full"
+                        />
+                      ) : (
+                        <DatabaseImage
+                          imageId={project.imageId}
+                          imageUrl={project.image_url}
+                          alt={project.title}
+                          className="w-full h-full object-cover"
+                          fallback={
+                            <div className="h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                              <div className="text-center">
+                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
+                                  <span className="text-2xl">🚀</span>
+                                </div>
+                                <p className="text-gray-400">Project Preview</p>
                               </div>
-                              <p className="text-gray-400">Project Preview</p>
                             </div>
-                          </div>
-                        }
-                      />
+                          }
+                        />
+                      )}
                     </div>
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-3">
@@ -452,9 +491,6 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Work & Workshop Slides Section */}
-        <WorkSlidesSection />
-
         {/* Contact Section */}
         <section id="contact" className="py-20 px-4 bg-gray-800/30">
           <div className="max-w-4xl mx-auto text-center">
@@ -501,6 +537,87 @@ export default function Portfolio() {
                 Download Resume
               </a>
             </div>
+          </div>
+        </section>
+
+        {/* Work & Workshop Slides Section */}
+        <section id="workshops" className="py-20 px-4 bg-gray-800/30">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Work & Workshop Slides
+            </h2>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
+                <p className="mt-4 text-gray-400">Loading workshops...</p>
+              </div>
+            ) : slides.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {slides.map((slide, index) => (
+                  <div
+                    key={slide.id}
+                    className="bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                    onClick={() => handleSlideClick(slide)}
+                  >
+                    <div className="h-48 relative overflow-hidden">
+                      {slide.images && slide.images.length > 0 ? (
+                        <ImageSlideshow
+                          images={slide.images}
+                          autoPlay={true}
+                          interval={3000}
+                          showThumbnails={false}
+                          showControls={false}
+                          className="h-full"
+                        />
+                      ) : (
+                        <DatabaseImage
+                          imageId={slide.imageId}
+                          imageUrl={slide.image_url}
+                          alt={slide.title}
+                          className="w-full h-full object-cover"
+                          fallback={
+                            <div className="h-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                              <div className="text-center">
+                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
+                                  <span className="text-2xl">📚</span>
+                                </div>
+                                <p className="text-gray-400">Workshop Preview</p>
+                              </div>
+                            </div>
+                          }
+                        />
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold mb-2 text-white">{slide.title}</h3>
+                      <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                        {slide.description || 'Workshop presentation and materials.'}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500">
+                          {slide.workshop_type || 'Workshop'}
+                        </span>
+                        {slide.workshop_date && (
+                          <span className="text-xs text-gray-500">
+                            {new Date(slide.workshop_date).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
+                  <span className="text-2xl">📚</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-300 mb-2">No workshops available</h3>
+                <p className="text-gray-400">No workshop slides available at the moment.</p>
+                <p className="text-gray-500 text-sm mt-2">Check back later for updates!</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -561,6 +678,20 @@ export default function Portfolio() {
             </a>
           </div>
         </div>
+
+        {/* Project Detail Modal */}
+        <ProjectDetailModal
+          project={selectedProject}
+          isOpen={showProjectModal}
+          onClose={closeProjectModal}
+        />
+
+        {/* Workshop Detail Modal */}
+        <WorkshopDetailModal
+          slide={selectedSlide}
+          isOpen={showSlideModal}
+          onClose={closeSlideModal}
+        />
       </div>
     </>
   )
