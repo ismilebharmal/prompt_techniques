@@ -289,6 +289,7 @@ export default function AdminDashboard() {
             textPosition: 'bottom-left'
           })
           setEditingHeroSlide(null)
+          setShowAddForm(false)
           alert('Hero slide updated successfully!')
         } else {
           alert('Failed to update hero slide')
@@ -315,6 +316,7 @@ export default function AdminDashboard() {
             imagePosition: 'center',
             textPosition: 'bottom-left'
           })
+          setShowAddForm(false)
           alert('Hero slide created successfully!')
         } else {
           alert('Failed to create hero slide')
@@ -496,6 +498,7 @@ export default function AdminDashboard() {
     setEditingPrompt(null)
     setEditingProject(null)
     setEditingSlide(null)
+    setEditingHeroSlide(null)
     setFormData({
       title: '',
       category: '',
@@ -523,6 +526,16 @@ export default function AdminDashboard() {
       imageUrl: '',
       category: '',
       orderIndex: 0
+    })
+    setHeroSlideFormData({
+      title: '',
+      description: '',
+      imageId: null,
+      displayOrder: 0,
+      isActive: true,
+      imageFit: 'cover',
+      imagePosition: 'center',
+      textPosition: 'bottom-left'
     })
   }
 

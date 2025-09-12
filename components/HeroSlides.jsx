@@ -91,7 +91,7 @@ const HeroSlides = () => {
         {/* Slideshow Container */}
         <div className="relative">
           {/* Main Slide Display */}
-          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900" style={{ aspectRatio: '16/9' }}>
+          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
             {slides.map((slide, index) => (
               <div
                 key={slide.id}
@@ -99,14 +99,14 @@ const HeroSlides = () => {
                   index === currentSlide ? 'opacity-100' : 'opacity-0'
                 }`}
               >
-                {/* Image Container with Proper Aspect Ratio */}
-                <div className="relative w-full h-full overflow-hidden">
+                {/* Image Container with Smart Fitting */}
+                <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
                   <DatabaseImage
                     imageId={slide.image_id}
                     alt={slide.title}
-                    className="w-full h-full object-cover"
+                    className="max-w-full max-h-full"
                     style={{
-                      objectFit: slide.image_fit || 'cover',
+                      objectFit: slide.image_fit || 'contain',
                       objectPosition: (() => {
                         const position = slide.image_position || 'center'
                         // Convert our position values to valid CSS object-position values
@@ -122,7 +122,9 @@ const HeroSlides = () => {
                           case 'center': return 'center center'
                           default: return 'center center'
                         }
-                      })()
+                      })(),
+                      width: '100%',
+                      height: '100%'
                     }}
                     fallback={
                       <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
