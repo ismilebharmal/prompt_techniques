@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
 import { useScrollPosition } from '../hooks/useScrollAnimation'
+import DatabaseImage from '../components/DatabaseImage'
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home')
@@ -289,22 +290,22 @@ export default function Portfolio() {
                     style={{ animationDelay: `${index * 0.2}s` }}
                   >
                     <div className="h-48 relative overflow-hidden">
-                      {project.imageUrl ? (
-                        <img
-                          src={project.imageUrl}
-                          alt={project.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                          <div className="text-center">
-                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
-                              <span className="text-2xl">🚀</span>
+                      <DatabaseImage
+                        imageId={project.imageId}
+                        imageUrl={project.imageUrl}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                        fallback={
+                          <div className="h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
+                                <span className="text-2xl">🚀</span>
+                              </div>
+                              <p className="text-gray-400">Project Preview</p>
                             </div>
-                            <p className="text-gray-400">Project Preview</p>
                           </div>
-                        </div>
-                      )}
+                        }
+                      />
                     </div>
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-3">

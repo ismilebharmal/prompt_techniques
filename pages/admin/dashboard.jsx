@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import DatabaseImage from '../../components/DatabaseImage'
 
 export default function AdminDashboard() {
   const [prompts, setPrompts] = useState([])
@@ -29,6 +30,7 @@ export default function AdminDashboard() {
     description: '',
     shortDescription: '',
     imageUrl: '',
+    imageId: null,
     githubUrl: '',
     liveUrl: '',
     technologies: '',
@@ -40,9 +42,11 @@ export default function AdminDashboard() {
     title: '',
     description: '',
     imageUrl: '',
+    imageId: null,
     category: '',
     orderIndex: 0
   })
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const router = useRouter()
 
@@ -77,6 +81,33 @@ export default function AdminDashboard() {
       console.error('Error fetching slides:', error)
     }
   }, [])
+
+  const uploadImage = async (file) => {
+    setUploadingImage(true)
+    try {
+      const formData = new FormData()
+      formData.append('image', file)
+
+      const response = await fetch('/api/upload-image', {
+        method: 'POST',
+        body: formData
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        return result.image
+      } else {
+        throw new Error(result.error || 'Upload failed')
+      }
+    } catch (error) {
+      console.error('Image upload error:', error)
+      alert('Failed to upload image: ' + error.message)
+      return null
+    } finally {
+      setUploadingImage(false)
+    }
+  }
 
   // Check authentication on component mount
   useEffect(() => {
@@ -992,10 +1023,16 @@ export default function AdminDashboard() {
                   {slides.map((slide) => (
                     <div key={slide.id} className="bg-gray-50 rounded-lg overflow-hidden">
                       <div className="aspect-w-16 aspect-h-9">
-                        <img
-                          src={slide.imageUrl}
+                        <DatabaseImage
+                          imageId={slide.imageId}
+                          imageUrl={slide.imageUrl}
                           alt={slide.title}
                           className="w-full h-48 object-cover"
+                          fallback={
+                            <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                              <span className="text-gray-400">No Image</span>
+                            </div>
+                          }
                         />
                       </div>
                       <div className="p-4">
@@ -1352,14 +1389,39 @@ export default function AdminDashboard() {
 
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Image URL</label>
-                      <input
-                        type="url"
-                        value={projectFormData.imageUrl}
-                        onChange={(e) => setProjectFormData({...projectFormData, imageUrl: e.target.value})}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="https://example.com/image.jpg"
-                      />
+                      <label className="block text-sm font-medium text-gray-700">Project Image</label>
+                      <div className="mt-1">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files[0]
+                            if (file) {
+                              const uploadedImage = await uploadImage(file)
+                              if (uploadedImage) {
+                                setProjectFormData({
+                                  ...projectFormData, 
+                                  imageId: uploadedImage.id,
+                                  imageUrl: `/api/images/${uploadedImage.id}`
+                                })
+                              }
+                            }
+                          }}
+                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                        />
+                        {projectFormData.imageId && (
+                          <div className="mt-2">
+                            <img
+                              src={`/api/images/${projectFormData.imageId}`}
+                              alt="Preview"
+                              className="h-20 w-20 object-cover rounded-md"
+                            />
+                          </div>
+                        )}
+                        {uploadingImage && (
+                          <div className="mt-2 text-sm text-blue-600">Uploading image...</div>
+                        )}
+                      </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Technologies (comma-separated)</label>
@@ -1524,15 +1586,40 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Image URL</label>
-                    <input
-                      type="url"
-                      value={slideFormData.imageUrl}
-                      onChange={(e) => setSlideFormData({...slideFormData, imageUrl: e.target.value})}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="https://example.com/image.jpg"
-                      required
-                    />
+                    <label className="block text-sm font-medium text-gray-700">Slide Image</label>
+                    <div className="mt-1">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files[0]
+                          if (file) {
+                            const uploadedImage = await uploadImage(file)
+                            if (uploadedImage) {
+                              setSlideFormData({
+                                ...slideFormData, 
+                                imageId: uploadedImage.id,
+                                imageUrl: `/api/images/${uploadedImage.id}`
+                              })
+                            }
+                          }
+                        }}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                        required
+                      />
+                      {slideFormData.imageId && (
+                        <div className="mt-2">
+                          <img
+                            src={`/api/images/${slideFormData.imageId}`}
+                            alt="Preview"
+                            className="h-20 w-20 object-cover rounded-md"
+                          />
+                        </div>
+                      )}
+                      {uploadingImage && (
+                        <div className="mt-2 text-sm text-blue-600">Uploading image...</div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
