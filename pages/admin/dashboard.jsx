@@ -253,9 +253,9 @@ export default function AdminDashboard() {
     }
   }
 
-  const addImageToSlide = async (imageId, isCover = false) => {
+  const addImageToSlide = async (slideId, imageId, isCover = false, displayOrder = 0) => {
     try {
-      const response = await fetch(`/api/slide-images?slideId=${editingSlide.id}`, {
+      const response = await fetch(`/api/slide-images?slideId=${slideId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -263,7 +263,7 @@ export default function AdminDashboard() {
         body: JSON.stringify({
           imageId,
           isCover,
-          displayOrder: (slideFormData.images || []).length
+          displayOrder
         })
       })
 
