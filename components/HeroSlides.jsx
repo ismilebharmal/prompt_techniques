@@ -15,6 +15,7 @@ const HeroSlides = () => {
     try {
       const response = await fetch('/api/hero-slides')
       const data = await response.json()
+      console.log('Hero slides data:', data) // Debug log
       setSlides(data || [])
       setLoading(false)
     } catch (error) {
@@ -94,14 +95,31 @@ const HeroSlides = () => {
                 }`}
               >
                 {/* Image Container with Proper Aspect Ratio */}
-                <div className="relative w-full h-full">
+                <div className="relative w-full h-full overflow-hidden">
                   <DatabaseImage
                     imageId={slide.image_id}
                     alt={slide.title}
                     className="w-full h-full"
                     style={{
                       objectFit: slide.image_fit || 'cover',
-                      objectPosition: slide.image_position || 'center center'
+                      objectPosition: (() => {
+                        const position = slide.image_position || 'center'
+                        // Convert our position values to valid CSS object-position values
+                        switch (position) {
+                          case 'top': return 'center top'
+                          case 'bottom': return 'center bottom'
+                          case 'left': return 'left center'
+                          case 'right': return 'right center'
+                          case 'top-left': return 'left top'
+                          case 'top-right': return 'right top'
+                          case 'bottom-left': return 'left bottom'
+                          case 'bottom-right': return 'right bottom'
+                          case 'center': return 'center center'
+                          default: return 'center center'
+                        }
+                      })(),
+                      minHeight: '100%',
+                      minWidth: '100%'
                     }}
                     fallback={
                       <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">

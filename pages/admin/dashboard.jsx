@@ -2441,7 +2441,22 @@ export default function AdminDashboard() {
                             className="w-full h-full"
                             style={{
                               objectFit: heroSlideFormData.imageFit,
-                              objectPosition: heroSlideFormData.imagePosition
+                              objectPosition: (() => {
+                                const position = heroSlideFormData.imagePosition || 'center'
+                                // Convert our position values to valid CSS object-position values
+                                switch (position) {
+                                  case 'top': return 'center top'
+                                  case 'bottom': return 'center bottom'
+                                  case 'left': return 'left center'
+                                  case 'right': return 'right center'
+                                  case 'top-left': return 'left top'
+                                  case 'top-right': return 'right top'
+                                  case 'bottom-left': return 'left bottom'
+                                  case 'bottom-right': return 'right bottom'
+                                  case 'center': return 'center center'
+                                  default: return 'center center'
+                                }
+                              })()
                             }}
                           />
                         </div>
