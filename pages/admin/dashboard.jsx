@@ -134,7 +134,7 @@ export default function AdminDashboard() {
         body: JSON.stringify({
           imageId,
           isCover,
-          displayOrder: projectFormData.images.length
+          displayOrder: (projectFormData.images || []).length
         })
       })
 
@@ -159,7 +159,7 @@ export default function AdminDashboard() {
         body: JSON.stringify({
           imageId,
           isCover,
-          displayOrder: slideFormData.images.length
+          displayOrder: (slideFormData.images || []).length
         })
       })
 
@@ -430,11 +430,11 @@ export default function AdminDashboard() {
   }
 
   // Filter prompts based on search and category
-  const filteredPrompts = prompts.filter(prompt => {
+  const filteredPrompts = (prompts || []).filter(prompt => {
     const matchesSearch = searchTerm === '' || 
       prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       prompt.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      prompt.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+      (prompt.tags || []).some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
     
     const matchesCategory = selectedCategory === 'All' || prompt.category === selectedCategory
     
@@ -443,14 +443,14 @@ export default function AdminDashboard() {
 
   // Get statistics
   const stats = {
-    total: prompts.length,
-    categories: [...new Set(prompts.map(p => p.category))].length,
-    code: prompts.filter(p => p.category === 'Code').length,
-    mail: prompts.filter(p => p.category === 'Mail').length,
-    data: prompts.filter(p => p.category === 'Data').length,
-    content: prompts.filter(p => p.category === 'Content').length,
-    role: prompts.filter(p => p.category === 'Role').length,
-    verifier: prompts.filter(p => p.category === 'Verifier').length
+    total: prompts?.length || 0,
+    categories: [...new Set((prompts || []).map(p => p.category))].length,
+    code: (prompts || []).filter(p => p.category === 'Code').length,
+    mail: (prompts || []).filter(p => p.category === 'Mail').length,
+    data: (prompts || []).filter(p => p.category === 'Data').length,
+    content: (prompts || []).filter(p => p.category === 'Content').length,
+    role: (prompts || []).filter(p => p.category === 'Role').length,
+    verifier: (prompts || []).filter(p => p.category === 'Verifier').length
   }
 
   const categories = ['All', 'Code', 'Mail', 'Data', 'Content', 'Role', 'Verifier']
@@ -1027,10 +1027,10 @@ export default function AdminDashboard() {
             {/* Projects List */}
             <div className="bg-white shadow rounded-lg">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">All Projects ({projects.length})</h3>
+                <h3 className="text-lg font-medium text-gray-900">All Projects ({(projects || []).length})</h3>
               </div>
               <div className="divide-y divide-gray-200">
-                {projects.map((project) => (
+                {(projects || []).map((project) => (
                   <div key={project.id} className="p-6 hover:bg-gray-50">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
@@ -1046,15 +1046,15 @@ export default function AdminDashboard() {
                         <div className="flex items-center space-x-4 mt-2">
                           <span className="text-sm text-gray-500">Category: {project.category}</span>
                           <span className="text-sm text-gray-500">Order: {project.orderIndex}</span>
-                          {project.technologies && project.technologies.length > 0 && (
+                          {project.technologies && (project.technologies || []).length > 0 && (
                             <div className="flex space-x-1">
                               {project.technologies.slice(0, 3).map((tech, index) => (
                                 <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                   {tech}
                                 </span>
                               ))}
-                              {project.technologies.length > 3 && (
-                                <span className="text-xs text-gray-500">+{project.technologies.length - 3} more</span>
+                              {(project.technologies || []).length > 3 && (
+                                <span className="text-xs text-gray-500">+{(project.technologies || []).length - 3} more</span>
                               )}
                             </div>
                           )}
@@ -1109,7 +1109,7 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
-                {projects.length === 0 && (
+                {(projects || []).length === 0 && (
                   <div className="p-6 text-center text-gray-500">
                     No projects found. Add your first project to get started.
                   </div>
@@ -1159,11 +1159,11 @@ export default function AdminDashboard() {
             {/* Slides Grid */}
             <div className="bg-white shadow rounded-lg">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">All Slides ({slides.length})</h3>
+                <h3 className="text-lg font-medium text-gray-900">All Slides ({(slides || []).length})</h3>
               </div>
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {slides.map((slide) => (
+                  {(slides || []).map((slide) => (
                     <div key={slide.id} className="bg-gray-50 rounded-lg overflow-hidden">
                       <div className="aspect-w-16 aspect-h-9">
                         <DatabaseImage
@@ -1228,7 +1228,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   ))}
-                  {slides.length === 0 && (
+                  {(slides || []).length === 0 && (
                     <div className="col-span-full text-center text-gray-500 py-8">
                       No slides found. Add your first slide to get started.
                     </div>
@@ -1456,7 +1456,7 @@ export default function AdminDashboard() {
                       })
                       if (response.ok) {
                         // Handle image associations for existing projects
-                        if (projectFormData.images.length > 0) {
+                        if ((projectFormData.images || []).length > 0) {
                           for (const image of projectFormData.images) {
                             await addImageToProject(image.id, image.is_cover)
                           }
@@ -1475,7 +1475,7 @@ export default function AdminDashboard() {
                       if (response.ok) {
                         const newProject = await response.json()
                         // Handle image associations for new projects
-                        if (projectFormData.images.length > 0) {
+                        if ((projectFormData.images || []).length > 0) {
                           for (const image of projectFormData.images) {
                             await addImageToProject(newProject.id, image.is_cover)
                           }
@@ -1564,13 +1564,13 @@ export default function AdminDashboard() {
                                 filename: uploadedImage.filename,
                                 mime_type: uploadedImage.mime_type,
                                 size: uploadedImage.size,
-                                is_cover: projectFormData.images.length === 0, // First image is cover by default
-                                display_order: projectFormData.images.length
+                                is_cover: (projectFormData.images || []).length === 0, // First image is cover by default
+                                display_order: (projectFormData.images || []).length
                               }
                               setProjectFormData({
                                 ...projectFormData,
                                 images: [...projectFormData.images, newImage],
-                                coverImageId: projectFormData.images.length === 0 ? uploadedImage.id : projectFormData.coverImageId,
+                                coverImageId: (projectFormData.images || []).length === 0 ? uploadedImage.id : projectFormData.coverImageId,
                                 imageId: projectFormData.imageId || uploadedImage.id, // Keep first image as main
                                 imageUrl: projectFormData.imageUrl || `/api/images/${uploadedImage.id}`
                               })
@@ -1585,10 +1585,10 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Image Gallery */}
-                    {projectFormData.images.length > 0 && (
+                    {(projectFormData.images || []).length > 0 && (
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          {projectFormData.images.map((image, index) => (
+                          {(projectFormData.images || []).map((image, index) => (
                             <div key={image.id} className="relative group">
                               <div className="aspect-square rounded-lg overflow-hidden border-2 border-gray-200">
                                 <img
@@ -1634,7 +1634,7 @@ export default function AdminDashboard() {
                                       setProjectFormData({
                                         ...projectFormData,
                                         images: updatedImages,
-                                        coverImageId: image.is_cover && updatedImages.length > 0 ? updatedImages[0].id : projectFormData.coverImageId
+                                        coverImageId: image.is_cover && (updatedImages || []).length > 0 ? updatedImages[0].id : projectFormData.coverImageId
                                       })
                                     }}
                                     className="bg-red-500 text-white px-3 py-1 rounded text-xs font-medium hover:bg-red-600"
@@ -1648,7 +1648,7 @@ export default function AdminDashboard() {
                         </div>
                         
                         <div className="text-sm text-gray-500">
-                          {projectFormData.images.length} image{projectFormData.images.length !== 1 ? 's' : ''} uploaded
+                          {(projectFormData.images || []).length} image{(projectFormData.images || []).length !== 1 ? 's' : ''} uploaded
                           {projectFormData.coverImageId && (
                             <span className="ml-2 text-yellow-600">• Cover image selected</span>
                           )}
@@ -1831,7 +1831,7 @@ export default function AdminDashboard() {
                       })
                       if (response.ok) {
                         // Handle image associations for existing slides
-                        if (slideFormData.images.length > 0) {
+                        if ((slideFormData.images || []).length > 0) {
                           for (const image of slideFormData.images) {
                             await addImageToSlide(image.id, image.is_cover)
                           }
@@ -1850,7 +1850,7 @@ export default function AdminDashboard() {
                       if (response.ok) {
                         const newSlide = await response.json()
                         // Handle image associations for new slides
-                        if (slideFormData.images.length > 0) {
+                        if ((slideFormData.images || []).length > 0) {
                           for (const image of slideFormData.images) {
                             await addImageToSlide(newSlide.id, image.is_cover)
                           }
@@ -1909,13 +1909,13 @@ export default function AdminDashboard() {
                                 filename: uploadedImage.filename,
                                 mime_type: uploadedImage.mime_type,
                                 size: uploadedImage.size,
-                                is_cover: slideFormData.images.length === 0, // First image is cover by default
-                                display_order: slideFormData.images.length
+                                is_cover: (slideFormData.images || []).length === 0, // First image is cover by default
+                                display_order: (slideFormData.images || []).length
                               }
                               setSlideFormData({
                                 ...slideFormData,
                                 images: [...slideFormData.images, newImage],
-                                coverImageId: slideFormData.images.length === 0 ? uploadedImage.id : slideFormData.coverImageId,
+                                coverImageId: (slideFormData.images || []).length === 0 ? uploadedImage.id : slideFormData.coverImageId,
                                 imageId: slideFormData.imageId || uploadedImage.id, // Keep first image as main
                                 imageUrl: slideFormData.imageUrl || `/api/images/${uploadedImage.id}`
                               })
@@ -1930,10 +1930,10 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Image Gallery */}
-                    {slideFormData.images.length > 0 && (
+                    {(slideFormData.images || []).length > 0 && (
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          {slideFormData.images.map((image, index) => (
+                          {(slideFormData.images || []).map((image, index) => (
                             <div key={image.id} className="relative group">
                               <div className="aspect-square rounded-lg overflow-hidden border-2 border-gray-200">
                                 <img
@@ -1979,7 +1979,7 @@ export default function AdminDashboard() {
                                       setSlideFormData({
                                         ...slideFormData,
                                         images: updatedImages,
-                                        coverImageId: image.is_cover && updatedImages.length > 0 ? updatedImages[0].id : slideFormData.coverImageId
+                                        coverImageId: image.is_cover && (updatedImages || []).length > 0 ? updatedImages[0].id : slideFormData.coverImageId
                                       })
                                     }}
                                     className="bg-red-500 text-white px-3 py-1 rounded text-xs font-medium hover:bg-red-600"
@@ -1993,7 +1993,7 @@ export default function AdminDashboard() {
                         </div>
                         
                         <div className="text-sm text-gray-500">
-                          {slideFormData.images.length} slide{slideFormData.images.length !== 1 ? 's' : ''} uploaded
+                          {(slideFormData.images || []).length} slide{(slideFormData.images || []).length !== 1 ? 's' : ''} uploaded
                           {slideFormData.coverImageId && (
                             <span className="ml-2 text-purple-600">• Cover slide selected</span>
                           )}
