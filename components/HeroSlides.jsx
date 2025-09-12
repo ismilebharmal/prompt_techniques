@@ -99,12 +99,12 @@ const HeroSlides = () => {
                   index === currentSlide ? 'opacity-100' : 'opacity-0'
                 }`}
               >
-                {/* Image Container with Hover Zoom Effect */}
+                {/* Image Container with Hover Preview */}
                 <div className="relative w-full h-full overflow-hidden group cursor-pointer">
                   <DatabaseImage
                     imageId={slide.image_id}
                     alt={slide.title}
-                    className="w-full h-full transition-transform duration-700 ease-in-out group-hover:scale-110"
+                    className="w-full h-full transition-all duration-700 ease-in-out group-hover:scale-110"
                     style={{
                       objectFit: slide.image_fit || 'cover',
                       objectPosition: (() => {
@@ -136,20 +136,20 @@ const HeroSlides = () => {
                     }
                   />
                   
-                  {/* Image Overlay for Better Text Readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 group-hover:from-black/40 group-hover:to-black/10 transition-all duration-700"></div>
-                  
-                  {/* Hover Hint */}
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
-                      <span className="flex items-center gap-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                        </svg>
-                        Hover to explore
-                      </span>
+                    {/* Image Overlay for Better Text Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 group-hover:from-black/40 group-hover:to-black/10 transition-all duration-700"></div>
+                    
+                    {/* Hover Preview Indicator */}
+                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+                        <span className="flex items-center gap-2">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                          </svg>
+                          Hover to explore
+                        </span>
+                      </div>
                     </div>
-                  </div>
                 </div>
                 
                 {/* Slide Overlay Content with Dynamic Positioning */}
