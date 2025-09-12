@@ -289,7 +289,6 @@ export default function AdminDashboard() {
             textPosition: 'bottom-left'
           })
           setEditingHeroSlide(null)
-          setShowAddForm(false)
           alert('Hero slide updated successfully!')
         } else {
           alert('Failed to update hero slide')
@@ -316,7 +315,6 @@ export default function AdminDashboard() {
             imagePosition: 'center',
             textPosition: 'bottom-left'
           })
-          setShowAddForm(false)
           alert('Hero slide created successfully!')
         } else {
           alert('Failed to create hero slide')
@@ -498,7 +496,6 @@ export default function AdminDashboard() {
     setEditingPrompt(null)
     setEditingProject(null)
     setEditingSlide(null)
-    setEditingHeroSlide(null)
     setFormData({
       title: '',
       category: '',
@@ -527,6 +524,7 @@ export default function AdminDashboard() {
       category: '',
       orderIndex: 0
     })
+    setEditingHeroSlide(null)
     setHeroSlideFormData({
       title: '',
       description: '',
@@ -2447,13 +2445,13 @@ export default function AdminDashboard() {
                     {heroSlideFormData.imageId && (
                       <div className="mt-4 p-4 border rounded-lg bg-gray-50">
                         <h4 className="text-sm font-medium text-gray-700 mb-2">Image Preview</h4>
-                        <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-100">
                           <DatabaseImage
                             imageId={heroSlideFormData.imageId}
                             alt="Preview"
                             className="w-full h-full"
                             style={{
-                              objectFit: heroSlideFormData.imageFit,
+                              objectFit: heroSlideFormData.imageFit || 'cover',
                               objectPosition: (() => {
                                 const position = heroSlideFormData.imagePosition || 'center'
                                 // Convert our position values to valid CSS object-position values
@@ -2469,9 +2467,16 @@ export default function AdminDashboard() {
                                   case 'center': return 'center center'
                                   default: return 'center center'
                                 }
-                              })()
+                              })(),
+                              width: '100%',
+                              height: '100%',
+                              maxWidth: '100%',
+                              maxHeight: '100%'
                             }}
                           />
+                          <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                            {heroSlideFormData.imageFit || 'cover'}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -2483,17 +2488,17 @@ export default function AdminDashboard() {
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Image Fit</label>
-                        <select
-                          value={heroSlideFormData.imageFit}
-                          onChange={(e) => setHeroSlideFormData({...heroSlideFormData, imageFit: e.target.value})}
-                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        >
-                          <option value="cover">Cover (Fill container, crop if needed)</option>
-                          <option value="contain">Contain (Fit entire image)</option>
-                          <option value="fill">Fill (Stretch to fit)</option>
-                          <option value="scale-down">Scale Down (Shrink if too large)</option>
-                          <option value="none">None (Original size)</option>
-                        </select>
+                            <select
+                              value={heroSlideFormData.imageFit}
+                              onChange={(e) => setHeroSlideFormData({...heroSlideFormData, imageFit: e.target.value})}
+                              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            >
+                              <option value="cover">Cover (Fill container, crop if needed) - Best for landscape</option>
+                              <option value="contain">Contain (Fit entire image) - Best for portrait</option>
+                              <option value="fill">Fill (Stretch to fit) - Distorts image</option>
+                              <option value="scale-down">Scale Down (Shrink if too large) - Preserves aspect</option>
+                              <option value="none">None (Original size) - May overflow</option>
+                            </select>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Image Position</label>
