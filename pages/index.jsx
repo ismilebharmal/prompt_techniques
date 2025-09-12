@@ -396,7 +396,7 @@ export default function Portfolio() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
+            <div className="text-center py-12">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-700/50 flex items-center justify-center">
                   <span className="text-2xl">📁</span>
                 </div>
@@ -542,25 +542,31 @@ export default function Portfolio() {
 
         {/* Work & Workshop Slides Section */}
         <section id="workshops" className="py-20 px-4 bg-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Work & Workshop Slides
-            </h2>
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Work & Workshop Slides
+              </h2>
+              <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+                Explore my workshop presentations, training materials, and work-related slides. 
+                Each presentation showcases different aspects of my expertise and teaching approach.
+              </p>
+            </div>
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
                 <p className="mt-4 text-gray-400">Loading workshops...</p>
               </div>
             ) : slides.length > 0 ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {slides.map((slide, index) => (
                   <div
                     key={slide.id}
-                    className="bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                    className="bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 cursor-pointer group"
                     style={{ animationDelay: `${index * 0.2}s` }}
                     onClick={() => handleSlideClick(slide)}
                   >
-                    <div className="h-48 relative overflow-hidden">
+                    <div className="h-56 relative overflow-hidden">
                       {slide.images && slide.images.length > 0 ? (
                         <ImageSlideshow
                           images={slide.images}
@@ -568,6 +574,7 @@ export default function Portfolio() {
                           interval={3000}
                           showThumbnails={false}
                           showControls={false}
+                          aspectRatio="16:9"
                           className="h-full"
                         />
                       ) : (
@@ -588,18 +595,62 @@ export default function Portfolio() {
                           }
                         />
                       )}
+                      
+                      {/* Overlay with slide count */}
+                      {slide.images && slide.images.length > 0 && (
+                        <div className="absolute top-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
+                          {slide.images.length} slide{slide.images.length !== 1 ? 's' : ''}
+                        </div>
+                      )}
+                      
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-white bg-opacity-90 text-gray-900 px-4 py-2 rounded-full text-sm font-medium">
+                            View Details
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    
                     <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-2 text-white">{slide.title}</h3>
+                      <div className="flex items-start justify-between mb-3">
+                        <h3 className="text-xl font-semibold text-white group-hover:text-blue-300 transition-colors">
+                          {slide.title}
+                        </h3>
+                        {slide.workshop_type && (
+                          <span className="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full text-xs font-medium">
+                            {slide.workshop_type}
+                          </span>
+                        )}
+                      </div>
+                      
                       <p className="text-gray-400 text-sm mb-4 line-clamp-2">
                         {slide.description || 'Workshop presentation and materials.'}
                       </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500">
-                          {slide.workshop_type || 'Workshop'}
-                        </span>
+                      
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <div className="flex items-center space-x-4">
+                          {slide.duration_hours && (
+                            <span className="flex items-center">
+                              <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                              </svg>
+                              {slide.duration_hours}h
+                            </span>
+                          )}
+                          {slide.participants_count && (
+                            <span className="flex items-center">
+                              <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                              </svg>
+                              {slide.participants_count}
+                            </span>
+                          )}
+                        </div>
+                        
                         {slide.workshop_date && (
-                          <span className="text-xs text-gray-500">
+                          <span>
                             {new Date(slide.workshop_date).toLocaleDateString()}
                           </span>
                         )}
@@ -692,7 +743,7 @@ export default function Portfolio() {
           isOpen={showSlideModal}
           onClose={closeSlideModal}
         />
-      </div>
+    </div>
     </>
   )
 }

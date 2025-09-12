@@ -4,6 +4,7 @@ import DatabaseImage from './DatabaseImage'
 
 const WorkshopDetailModal = ({ slide, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('overview')
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   if (!isOpen || !slide) return null
 
@@ -51,7 +52,7 @@ const WorkshopDetailModal = ({ slide, isOpen, onClose }) => {
         />
 
         {/* Modal */}
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full">
           {/* Header */}
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="flex items-start justify-between">
@@ -108,7 +109,7 @@ const WorkshopDetailModal = ({ slide, isOpen, onClose }) => {
           </div>
 
           {/* Content */}
-          <div className="px-6 py-4 max-h-96 overflow-y-auto">
+          <div className="px-6 py-4 max-h-[70vh] overflow-y-auto">
             {activeTab === 'overview' && (
               <div className="space-y-4">
                 <div>
@@ -151,23 +152,71 @@ const WorkshopDetailModal = ({ slide, isOpen, onClose }) => {
             )}
 
             {activeTab === 'images' && (
-              <div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-lg font-semibold text-gray-900">Workshop Slides</h4>
+                  {slide.images && slide.images.length > 0 && (
+                    <span className="text-sm text-gray-500">
+                      {slide.images.length} slide{slide.images.length !== 1 ? 's' : ''} available
+                    </span>
+                  )}
+                </div>
+                
                 {slide.images && slide.images.length > 0 ? (
-                  <ImageSlideshow
-                    images={slide.images}
-                    autoPlay={true}
-                    interval={4000}
-                    showThumbnails={true}
-                    showControls={true}
-                    className="w-full"
-                  />
+                  <div className="space-y-4">
+                    {/* Main Slideshow */}
+                    <ImageSlideshow
+                      images={slide.images}
+                      autoPlay={true}
+                      interval={4000}
+                      showThumbnails={true}
+                      showControls={true}
+                      aspectRatio="16:9"
+                      maxHeight="96"
+                      allowFullscreen={true}
+                      currentIndex={currentIndex}
+                      onIndexChange={setCurrentIndex}
+                      className="w-full"
+                    />
+                    
+                    {/* Image Grid View */}
+                    <div className="mt-6">
+                      <h5 className="text-md font-medium text-gray-700 mb-3">All Slides</h5>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {slide.images.map((image, index) => (
+                          <div
+                            key={image.id || index}
+                            className="relative group cursor-pointer rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-300 transition-all"
+                            onClick={() => setCurrentIndex(index)}
+                          >
+                            <DatabaseImage
+                              imageId={image.id}
+                              imageUrl={image.image_url}
+                              fallback={
+                                <div className="w-full h-24 bg-gray-100 flex items-center justify-center">
+                                  <span className="text-xs text-gray-500">?</span>
+                                </div>
+                              }
+                              className="w-full h-24 object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+                              <span className="text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                {index + 1}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <div className="text-center py-12">
+                    <svg className="mx-auto h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">No slides available</h3>
-                    <p className="mt-1 text-sm text-gray-500">No workshop slides have been uploaded yet.</p>
+                    <h3 className="mt-4 text-lg font-medium text-gray-900">No slides available</h3>
+                    <p className="mt-2 text-sm text-gray-500">No workshop slides have been uploaded yet.</p>
+                    <p className="mt-1 text-xs text-gray-400">Check back later for workshop materials and presentations.</p>
                   </div>
                 )}
               </div>
