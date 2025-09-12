@@ -16,6 +16,11 @@ const HeroSlides = () => {
       const response = await fetch('/api/hero-slides')
       const data = await response.json()
       console.log('Hero slides data:', data) // Debug log
+      console.log('First slide image settings:', data[0] ? {
+        image_fit: data[0].image_fit,
+        image_position: data[0].image_position,
+        text_position: data[0].text_position
+      } : 'No slides')
       setSlides(data || [])
       setLoading(false)
     } catch (error) {
@@ -86,7 +91,7 @@ const HeroSlides = () => {
         {/* Slideshow Container */}
         <div className="relative">
           {/* Main Slide Display */}
-          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
+          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900" style={{ aspectRatio: '16/9' }}>
             {slides.map((slide, index) => (
               <div
                 key={slide.id}
@@ -99,7 +104,7 @@ const HeroSlides = () => {
                   <DatabaseImage
                     imageId={slide.image_id}
                     alt={slide.title}
-                    className="w-full h-full"
+                    className="w-full h-full object-cover"
                     style={{
                       objectFit: slide.image_fit || 'cover',
                       objectPosition: (() => {
@@ -117,9 +122,7 @@ const HeroSlides = () => {
                           case 'center': return 'center center'
                           default: return 'center center'
                         }
-                      })(),
-                      minHeight: '100%',
-                      minWidth: '100%'
+                      })()
                     }}
                     fallback={
                       <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">

@@ -2361,7 +2361,7 @@ export default function AdminDashboard() {
         )}
 
         {/* Hero Slide Form Modal */}
-        {showAddForm && (editingHeroSlide !== null || activeTab === 'hero-slides') && (
+        {(showAddForm && activeTab === 'hero-slides') || editingHeroSlide !== null ? (
           <div 
             className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
             onClick={handleCloseModal}
@@ -2568,7 +2568,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   )
