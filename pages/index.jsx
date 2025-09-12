@@ -94,14 +94,18 @@ export default function Portfolio() {
   }
 
   const skills = [
-    { name: 'JavaScript', level: 95, color: 'from-yellow-400 to-orange-500' },
-    { name: 'React/Next.js', level: 90, color: 'from-blue-400 to-cyan-500' },
-    { name: 'Node.js', level: 85, color: 'from-green-400 to-emerald-500' },
-    { name: 'Python', level: 80, color: 'from-blue-500 to-indigo-600' },
-    { name: 'PostgreSQL', level: 85, color: 'from-purple-400 to-pink-500' },
-    { name: 'MongoDB', level: 80, color: 'from-green-500 to-teal-600' },
-    { name: 'AWS/Vercel', level: 75, color: 'from-orange-400 to-red-500' },
-    { name: 'Docker', level: 70, color: 'from-blue-600 to-blue-800' }
+    { name: 'Flutter', level: 95, color: 'from-blue-400 to-cyan-500' },
+    { name: 'Dart', level: 90, color: 'from-blue-500 to-indigo-600' },
+    { name: 'Python', level: 90, color: 'from-yellow-400 to-orange-500' },
+    { name: 'AI/ML', level: 85, color: 'from-purple-400 to-pink-500' },
+    { name: 'LangChain', level: 80, color: 'from-green-400 to-emerald-500' },
+    { name: 'FastAPI', level: 85, color: 'from-red-400 to-pink-500' },
+    { name: 'StreamLit', level: 80, color: 'from-orange-400 to-red-500' },
+    { name: 'Firebase', level: 85, color: 'from-yellow-500 to-orange-600' },
+    { name: 'MySQL', level: 80, color: 'from-blue-600 to-blue-800' },
+    { name: 'PostgreSQL', level: 75, color: 'from-indigo-400 to-purple-500' },
+    { name: 'Git/GitLab', level: 90, color: 'from-gray-400 to-gray-600' },
+    { name: 'Figma', level: 75, color: 'from-pink-400 to-purple-500' }
   ]
 
 
@@ -168,37 +172,120 @@ export default function Portfolio() {
           </div>
         </nav>
 
-        {/* Hero Section */}
-        <section id="home" className="min-h-screen flex items-center justify-center px-4">
-          <div className="text-center max-w-4xl mx-auto">
+        {/* Hero Section with Animated Background */}
+        <section id="home" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+          {/* Animated Gradient Mesh Backgrounds */}
+          <div className="absolute inset-0">
+            {/* Gradient Mesh 1 */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-pink-600/20 animate-pulse"></div>
+            
+            {/* Gradient Mesh 2 */}
+            <div className="absolute inset-0 bg-gradient-to-tl from-emerald-600/15 via-cyan-600/15 to-blue-600/15 animate-pulse" style={{animationDelay: '1s'}}></div>
+            
+            {/* Gradient Mesh 3 */}
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 via-fuchsia-600/10 to-rose-600/10 animate-pulse" style={{animationDelay: '2s'}}></div>
+            
+            {/* Animated Blob Shapes */}
+            <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+            <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-pink-500/30 to-rose-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" style={{animationDelay: '2s'}}></div>
+            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-gradient-to-r from-yellow-500/30 to-pink-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" style={{animationDelay: '4s'}}></div>
+            
+            {/* Floating Code Elements */}
+            <div className="absolute inset-0 overflow-hidden">
+              {/* Dart/Flutter Code */}
+              <div className="absolute top-20 left-10 text-green-400/20 text-xs font-mono animate-float" style={{animationDelay: '0s'}}>
+                <pre>{`class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+    );
+  }
+}`}</pre>
+              </div>
+              
+              {/* Python/AI Code */}
+              <div className="absolute top-40 right-10 text-blue-400/20 text-xs font-mono animate-float" style={{animationDelay: '1s'}}>
+                <pre>{`from langchain import LLMChain
+from langchain.llms import OpenAI
+
+def create_chatbot():
+    llm = OpenAI(temperature=0.7)
+    chain = LLMChain(llm=llm)
+    return chain`}</pre>
+              </div>
+              
+              {/* JavaScript/Web Code */}
+              <div className="absolute bottom-20 left-20 text-yellow-400/20 text-xs font-mono animate-float" style={{animationDelay: '2s'}}>
+                <pre>{`const express = require('express');
+const app = express();
+
+app.get('/api/ai', async (req, res) => {
+  const response = await openai.createCompletion({
+    model: "gpt-3.5-turbo",
+    prompt: req.body.prompt
+  });
+  res.json(response.data);
+});`}</pre>
+              </div>
+              
+              {/* Machine Learning Code */}
+              <div className="absolute bottom-40 right-20 text-purple-400/20 text-xs font-mono animate-float" style={{animationDelay: '3s'}}>
+                <pre>{`import tensorflow as tf
+from tensorflow import keras
+
+model = keras.Sequential([
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dropout(0.2),
+    keras.layers.Dense(10, activation='softmax')
+])`}</pre>
+              </div>
+            </div>
+            
+            {/* Floating Technology Icons */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute top-32 left-1/4 text-4xl opacity-10 animate-bounce" style={{animationDelay: '0.5s'}}>🚀</div>
+              <div className="absolute top-60 right-1/4 text-4xl opacity-10 animate-bounce" style={{animationDelay: '1.5s'}}>🤖</div>
+              <div className="absolute bottom-32 left-1/3 text-4xl opacity-10 animate-bounce" style={{animationDelay: '2.5s'}}>📱</div>
+              <div className="absolute bottom-60 right-1/3 text-4xl opacity-10 animate-bounce" style={{animationDelay: '3.5s'}}>⚡</div>
+              <div className="absolute top-1/2 left-10 text-4xl opacity-10 animate-bounce" style={{animationDelay: '4.5s'}}>🔮</div>
+              <div className="absolute top-1/2 right-10 text-4xl opacity-10 animate-bounce" style={{animationDelay: '5.5s'}}>💻</div>
+            </div>
+          </div>
+          
+          {/* Main Content */}
+          <div className="relative z-10 text-center max-w-4xl mx-auto">
             <div className="mb-8">
-              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 p-1">
+              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 p-1 animate-pulse">
                 <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center">
                   <span className="text-4xl font-bold">IB</span>
                 </div>
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-fade-in">
                 Ismile Bharmal
               </h1>
-              <p className="text-xl md:text-2xl text-gray-300 mb-6">
-                Full Stack Developer & AI Enthusiast
+              <p className="text-xl md:text-2xl text-gray-300 mb-6 animate-fade-in" style={{animationDelay: '0.5s'}}>
+                Flutter & AI/ML Developer
               </p>
-              <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-                Crafting digital experiences with modern technologies. 
-                Passionate about building scalable applications and exploring AI innovations.
+              <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8 animate-fade-in" style={{animationDelay: '1s'}}>
+                More than two years of experience in Flutter, AI, and Machine Learning development. 
+                Specializing in cross-platform applications and AI/ML-driven solutions.
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{animationDelay: '1.5s'}}>
               <button
                 onClick={() => scrollToSection('projects')}
-                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
+                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 View My Work
               </button>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300"
+                className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Get In Touch
               </button>
@@ -216,14 +303,14 @@ export default function Portfolio() {
               <div>
                 <h3 className="text-2xl font-semibold mb-6">Hello, I'm Ismile! 👋</h3>
                 <p className="text-gray-300 mb-4 text-lg leading-relaxed">
-                  I'm a passionate Full Stack Developer with a love for creating innovative solutions 
-                  and exploring the latest technologies. With expertise in modern web development 
-                  and AI applications, I enjoy building products that make a difference.
+                  I'm a passionate Flutter & AI/ML Developer with more than two years of experience 
+                  in designing, developing, and deploying mobile applications and AI/ML-driven solutions. 
+                  I specialize in building cross-platform applications with Flutter for both mobile and web.
                 </p>
                 <p className="text-gray-300 mb-6 text-lg leading-relaxed">
-                  When I'm not coding, you'll find me experimenting with AI tools, contributing to 
-                  open-source projects, or sharing knowledge with the developer community. I believe 
-                  in continuous learning and staying updated with the latest tech trends.
+                  My expertise covers the full development lifecycle, from architecture and design to 
+                  deployment and monitoring. I have a solid understanding of implementing design patterns 
+                  and developing model-agnostic chatbots using technologies like FastAPI and StreamLit.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <div className="bg-gray-800/50 rounded-lg px-4 py-2">
@@ -270,7 +357,7 @@ export default function Portfolio() {
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Skills & Technologies
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {skills.map((skill, index) => (
                 <div
                   key={skill.name}
