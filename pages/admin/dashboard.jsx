@@ -68,7 +68,11 @@ export default function AdminDashboard() {
     description: '',
     imageId: null,
     displayOrder: 0,
-    isActive: true
+    isActive: true,
+    imagePosition: 'center', // 'center', 'top', 'bottom', 'left', 'right'
+    imageFit: 'cover', // 'cover', 'contain', 'fill', 'scale-down'
+    imageOpacity: 100, // 0-100
+    textPosition: 'bottom-left' // 'bottom-left', 'bottom-center', 'bottom-right', 'center', 'top-left', etc.
   })
   const [editingHeroSlide, setEditingHeroSlide] = useState(null)
   const router = useRouter()
@@ -269,7 +273,16 @@ export default function AdminDashboard() {
           },
           body: JSON.stringify({
             id: editingHeroSlide.id,
-            ...heroSlideFormData
+            title: heroSlideFormData.title,
+            description: heroSlideFormData.description,
+            imageId: heroSlideFormData.imageId,
+            displayOrder: heroSlideFormData.displayOrder,
+            isActive: heroSlideFormData.isActive,
+            imagePosition: heroSlideFormData.imagePosition,
+            imageFit: heroSlideFormData.imageFit,
+            imageOpacity: heroSlideFormData.imageOpacity,
+            textPosition: heroSlideFormData.textPosition,
+            customCss: heroSlideFormData.customCss
           })
         })
 
@@ -294,7 +307,18 @@ export default function AdminDashboard() {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(heroSlideFormData)
+          body: JSON.stringify({
+            title: heroSlideFormData.title,
+            description: heroSlideFormData.description,
+            imageId: heroSlideFormData.imageId,
+            displayOrder: heroSlideFormData.displayOrder,
+            isActive: heroSlideFormData.isActive,
+            imagePosition: heroSlideFormData.imagePosition,
+            imageFit: heroSlideFormData.imageFit,
+            imageOpacity: heroSlideFormData.imageOpacity,
+            textPosition: heroSlideFormData.textPosition,
+            customCss: heroSlideFormData.customCss
+          })
         })
 
         if (response.ok) {
@@ -324,7 +348,12 @@ export default function AdminDashboard() {
       description: slide.description || '',
       imageId: slide.image_id || null,
       displayOrder: slide.display_order || 0,
-      isActive: slide.is_active !== false
+      isActive: slide.is_active !== false,
+      imagePosition: slide.image_position || 'center',
+      imageFit: slide.image_fit || 'cover',
+      imageOpacity: slide.image_opacity || 100,
+      textPosition: slide.text_position || 'bottom-left',
+      customCss: slide.custom_css || ''
     })
   }
 
@@ -2414,38 +2443,131 @@ export default function AdminDashboard() {
                       <div className="mt-2 text-sm text-blue-600">Uploading image...</div>
                     )}
                     {heroSlideFormData.imageId && (
-                      <div className="mt-2">
-                        <DatabaseImage
-                          imageId={heroSlideFormData.imageId}
-                          alt="Preview"
-                          className="w-32 h-20 object-cover rounded"
-                        />
+                      <div className="mt-4 p-4 border rounded-lg bg-gray-50">
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Image Preview</h4>
+                        <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                          <DatabaseImage
+                            imageId={heroSlideFormData.imageId}
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                            style={{
+                              objectFit: heroSlideFormData.imageFit,
+                              objectPosition: heroSlideFormData.imagePosition,
+                              opacity: heroSlideFormData.imageOpacity / 100
+                            }}
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Display Order</label>
-                      <input
-                        type="number"
-                        value={heroSlideFormData.displayOrder}
-                        onChange={(e) => setHeroSlideFormData({...heroSlideFormData, displayOrder: parseInt(e.target.value) || 0})}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        min="0"
-                      />
+                  {/* Image Settings */}
+                  <div className="border-t pt-6">
+                    <h4 className="text-lg font-medium text-gray-900 mb-4">Image Settings</h4>
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Image Fit</label>
+                        <select
+                          value={heroSlideFormData.imageFit}
+                          onChange={(e) => setHeroSlideFormData({...heroSlideFormData, imageFit: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                          <option value="cover">Cover (Fill container, crop if needed)</option>
+                          <option value="contain">Contain (Fit entire image)</option>
+                          <option value="fill">Fill (Stretch to fit)</option>
+                          <option value="scale-down">Scale Down (Shrink if too large)</option>
+                          <option value="none">None (Original size)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Image Position</label>
+                        <select
+                          value={heroSlideFormData.imagePosition}
+                          onChange={(e) => setHeroSlideFormData({...heroSlideFormData, imagePosition: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                          <option value="center">Center</option>
+                          <option value="top">Top</option>
+                          <option value="bottom">Bottom</option>
+                          <option value="left">Left</option>
+                          <option value="right">Right</option>
+                          <option value="top-left">Top Left</option>
+                          <option value="top-right">Top Right</option>
+                          <option value="bottom-left">Bottom Left</option>
+                          <option value="bottom-right">Bottom Right</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Image Opacity: {heroSlideFormData.imageOpacity}%</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={heroSlideFormData.imageOpacity}
+                          onChange={(e) => setHeroSlideFormData({...heroSlideFormData, imageOpacity: parseInt(e.target.value)})}
+                          className="mt-1 block w-full"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Text Position</label>
+                        <select
+                          value={heroSlideFormData.textPosition}
+                          onChange={(e) => setHeroSlideFormData({...heroSlideFormData, textPosition: e.target.value})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                          <option value="bottom-left">Bottom Left</option>
+                          <option value="bottom-center">Bottom Center</option>
+                          <option value="bottom-right">Bottom Right</option>
+                          <option value="center">Center</option>
+                          <option value="top-left">Top Left</option>
+                          <option value="top-center">Top Center</option>
+                          <option value="top-right">Top Right</option>
+                          <option value="left">Left</option>
+                          <option value="right">Right</option>
+                        </select>
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Status</label>
-                      <select
-                        value={heroSlideFormData.isActive}
-                        onChange={(e) => setHeroSlideFormData({...heroSlideFormData, isActive: e.target.value === 'true'})}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value={true}>Active</option>
-                        <option value={false}>Inactive</option>
-                      </select>
+                  </div>
+
+                  {/* Basic Settings */}
+                  <div className="border-t pt-6">
+                    <h4 className="text-lg font-medium text-gray-900 mb-4">Basic Settings</h4>
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Display Order</label>
+                        <input
+                          type="number"
+                          value={heroSlideFormData.displayOrder}
+                          onChange={(e) => setHeroSlideFormData({...heroSlideFormData, displayOrder: parseInt(e.target.value) || 0})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Status</label>
+                        <select
+                          value={heroSlideFormData.isActive}
+                          onChange={(e) => setHeroSlideFormData({...heroSlideFormData, isActive: e.target.value === 'true'})}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                          <option value={true}>Active</option>
+                          <option value={false}>Inactive</option>
+                        </select>
+                      </div>
                     </div>
+                  </div>
+
+                  {/* Custom CSS */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Custom CSS (Advanced)</label>
+                    <textarea
+                      value={heroSlideFormData.customCss || ''}
+                      onChange={(e) => setHeroSlideFormData({...heroSlideFormData, customCss: e.target.value})}
+                      rows={3}
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
+                      placeholder="/* Custom CSS for this slide */&#10;.slide-container {&#10;  /* Your custom styles */&#10;}"
+                    />
+                    <p className="mt-1 text-sm text-gray-500">Add custom CSS for advanced styling (optional)</p>
                   </div>
 
                   <div className="flex justify-end space-x-3">

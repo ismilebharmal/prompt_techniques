@@ -85,7 +85,7 @@ const HeroSlides = () => {
         {/* Slideshow Container */}
         <div className="relative">
           {/* Main Slide Display */}
-          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
             {slides.map((slide, index) => (
               <div
                 key={slide.id}
@@ -93,25 +93,59 @@ const HeroSlides = () => {
                   index === currentSlide ? 'opacity-100' : 'opacity-0'
                 }`}
               >
-                <DatabaseImage
-                  imageId={slide.image_id}
-                  alt={slide.title}
-                  className="w-full h-full object-cover"
-                  fallback={
-                    <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center">
-                          <span className="text-2xl">🖼️</span>
+                <div className="relative w-full h-full">
+                  <DatabaseImage
+                    imageId={slide.image_id}
+                    alt={slide.title}
+                    className="w-full h-full"
+                    style={{
+                      objectFit: slide.image_fit || 'cover',
+                      objectPosition: slide.image_position || 'center center',
+                      opacity: (slide.image_opacity || 100) / 100
+                    }}
+                    fallback={
+                      <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                        <div className="text-center text-white">
+                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center">
+                            <span className="text-2xl">🖼️</span>
+                          </div>
+                          <p className="text-lg font-medium">{slide.title}</p>
                         </div>
-                        <p className="text-lg font-medium">{slide.title}</p>
                       </div>
-                    </div>
-                  }
-                />
+                    }
+                  />
+                  
+                  {/* Image Overlay for Better Text Readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+                  
+                  {/* Custom CSS Overlay */}
+                  {slide.custom_css && (
+                    <style jsx>{`
+                      .slide-${slide.id} {
+                        ${slide.custom_css}
+                      }
+                    `}</style>
+                  )}
+                </div>
                 
                 {/* Slide Overlay Content */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
-                  <div className="absolute bottom-0 left-0 right-0 p-8">
+                <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent ${
+                  slide.text_position === 'center' ? 'flex items-center justify-center' :
+                  slide.text_position === 'top-left' ? 'flex items-start justify-start' :
+                  slide.text_position === 'top-center' ? 'flex items-start justify-center' :
+                  slide.text_position === 'top-right' ? 'flex items-start justify-end' :
+                  slide.text_position === 'left' ? 'flex items-center justify-start' :
+                  slide.text_position === 'right' ? 'flex items-center justify-end' :
+                  slide.text_position === 'bottom-right' ? 'flex items-end justify-end' :
+                  slide.text_position === 'bottom-center' ? 'flex items-end justify-center' :
+                  'flex items-end justify-start' // default: bottom-left
+                }`}>
+                  <div className={`p-8 ${
+                    slide.text_position === 'center' ? 'text-center' :
+                    slide.text_position === 'top-left' || slide.text_position === 'left' ? 'text-left' :
+                    slide.text_position === 'top-right' || slide.text_position === 'right' || slide.text_position === 'bottom-right' ? 'text-right' :
+                    'text-left' // default
+                  }`}>
                     <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
                       {slide.title}
                     </h3>

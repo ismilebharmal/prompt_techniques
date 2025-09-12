@@ -11,13 +11,34 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { title, description, imageId, displayOrder } = req.body
+      const { 
+        title, 
+        description, 
+        imageId, 
+        displayOrder, 
+        isActive,
+        imagePosition,
+        imageFit,
+        imageOpacity,
+        textPosition,
+        customCss
+      } = req.body
       
       if (!title || !imageId) {
         return res.status(400).json({ error: 'Title and imageId are required' })
       }
 
-      const slide = await createHeroSlide(title, description, imageId, displayOrder)
+      const slide = await createHeroSlide(
+        title, 
+        description, 
+        imageId, 
+        displayOrder || 0,
+        imagePosition || 'center',
+        imageFit || 'cover',
+        imageOpacity || 100,
+        textPosition || 'bottom-left',
+        customCss || ''
+      )
       res.status(201).json(slide)
     } catch (error) {
       console.error('Error creating hero slide:', error)
@@ -25,13 +46,37 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'PUT') {
     try {
-      const { id, title, description, imageId, displayOrder, isActive } = req.body
+      const { 
+        id, 
+        title, 
+        description, 
+        imageId, 
+        displayOrder, 
+        isActive,
+        imagePosition,
+        imageFit,
+        imageOpacity,
+        textPosition,
+        customCss
+      } = req.body
       
       if (!id) {
         return res.status(400).json({ error: 'ID is required' })
       }
 
-      const slide = await updateHeroSlide(id, title, description, imageId, displayOrder, isActive)
+      const slide = await updateHeroSlide(
+        id, 
+        title, 
+        description, 
+        imageId, 
+        displayOrder, 
+        isActive,
+        imagePosition || 'center',
+        imageFit || 'cover',
+        imageOpacity || 100,
+        textPosition || 'bottom-left',
+        customCss || ''
+      )
       res.status(200).json(slide)
     } catch (error) {
       console.error('Error updating hero slide:', error)
