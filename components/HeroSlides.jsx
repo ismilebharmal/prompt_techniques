@@ -6,6 +6,7 @@ const HeroSlides = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isPlaying, setIsPlaying] = useState(true)
   const [loading, setLoading] = useState(true)
+  const [imageAspectRatios, setImageAspectRatios] = useState({})
 
   useEffect(() => {
     fetchSlides()
@@ -26,6 +27,42 @@ const HeroSlides = () => {
     } catch (error) {
       console.error('Error fetching hero slides:', error)
       setLoading(false)
+    }
+  }
+
+  const detectImageAspectRatio = (imageId) => {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => {
+        const aspectRatio = img.width / img.height
+        setImageAspectRatios(prev => ({
+          ...prev,
+          [imageId]: aspectRatio
+        }))
+        resolve(aspectRatio)
+      }
+      img.onerror = () => {
+        resolve(1) // Default to square if error
+      }
+      img.src = `/api/images/${imageId}`
+    })
+  }
+
+  const getOptimalImageFit = (slide) => {
+    const aspectRatio = imageAspectRatios[slide.image_id]
+    if (!aspectRatio) return slide.image_fit || 'contain'
+    
+    // If it's a portrait image (height > width), use contain
+    if (aspectRatio < 1) {
+      return 'contain'
+    }
+    // If it's a landscape image (width > height), use cover
+    else if (aspectRatio > 1.5) {
+      return 'cover'
+    }
+    // For square or near-square images, use contain
+    else {
+      return 'contain'
     }
   }
 
@@ -90,8 +127,8 @@ const HeroSlides = () => {
 
         {/* Slideshow Container */}
         <div className="relative">
-          {/* Main Slide Display */}
-          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
+          {/* Main Slide Display - Dynamic Height for Portrait Images */}
+          <div className="relative min-h-96 md:min-h-[500px] max-h-[80vh] rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
             {slides.map((slide, index) => (
               <div
                 key={slide.id}
@@ -100,13 +137,17 @@ const HeroSlides = () => {
                 }`}
               >
                 {/* Image Container with Smart Fitting */}
-                <div className="relative w-full h-full overflow-hidden">
+                <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
                   <DatabaseImage
                     imageId={slide.image_id}
                     alt={slide.title}
-                    className="w-full h-full"
+                    className="max-w-full max-h-full"
+                    onLoad={() => {
+                      // Detect aspect ratio when image loads
+                      detectImageAspectRatio(slide.image_id)
+                    }}
                     style={{
-                      objectFit: slide.image_fit || 'cover',
+                      objectFit: getOptimalImageFit(slide),
                       objectPosition: (() => {
                         const position = slide.image_position || 'center'
                         // Convert our position values to valid CSS object-position values
@@ -123,8 +164,8 @@ const HeroSlides = () => {
                           default: return 'center center'
                         }
                       })(),
-                      width: '100%',
-                      height: '100%',
+                      width: 'auto',
+                      height: 'auto',
                       maxWidth: '100%',
                       maxHeight: '100%'
                     }}
@@ -142,6 +183,11 @@ const HeroSlides = () => {
                   
                   {/* Image Overlay for Better Text Readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+                  
+                  {/* Debug Info - Remove in production */}
+                  <div className="absolute top-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                    {getOptimalImageFit(slide)} {imageAspectRatios[slide.image_id] ? `(${(imageAspectRatios[slide.image_id]).toFixed(2)})` : ''}
+                  </div>
                 </div>
                 
                 {/* Slide Overlay Content with Dynamic Positioning */}

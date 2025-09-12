@@ -69,7 +69,7 @@ export default function AdminDashboard() {
     imageId: null,
     displayOrder: 0,
     isActive: true,
-    imageFit: 'cover', // 'cover', 'contain', 'fill', 'scale-down'
+    imageFit: 'contain', // 'cover', 'contain', 'fill', 'scale-down' - Default to contain for portrait images
     imagePosition: 'center', // 'center', 'top', 'bottom', 'left', 'right'
     textPosition: 'bottom-left' // 'bottom-left', 'bottom-center', 'bottom-right', 'center', 'top-left', etc.
   })
@@ -531,7 +531,7 @@ export default function AdminDashboard() {
       imageId: null,
       displayOrder: 0,
       isActive: true,
-      imageFit: 'cover',
+      imageFit: 'contain', // Default to contain for better portrait handling
       imagePosition: 'center',
       textPosition: 'bottom-left'
     })
