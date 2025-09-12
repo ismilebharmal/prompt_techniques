@@ -4,10 +4,14 @@ import Link from 'next/link'
 
 export default function AdminDashboard() {
   const [prompts, setPrompts] = useState([])
+  const [projects, setProjects] = useState([])
+  const [slides, setSlides] = useState([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [editingPrompt, setEditingPrompt] = useState(null)
+  const [editingProject, setEditingProject] = useState(null)
+  const [editingSlide, setEditingSlide] = useState(null)
   const [activeTab, setActiveTab] = useState('overview')
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
@@ -19,6 +23,25 @@ export default function AdminDashboard() {
     prompt: '',
     exampleInput: '',
     exampleOutput: ''
+  })
+  const [projectFormData, setProjectFormData] = useState({
+    title: '',
+    description: '',
+    shortDescription: '',
+    imageUrl: '',
+    githubUrl: '',
+    liveUrl: '',
+    technologies: '',
+    category: '',
+    featured: false,
+    orderIndex: 0
+  })
+  const [slideFormData, setSlideFormData] = useState({
+    title: '',
+    description: '',
+    imageUrl: '',
+    category: '',
+    orderIndex: 0
   })
   const [currentUser, setCurrentUser] = useState(null)
   const router = useRouter()
@@ -32,6 +55,26 @@ export default function AdminDashboard() {
       console.error('Error fetching prompts:', error)
     } finally {
       setLoading(false)
+    }
+  }, [])
+
+  const fetchProjects = useCallback(async () => {
+    try {
+      const response = await fetch('/api/projects')
+      const data = await response.json()
+      setProjects(data.data || [])
+    } catch (error) {
+      console.error('Error fetching projects:', error)
+    }
+  }, [])
+
+  const fetchSlides = useCallback(async () => {
+    try {
+      const response = await fetch('/api/slides')
+      const data = await response.json()
+      setSlides(data.data || [])
+    } catch (error) {
+      console.error('Error fetching slides:', error)
     }
   }, [])
 
@@ -61,7 +104,9 @@ export default function AdminDashboard() {
     }
 
     fetchPrompts()
-  }, [router, fetchPrompts])
+    fetchProjects()
+    fetchSlides()
+  }, [router, fetchPrompts, fetchProjects, fetchSlides])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -164,7 +209,10 @@ export default function AdminDashboard() {
 
   const handleCloseModal = () => {
     setShowEditModal(false)
+    setShowAddForm(false)
     setEditingPrompt(null)
+    setEditingProject(null)
+    setEditingSlide(null)
     setFormData({
       title: '',
       category: '',
@@ -173,6 +221,25 @@ export default function AdminDashboard() {
       prompt: '',
       exampleInput: '',
       exampleOutput: ''
+    })
+    setProjectFormData({
+      title: '',
+      description: '',
+      shortDescription: '',
+      imageUrl: '',
+      githubUrl: '',
+      liveUrl: '',
+      technologies: '',
+      category: '',
+      featured: false,
+      orderIndex: 0
+    })
+    setSlideFormData({
+      title: '',
+      description: '',
+      imageUrl: '',
+      category: '',
+      orderIndex: 0
     })
   }
 
@@ -305,6 +372,8 @@ export default function AdminDashboard() {
             {[
               { id: 'overview', name: 'Overview', icon: '📊' },
               { id: 'prompts', name: 'Manage Prompts', icon: '📝' },
+              { id: 'projects', name: 'Featured Projects', icon: '🚀' },
+              { id: 'slides', name: 'Work Slides', icon: '🖼️' },
               { id: 'analytics', name: 'Analytics', icon: '📈' },
               { id: 'settings', name: 'Settings', icon: '⚙️' }
             ].map((tab) => (
@@ -755,6 +824,241 @@ export default function AdminDashboard() {
           </div>
         )}
 
+        {/* Projects Tab */}
+        {activeTab === 'projects' && (
+          <div className="space-y-6">
+            {/* Projects Header */}
+            <div className="bg-white shadow rounded-lg p-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Featured Projects</h2>
+                  <p className="text-gray-600 mt-1">Manage your portfolio projects</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setEditingProject(null)
+                    setProjectFormData({
+                      title: '',
+                      description: '',
+                      shortDescription: '',
+                      imageUrl: '',
+                      githubUrl: '',
+                      liveUrl: '',
+                      technologies: '',
+                      category: '',
+                      featured: false,
+                      orderIndex: 0
+                    })
+                    setShowAddForm(true)
+                  }}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                >
+                  Add New Project
+                </button>
+              </div>
+            </div>
+
+            {/* Projects List */}
+            <div className="bg-white shadow rounded-lg">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">All Projects ({projects.length})</h3>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {projects.map((project) => (
+                  <div key={project.id} className="p-6 hover:bg-gray-50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3">
+                          <h4 className="text-lg font-medium text-gray-900">{project.title}</h4>
+                          {project.featured && (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                              Featured
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{project.shortDescription}</p>
+                        <div className="flex items-center space-x-4 mt-2">
+                          <span className="text-sm text-gray-500">Category: {project.category}</span>
+                          <span className="text-sm text-gray-500">Order: {project.orderIndex}</span>
+                          {project.technologies && project.technologies.length > 0 && (
+                            <div className="flex space-x-1">
+                              {project.technologies.slice(0, 3).map((tech, index) => (
+                                <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                  {tech}
+                                </span>
+                              ))}
+                              {project.technologies.length > 3 && (
+                                <span className="text-xs text-gray-500">+{project.technologies.length - 3} more</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => {
+                            setEditingProject(project)
+                            setProjectFormData({
+                              title: project.title,
+                              description: project.description,
+                              shortDescription: project.shortDescription,
+                              imageUrl: project.imageUrl,
+                              githubUrl: project.githubUrl,
+                              liveUrl: project.liveUrl,
+                              technologies: project.technologies.join(', '),
+                              category: project.category,
+                              featured: project.featured,
+                              orderIndex: project.orderIndex
+                            })
+                            setShowAddForm(true)
+                          }}
+                          className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={async () => {
+                            if (confirm('Are you sure you want to delete this project?')) {
+                              try {
+                                const response = await fetch(`/api/projects?id=${project.id}`, {
+                                  method: 'DELETE'
+                                })
+                                if (response.ok) {
+                                  fetchProjects()
+                                  alert('Project deleted successfully!')
+                                } else {
+                                  alert('Error deleting project')
+                                }
+                              } catch (error) {
+                                console.error('Error deleting project:', error)
+                                alert('Error deleting project')
+                              }
+                            }
+                          }}
+                          className="text-red-600 hover:text-red-900 text-sm font-medium"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {projects.length === 0 && (
+                  <div className="p-6 text-center text-gray-500">
+                    No projects found. Add your first project to get started.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Slides Tab */}
+        {activeTab === 'slides' && (
+          <div className="space-y-6">
+            {/* Slides Header */}
+            <div className="bg-white shadow rounded-lg p-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Work & Workshop Slides</h2>
+                  <p className="text-gray-600 mt-1">Manage your work and workshop images</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setEditingSlide(null)
+                    setSlideFormData({
+                      title: '',
+                      description: '',
+                      imageUrl: '',
+                      category: '',
+                      orderIndex: 0
+                    })
+                    setShowAddForm(true)
+                  }}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                >
+                  Add New Slide
+                </button>
+              </div>
+            </div>
+
+            {/* Slides Grid */}
+            <div className="bg-white shadow rounded-lg">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">All Slides ({slides.length})</h3>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {slides.map((slide) => (
+                    <div key={slide.id} className="bg-gray-50 rounded-lg overflow-hidden">
+                      <div className="aspect-w-16 aspect-h-9">
+                        <img
+                          src={slide.imageUrl}
+                          alt={slide.title}
+                          className="w-full h-48 object-cover"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h4 className="text-lg font-medium text-gray-900">{slide.title}</h4>
+                        <p className="text-sm text-gray-600 mt-1">{slide.description}</p>
+                        <div className="flex items-center justify-between mt-3">
+                          <span className="text-xs text-gray-500">{slide.category}</span>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => {
+                                setEditingSlide(slide)
+                                setSlideFormData({
+                                  title: slide.title,
+                                  description: slide.description,
+                                  imageUrl: slide.imageUrl,
+                                  category: slide.category,
+                                  orderIndex: slide.orderIndex
+                                })
+                                setShowAddForm(true)
+                              }}
+                              className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={async () => {
+                                if (confirm('Are you sure you want to delete this slide?')) {
+                                  try {
+                                    const response = await fetch(`/api/slides?id=${slide.id}`, {
+                                      method: 'DELETE'
+                                    })
+                                    if (response.ok) {
+                                      fetchSlides()
+                                      alert('Slide deleted successfully!')
+                                    } else {
+                                      alert('Error deleting slide')
+                                    }
+                                  } catch (error) {
+                                    console.error('Error deleting slide:', error)
+                                    alert('Error deleting slide')
+                                  }
+                                }
+                              }}
+                              className="text-red-600 hover:text-red-900 text-sm font-medium"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {slides.length === 0 && (
+                    <div className="col-span-full text-center text-gray-500 py-8">
+                      No slides found. Add your first slide to get started.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Analytics Tab */}
         {activeTab === 'analytics' && (
           <div className="space-y-6">
@@ -922,6 +1226,357 @@ export default function AdminDashboard() {
                       className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       Update Prompt
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Project Form Modal */}
+        {showAddForm && (editingProject !== null || activeTab === 'projects') && (
+          <div 
+            className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+            onClick={handleCloseModal}
+          >
+            <div 
+              className="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mt-3">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {editingProject ? 'Edit Project' : 'Add New Project'}
+                  </h3>
+                  <button
+                    onClick={handleCloseModal}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <form onSubmit={async (e) => {
+                  e.preventDefault()
+                  try {
+                    const projectData = {
+                      ...projectFormData,
+                      technologies: projectFormData.technologies.split(',').map(tech => tech.trim()).filter(tech => tech)
+                    }
+
+                    if (editingProject) {
+                      const response = await fetch(`/api/projects?id=${editingProject.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(projectData)
+                      })
+                      if (response.ok) {
+                        fetchProjects()
+                        alert('Project updated successfully!')
+                      } else {
+                        alert('Error updating project')
+                      }
+                    } else {
+                      const response = await fetch('/api/projects', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(projectData)
+                      })
+                      if (response.ok) {
+                        fetchProjects()
+                        alert('Project added successfully!')
+                      } else {
+                        alert('Error adding project')
+                      }
+                    }
+                    handleCloseModal()
+                  } catch (error) {
+                    console.error('Error saving project:', error)
+                    alert('Error saving project')
+                  }
+                }} className="space-y-6">
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Project Title</label>
+                      <input
+                        type="text"
+                        value={projectFormData.title}
+                        onChange={(e) => setProjectFormData({...projectFormData, title: e.target.value})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Category</label>
+                      <select
+                        value={projectFormData.category}
+                        onChange={(e) => setProjectFormData({...projectFormData, category: e.target.value})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        required
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Web Application">Web Application</option>
+                        <option value="Mobile App">Mobile App</option>
+                        <option value="Desktop App">Desktop App</option>
+                        <option value="API">API</option>
+                        <option value="Library">Library</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Short Description</label>
+                    <input
+                      type="text"
+                      value={projectFormData.shortDescription}
+                      onChange={(e) => setProjectFormData({...projectFormData, shortDescription: e.target.value})}
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Brief description for display"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Full Description</label>
+                    <textarea
+                      value={projectFormData.description}
+                      onChange={(e) => setProjectFormData({...projectFormData, description: e.target.value})}
+                      rows={4}
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Detailed project description"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Image URL</label>
+                      <input
+                        type="url"
+                        value={projectFormData.imageUrl}
+                        onChange={(e) => setProjectFormData({...projectFormData, imageUrl: e.target.value})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="https://example.com/image.jpg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Technologies (comma-separated)</label>
+                      <input
+                        type="text"
+                        value={projectFormData.technologies}
+                        onChange={(e) => setProjectFormData({...projectFormData, technologies: e.target.value})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="React, Node.js, MongoDB"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">GitHub URL</label>
+                      <input
+                        type="url"
+                        value={projectFormData.githubUrl}
+                        onChange={(e) => setProjectFormData({...projectFormData, githubUrl: e.target.value})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="https://github.com/username/repo"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Live URL</label>
+                      <input
+                        type="url"
+                        value={projectFormData.liveUrl}
+                        onChange={(e) => setProjectFormData({...projectFormData, liveUrl: e.target.value})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="https://project-demo.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Order Index</label>
+                      <input
+                        type="number"
+                        value={projectFormData.orderIndex}
+                        onChange={(e) => setProjectFormData({...projectFormData, orderIndex: parseInt(e.target.value) || 0})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        min="0"
+                      />
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="featured"
+                        checked={projectFormData.featured}
+                        onChange={(e) => setProjectFormData({...projectFormData, featured: e.target.checked})}
+                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="featured" className="ml-2 block text-sm text-gray-900">
+                        Featured Project
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      type="button"
+                      onClick={handleCloseModal}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      {editingProject ? 'Update Project' : 'Add Project'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Slide Form Modal */}
+        {showAddForm && (editingSlide !== null || activeTab === 'slides') && (
+          <div 
+            className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+            onClick={handleCloseModal}
+          >
+            <div 
+              className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mt-3">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {editingSlide ? 'Edit Slide' : 'Add New Slide'}
+                  </h3>
+                  <button
+                    onClick={handleCloseModal}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <form onSubmit={async (e) => {
+                  e.preventDefault()
+                  try {
+                    if (editingSlide) {
+                      const response = await fetch(`/api/slides?id=${editingSlide.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(slideFormData)
+                      })
+                      if (response.ok) {
+                        fetchSlides()
+                        alert('Slide updated successfully!')
+                      } else {
+                        alert('Error updating slide')
+                      }
+                    } else {
+                      const response = await fetch('/api/slides', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(slideFormData)
+                      })
+                      if (response.ok) {
+                        fetchSlides()
+                        alert('Slide added successfully!')
+                      } else {
+                        alert('Error adding slide')
+                      }
+                    }
+                    handleCloseModal()
+                  } catch (error) {
+                    console.error('Error saving slide:', error)
+                    alert('Error saving slide')
+                  }
+                }} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Slide Title</label>
+                    <input
+                      type="text"
+                      value={slideFormData.title}
+                      onChange={(e) => setSlideFormData({...slideFormData, title: e.target.value})}
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea
+                      value={slideFormData.description}
+                      onChange={(e) => setSlideFormData({...slideFormData, description: e.target.value})}
+                      rows={3}
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Brief description of the work or workshop"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Image URL</label>
+                    <input
+                      type="url"
+                      value={slideFormData.imageUrl}
+                      onChange={(e) => setSlideFormData({...slideFormData, imageUrl: e.target.value})}
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="https://example.com/image.jpg"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Category</label>
+                      <select
+                        value={slideFormData.category}
+                        onChange={(e) => setSlideFormData({...slideFormData, category: e.target.value})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Conference">Conference</option>
+                        <option value="Event">Event</option>
+                        <option value="Work">Work</option>
+                        <option value="Presentation">Presentation</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Order Index</label>
+                      <input
+                        type="number"
+                        value={slideFormData.orderIndex}
+                        onChange={(e) => setSlideFormData({...slideFormData, orderIndex: parseInt(e.target.value) || 0})}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      type="button"
+                      onClick={handleCloseModal}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      {editingSlide ? 'Update Slide' : 'Add Slide'}
                     </button>
                   </div>
                 </form>

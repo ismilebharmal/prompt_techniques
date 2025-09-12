@@ -142,12 +142,6 @@ export default function Home({ showToast }) {
               >
                 ← Back to Portfolio
               </Link>
-              <Link
-                href="/admin/login"
-                className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors rounded-md hover:bg-gray-100"
-              >
-                Admin
-              </Link>
               <span className="text-sm text-gray-500">
                 {filteredPrompts.length} prompts
               </span>

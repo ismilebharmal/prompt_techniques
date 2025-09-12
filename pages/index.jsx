@@ -8,12 +8,53 @@ export default function Portfolio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [projects, setProjects] = useState([])
+  const [slides, setSlides] = useState([])
+  const [loading, setLoading] = useState(true)
   const scrollPosition = useScrollPosition()
 
   useEffect(() => {
     setIsScrolled(scrollPosition > 50)
     setShowBackToTop(scrollPosition > 300)
   }, [scrollPosition])
+
+  // Fetch projects and slides from database
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [projectsRes, slidesRes] = await Promise.all([
+          fetch('/api/projects?featured=true'),
+          fetch('/api/slides')
+        ])
+        
+        const projectsData = await projectsRes.json()
+        const slidesData = await slidesRes.json()
+        
+        setProjects(projectsData.data || [])
+        setSlides(slidesData.data || [])
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        // Fallback to hardcoded data if API fails
+        setProjects([
+          {
+            id: 1,
+            title: 'Prompt Techniques Hub',
+            description: 'A comprehensive AI prompt library with advanced filtering, admin dashboard, and database management.',
+            shortDescription: 'AI prompt library with search and filtering',
+            technologies: ['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt'],
+            imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
+            liveUrl: '/',
+            githubUrl: 'https://github.com/ismilebharmal/prompt_techniques',
+            featured: true
+          }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId)
@@ -34,35 +75,6 @@ export default function Portfolio() {
     { name: 'Docker', level: 70, color: 'from-blue-600 to-blue-800' }
   ]
 
-  const projects = [
-    {
-      title: 'Prompt Techniques Hub',
-      description: 'A comprehensive AI prompt library with advanced filtering, admin dashboard, and database management.',
-      technologies: ['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt'],
-      image: '/api/placeholder/600/400',
-      liveUrl: '/',
-      githubUrl: 'https://github.com/ismilebharmal/prompt_techniques',
-      featured: true
-    },
-    {
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce solution with payment integration, inventory management, and admin panel.',
-      technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'JWT'],
-      image: '/api/placeholder/600/400',
-      liveUrl: '#',
-      githubUrl: '#',
-      featured: false
-    },
-    {
-      title: 'Task Management App',
-      description: 'Collaborative task management tool with real-time updates, team collaboration, and analytics.',
-      technologies: ['Vue.js', 'Express', 'Socket.io', 'PostgreSQL', 'Redis'],
-      image: '/api/placeholder/600/400',
-      liveUrl: '#',
-      githubUrl: '#',
-      featured: false
-    }
-  ]
 
   return (
     <>
@@ -261,61 +273,96 @@ export default function Portfolio() {
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Featured Projects
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map((project, index) => (
-                <div
-                  key={project.title}
-                  className={`bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 ${
-                    project.featured ? 'md:col-span-2 lg:col-span-1' : ''
-                  }`}
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
-                  <div className="h-48 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
-                        <span className="text-2xl">🚀</span>
-                      </div>
-                      <p className="text-gray-400">Project Preview</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-semibold">{project.title}</h3>
-                      {project.featured && (
-                        <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-2 py-1 rounded-full text-xs font-bold">
-                          Featured
-                        </span>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
+                <p className="mt-4 text-gray-400">Loading projects...</p>
+              </div>
+            ) : projects.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {projects.map((project, index) => (
+                  <div
+                    key={project.id}
+                    className={`bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 ${
+                      project.featured ? 'md:col-span-2 lg:col-span-1' : ''
+                    }`}
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                  >
+                    <div className="h-48 relative overflow-hidden">
+                      {project.imageUrl ? (
+                        <img
+                          src={project.imageUrl}
+                          alt={project.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                          <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
+                              <span className="text-2xl">🚀</span>
+                            </div>
+                            <p className="text-gray-400">Project Preview</p>
+                          </div>
+                        </div>
                       )}
                     </div>
-                    <p className="text-gray-300 mb-4">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="bg-gray-700/50 text-blue-400 px-2 py-1 rounded text-xs"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex gap-3">
-                      <a
-                        href={project.liveUrl}
-                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-center py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
-                      >
-                        Live Demo
-                      </a>
-                      <a
-                        href={project.githubUrl}
-                        className="flex-1 border border-gray-600 text-center py-2 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-300"
-                      >
-                        GitHub
-                      </a>
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-xl font-semibold">{project.title}</h3>
+                        {project.featured && (
+                          <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-2 py-1 rounded-full text-xs font-bold">
+                            Featured
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-gray-300 mb-4">
+                        {project.shortDescription || project.description}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.technologies && project.technologies.map((tech) => (
+                          <span
+                            key={tech}
+                            className="bg-gray-700/50 text-blue-400 px-2 py-1 rounded text-xs"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex gap-3">
+                        {project.liveUrl && (
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-center py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+                          >
+                            Live Demo
+                          </a>
+                        )}
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 border border-gray-600 text-center py-2 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-300"
+                          >
+                            GitHub
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-700/50 flex items-center justify-center">
+                  <span className="text-2xl">📁</span>
                 </div>
-              ))}
-            </div>
+                <p className="text-gray-400">No projects available at the moment.</p>
+                <p className="text-gray-500 text-sm mt-2">Check back later for updates!</p>
+              </div>
+            )}
           </div>
         </section>
 
