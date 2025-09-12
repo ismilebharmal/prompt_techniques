@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import DatabaseImage from './DatabaseImage'
 import SlideDetailModal from './SlideDetailModal'
 
@@ -8,11 +8,7 @@ export default function WorkSlidesSection() {
   const [selectedSlide, setSelectedSlide] = useState(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
 
-  useEffect(() => {
-    fetchSlides()
-  }, [])
-
-  const fetchSlides = async () => {
+  const fetchSlides = useCallback(async () => {
     try {
       const response = await fetch('/api/slides/featured')
       const data = await response.json()
@@ -24,7 +20,11 @@ export default function WorkSlidesSection() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchSlides()
+  }, [fetchSlides])
 
   const openSlideDetail = (slide) => {
     setSelectedSlide(slide)
