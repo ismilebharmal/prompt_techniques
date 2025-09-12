@@ -1,7 +1,7 @@
 {
-  "name": "prompt-techniques-hub",
+  "name": "ismile-bharmal-portfolio",
   "version": "1.0.0",
-  "description": "A filterable prompt library built with Next.js, TailwindCSS, and Neon PostgreSQL",
+  "description": "Portfolio of Ismile Bharmal - Full Stack Developer with AI prompt templates and modern web applications",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
@@ -11,9 +11,12 @@
     "seed": "node scripts/seed-neon-direct.js"
   },
   "keywords": [
+    "portfolio",
+    "ismile-bharmal",
+    "fullstack-developer",
+    "react",
     "nextjs",
-    "prompts",
-    "ai",
+    "ai-prompts",
     "postgresql",
     "neon",
     "tailwindcss"

@@ -1,252 +1,233 @@
-# Prompt Techniques Hub
+# Ismile Bharmal - Portfolio & AI Prompt Hub
 
-A production-ready Next.js application for discovering, sharing, and managing AI prompts. Built with Next.js, TailwindCSS, and MongoDB.
+A modern portfolio website showcasing my work as a Full Stack Developer, featuring an integrated AI prompt templates library.
 
-![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
-![React](https://img.shields.io/badge/React-18.2-blue)
-![MongoDB](https://img.shields.io/badge/MongoDB-6.3-green)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.3-38B2AC)
+## 🌟 Features
 
-## Features
+### Portfolio Website
+- **Modern Design**: Dark gradient theme with glassmorphism effects
+- **Responsive Layout**: Mobile-first design that works on all devices
+- **Interactive UI**: Smooth animations, hover effects, and scroll animations
+- **Professional Sections**: About, Skills, Projects, Contact, and AI Prompts
 
-- 🔍 **Search & Filter**: Find prompts by category, tags, or keywords
-- 📋 **One-Click Copy**: Copy prompts to clipboard with confirmation
-- ❤️ **Favorites**: Save favorite prompts locally
-- 📱 **Responsive Design**: Works perfectly on desktop and mobile
-- 🚀 **Fast Performance**: Optimized with caching and connection pooling
-- 🔒 **API Protection**: Secure POST endpoints with API key authentication
-- 🌱 **Easy Seeding**: Populate database with sample data
+### AI Prompt Templates
+- **Curated Collection**: 50+ professional AI prompt templates
+- **Categorized Library**: Organized by use case (Code, Mail, Data, Content, Role, Verifier)
+- **Search & Filter**: Advanced filtering and search functionality
+- **Copy-Paste Ready**: Easy-to-use templates with examples
 
-## Quick Start
+### Admin Dashboard
+- **Secure Authentication**: Database-driven admin login system
+- **CRUD Operations**: Create, read, update, and delete prompts
+- **User Management**: Admin user system with password hashing
+- **Real-time Updates**: Live data synchronization
 
-### 1. Clone and Install
+## 🚀 Tech Stack
 
-```bash
-# Clone the repository
-git clone <your-repo-url>
-cd prompt-techniques-hub
+### Frontend
+- **Next.js 14** - React framework with SSR
+- **React 18** - Modern React with hooks
+- **TailwindCSS** - Utility-first CSS framework
+- **Custom Hooks** - Scroll animations and interactions
 
-# Install dependencies
-npm install
-```
+### Backend
+- **Neon PostgreSQL** - Serverless PostgreSQL database
+- **bcryptjs** - Password hashing and security
+- **Next.js API Routes** - Serverless API endpoints
 
-### 2. Environment Setup
+### Database
+- **PostgreSQL** - Relational database
+- **Neon** - Serverless PostgreSQL hosting
+- **Database Tables**:
+  - `prompts` - AI prompt templates
+  - `admin_users` - Admin authentication
 
-Create a `.env.local` file in the root directory:
-
-```env
-# MongoDB Connection (Required)
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/prompt-hub?retryWrites=true&w=majority
-
-# API Key for protected POST endpoints (Required)
-API_KEY=your-secure-api-key-here
-
-# Optional: Vercel URL for production
-NEXT_PUBLIC_VERCEL_URL=https://your-app.vercel.app
-```
-
-### 3. MongoDB Atlas Setup
-
-1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
-2. Create a free account and cluster
-3. Create a database user with read/write permissions
-4. Whitelist your IP address (or use 0.0.0.0/0 for development)
-5. Get your connection string and add it to `.env.local`
-
-### 4. Seed the Database
-
-```bash
-# Seed the database with sample prompts
-npm run seed
-```
-
-### 5. Start Development Server
-
-```bash
-# Start the development server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run seed` - Seed database with sample data
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-prompt-techniques-hub/
-├── components/          # React components
-│   ├── FilterTabs.jsx   # Category filter tabs
-│   ├── PromptCard.jsx   # Individual prompt card
-│   └── PromptModal.jsx  # Detailed prompt view
-├── data/               # Seed data
-│   └── prompts.json    # Sample prompts
-├── lib/                # Utility functions
-│   └── mongodb.js      # Database connection
-├── pages/              # Next.js pages
-│   ├── api/            # API routes
-│   │   └── prompts/    # Prompts API endpoints
-│   ├── _app.jsx        # App wrapper with toast notifications
-│   └── index.jsx       # Home page
-├── scripts/            # Utility scripts
-│   └── seed.js         # Database seeding script
-├── styles/             # Global styles
-│   └── globals.css     # TailwindCSS imports
-└── public/             # Static assets
+├── pages/
+│   ├── index.jsx          # Main portfolio landing page
+│   ├── prompts.jsx        # AI prompt templates library
+│   ├── portfolio.jsx      # Standalone portfolio page
+│   ├── admin/             # Admin dashboard
+│   └── api/               # API endpoints
+├── components/            # Reusable React components
+├── lib/                   # Database and utility functions
+├── hooks/                 # Custom React hooks
+├── styles/                # Global CSS styles
+└── scripts/               # Database seeding scripts
 ```
 
-## API Endpoints
+## 🎯 Site Structure
 
-### GET /api/prompts
-Retrieve prompts with optional filtering.
+### Main Landing Page (`/`)
+- **Hero Section**: Introduction and call-to-action
+- **About Section**: Personal background and stats
+- **Skills Section**: Technology stack with progress bars
+- **Projects Section**: Featured work and projects
+- **Prompts Section**: AI prompt templates showcase
+- **Contact Section**: Ways to get in touch
 
-**Query Parameters:**
-- `category` - Filter by category (Code, Mail, Data, etc.)
-- `q` - Search query for title, description, or tags
-- `limit` - Maximum number of results (default: 50)
+### AI Prompt Library (`/prompts`)
+- **Search & Filter**: Find prompts by category or keywords
+- **Prompt Cards**: Detailed view of each template
+- **Copy Functionality**: One-click copy to clipboard
+- **Favorites System**: Save favorite prompts
 
-**Example:**
-```bash
-curl "http://localhost:3000/api/prompts?category=Code&q=javascript"
-```
+### Admin Dashboard (`/admin`)
+- **Login System**: Secure authentication
+- **Prompt Management**: CRUD operations for prompts
+- **User Management**: Admin user administration
+- **Analytics**: Usage statistics and insights
 
-### POST /api/prompts
-Create a new prompt (requires API key).
+## 🔧 Getting Started
 
-**Headers:**
-```
-Authorization: Bearer your-api-key
-Content-Type: application/json
-```
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Neon PostgreSQL database
 
-**Body:**
-```json
-{
-  "title": "My New Prompt",
-  "category": "Code",
-  "tags": ["javascript", "debugging"],
-  "description": "A helpful prompt for debugging",
-  "prompt": "SYSTEM: You are a debugging expert...",
-  "exampleInput": "Sample input",
-  "exampleOutput": "Sample output"
-}
-```
+### Installation
 
-## Deployment
-
-### Deploy to Vercel
-
-1. **Push to GitHub:**
+1. **Clone the repository**
    ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
+   git clone https://github.com/ismilebharmal/prompt_techniques.git
+   cd prompt_techniques
    ```
 
-2. **Connect to Vercel:**
-   - Go to [Vercel](https://vercel.com)
-   - Import your GitHub repository
-   - Add environment variables in Vercel dashboard:
-     - `MONGODB_URI`
-     - `API_KEY`
-   - Deploy!
-
-3. **Seed Production Database:**
+2. **Install dependencies**
    ```bash
-   # Run locally with production MongoDB URI
-   MONGODB_URI=your-production-uri npm run seed
+   npm install
    ```
 
-### Environment Variables in Vercel
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Add your database URL:
+   ```
+   DATABASE_URL=postgresql://username:password@host:port/database
+   ```
 
-1. Go to your project dashboard
-2. Click on "Settings" → "Environment Variables"
-3. Add the following variables:
-   - `MONGODB_URI` - Your MongoDB Atlas connection string
-   - `API_KEY` - A secure random string for API protection
+4. **Set up the database**
+   ```bash
+   # Create admin users table
+   npm run setup-admin
+   
+   # Seed the database with prompts
+   npm run seed
+   ```
 
-## Security Notes
+5. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-### API Key Protection
-- The POST endpoint is protected with a simple API key
-- Store your API key securely and never commit it to version control
-- For production, consider implementing more sophisticated authentication
+6. **Open your browser**
+   Navigate to `http://localhost:3000`
 
-### User Data
-- No user data is stored in the database
-- Favorites are stored locally in browser localStorage
-- No personal information is collected or transmitted
+## 🚀 Deployment
 
-### MongoDB Security
-- Use MongoDB Atlas IP whitelisting
-- Create database users with minimal required permissions
-- Enable MongoDB Atlas security features (encryption at rest, network access)
+### Vercel (Recommended)
 
-## Customization
+1. **Connect your GitHub repository to Vercel**
+2. **Set environment variables** in Vercel dashboard:
+   - `DATABASE_URL`: Your Neon PostgreSQL connection string
+3. **Deploy**: Vercel will automatically deploy on every push
 
-### Adding New Categories
-1. Update the `categories` array in `pages/index.jsx`
-2. Add new prompts with the desired category in `data/prompts.json`
-3. Run `npm run seed` to update the database
+### Custom Domain
 
-### Styling
-- Modify `tailwind.config.js` for theme customization
-- Update `styles/globals.css` for global styles
-- Components use TailwindCSS classes for styling
+To use a custom domain like `ismile-bharmal.vercel.app`:
 
-### Database Schema
-The prompts collection uses this schema:
-```javascript
-{
-  _id: ObjectId,
-  title: String,
-  category: String,
-  tags: [String],
-  description: String,
-  prompt: String,
-  exampleInput: String,
-  exampleOutput: String,
-  createdAt: Date,
-  updatedAt: Date
-}
+1. **Update Vercel project settings**
+2. **Add custom domain** in Vercel dashboard
+3. **Update DNS records** as instructed by Vercel
+
+## 🔐 Admin Access
+
+### Default Admin Credentials
+- **Username**: `ismile`
+- **Password**: `ismile@8866`
+
+### Adding New Admin Users
+Use the admin dashboard or create a script to add new admin users to the database.
+
+## 📊 Database Schema
+
+### Prompts Table
+```sql
+CREATE TABLE prompts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  category VARCHAR(100) NOT NULL,
+  tags JSONB,
+  description TEXT,
+  prompt TEXT NOT NULL,
+  example_input TEXT,
+  example_output TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
-## Contributing
+### Admin Users Table
+```sql
+CREATE TABLE admin_users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  email VARCHAR(100),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## 🎨 Customization
+
+### Colors and Styling
+- Edit `tailwind.config.js` for color schemes
+- Modify `styles/globals.css` for global styles
+- Update component styles in individual files
+
+### Content
+- Update personal information in `pages/index.jsx`
+- Modify project data in the projects array
+- Add new skills in the skills array
+
+### Prompts
+- Add new prompts via admin dashboard
+- Modify categories in the categories array
+- Update prompt data structure as needed
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## License
+## 📄 License
 
-MIT License - see LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 📞 Contact
 
-For issues and questions:
-1. Check the [Issues](https://github.com/your-username/prompt-techniques-hub/issues) page
-2. Create a new issue with detailed information
-3. Include error messages and steps to reproduce
+**Ismile Bharmal**
+- **Email**: ismile@example.com
+- **GitHub**: [@ismilebharmal](https://github.com/ismilebharmal)
+- **LinkedIn**: [ismilebharmal](https://linkedin.com/in/ismilebharmal)
+- **Portfolio**: [ismile-bharmal.vercel.app](https://ismile-bharmal.vercel.app)
 
-## Roadmap
+## 🙏 Acknowledgments
 
-- [ ] User authentication and accounts
-- [ ] Prompt rating and reviews
-- [ ] Advanced search filters
-- [ ] Prompt sharing and collaboration
-- [ ] API rate limiting improvements
-- [ ] Admin dashboard for prompt management
-- [ ] Export/import functionality
-- [ ] Mobile app (React Native)
+- **Next.js** team for the amazing framework
+- **TailwindCSS** for the utility-first CSS
+- **Neon** for the serverless PostgreSQL hosting
+- **Vercel** for the seamless deployment platform
 
 ---
 
-Built with ❤️ using Next.js, MongoDB, and TailwindCSS.
+Built with ❤️ by [Ismile Bharmal](https://github.com/ismilebharmal)

@@ -1,301 +1,515 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import PromptCard from '../components/PromptCard'
-import PromptModal from '../components/PromptModal'
-import FilterTabs from '../components/FilterTabs'
+import Head from 'next/head'
+import { useScrollPosition } from '../hooks/useScrollAnimation'
 
-const categories = ['All', 'Code', 'Mail', 'Data', 'Content', 'Role', 'Verifier']
-
-export default function Home({ showToast }) {
-  const [prompts, setPrompts] = useState([])
-  const [filteredPrompts, setFilteredPrompts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedPrompt, setSelectedPrompt] = useState(null)
-  const [favorites, setFavorites] = useState(new Set())
-
-  // Load favorites from localStorage
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem('prompt-favorites')
-    if (savedFavorites) {
-      setFavorites(new Set(JSON.parse(savedFavorites)))
-    }
-  }, [])
-
-  // Fetch prompts from API
-  const fetchPrompts = useCallback(async () => {
-    try {
-      setLoading(true)
-      
-      const response = await fetch(`/api/prompts-neon?t=${Date.now()}`)
-      const data = await response.json()
-      console.log('Fetched data:', data.length, 'prompts')
-      setPrompts(data)
-      setFilteredPrompts(data)
-    } catch (error) {
-      console.error('Error fetching prompts:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+export default function Portfolio() {
+  const [activeSection, setActiveSection] = useState('home')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const scrollPosition = useScrollPosition()
 
   useEffect(() => {
-    fetchPrompts()
-  }, [fetchPrompts])
+    setIsScrolled(scrollPosition > 50)
+    setShowBackToTop(scrollPosition > 300)
+  }, [scrollPosition])
 
-  // Auto-refresh when page becomes visible (user returns to tab)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        fetchPrompts()
-      }
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
     }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [fetchPrompts])
-
-  // Auto-refresh on window focus (user switches back to window)
-  useEffect(() => {
-    const handleFocus = () => {
-      fetchPrompts()
-    }
-
-    window.addEventListener('focus', handleFocus)
-    
-    return () => {
-      window.removeEventListener('focus', handleFocus)
-    }
-  }, [fetchPrompts])
-
-  // Filter prompts based on category and search
-  useEffect(() => {
-    let filtered = prompts
-
-    if (selectedCategory !== 'All') {
-      filtered = filtered.filter(prompt => prompt.category === selectedCategory)
-    }
-
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(prompt =>
-        prompt.title.toLowerCase().includes(query) ||
-        prompt.description.toLowerCase().includes(query) ||
-        prompt.tags.some(tag => tag.toLowerCase().includes(query))
-      )
-    }
-
-    setFilteredPrompts(filtered)
-  }, [prompts, selectedCategory, searchQuery])
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value)
+    setIsMenuOpen(false)
   }
 
-  const toggleFavorite = (promptId) => {
-    const newFavorites = new Set(favorites)
-    if (newFavorites.has(promptId)) {
-      newFavorites.delete(promptId)
-    } else {
-      newFavorites.add(promptId)
-    }
-    setFavorites(newFavorites)
-    localStorage.setItem('prompt-favorites', JSON.stringify([...newFavorites]))
-  }
+  const skills = [
+    { name: 'JavaScript', level: 95, color: 'from-yellow-400 to-orange-500' },
+    { name: 'React/Next.js', level: 90, color: 'from-blue-400 to-cyan-500' },
+    { name: 'Node.js', level: 85, color: 'from-green-400 to-emerald-500' },
+    { name: 'Python', level: 80, color: 'from-blue-500 to-indigo-600' },
+    { name: 'PostgreSQL', level: 85, color: 'from-purple-400 to-pink-500' },
+    { name: 'MongoDB', level: 80, color: 'from-green-500 to-teal-600' },
+    { name: 'AWS/Vercel', level: 75, color: 'from-orange-400 to-red-500' },
+    { name: 'Docker', level: 70, color: 'from-blue-600 to-blue-800' }
+  ]
 
-  const copyToClipboard = async (text) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      showToast('Copied to clipboard!')
-    } catch (error) {
-      console.error('Failed to copy:', error)
-      showToast('Failed to copy to clipboard')
+  const projects = [
+    {
+      title: 'Prompt Techniques Hub',
+      description: 'A comprehensive AI prompt library with advanced filtering, admin dashboard, and database management.',
+      technologies: ['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt'],
+      image: '/api/placeholder/600/400',
+      liveUrl: '/',
+      githubUrl: 'https://github.com/ismilebharmal/prompt_techniques',
+      featured: true
+    },
+    {
+      title: 'E-Commerce Platform',
+      description: 'Full-stack e-commerce solution with payment integration, inventory management, and admin panel.',
+      technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'JWT'],
+      image: '/api/placeholder/600/400',
+      liveUrl: '#',
+      githubUrl: '#',
+      featured: false
+    },
+    {
+      title: 'Task Management App',
+      description: 'Collaborative task management tool with real-time updates, team collaboration, and analytics.',
+      technologies: ['Vue.js', 'Express', 'Socket.io', 'PostgreSQL', 'Redis'],
+      image: '/api/placeholder/600/400',
+      liveUrl: '#',
+      githubUrl: '#',
+      featured: false
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-500"></div>
-      </div>
-    )
-  }
+  ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Prompt Techniques Hub</h1>
-              <p className="text-gray-600 mt-1">Discover and share powerful AI prompts</p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/portfolio"
-                className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors rounded-md hover:bg-gray-100"
-              >
-                Portfolio
-              </Link>
-              <Link
-                href="/admin/login"
-                className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors rounded-md hover:bg-gray-100"
-              >
-                Admin
-              </Link>
-              <span className="text-sm text-gray-500">
-                {filteredPrompts.length} prompts
-              </span>
-            </div>
-          </div>
-        </div>
-      </header>
+    <>
+      <Head>
+        <title>Ismile Bharmal - Full Stack Developer & AI Enthusiast</title>
+        <meta name="description" content="Portfolio of Ismile Bharmal - Full Stack Developer specializing in React, Node.js, and AI applications. Explore my projects and AI prompt templates." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-      {/* Search and Filters */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="mb-6">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search prompts..."
-              value={searchQuery}
-              onChange={handleSearch}
-              className="w-full px-4 py-3 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <FilterTabs
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
-
-        {/* Prompts Grid */}
-        <div className="mt-8">
-          {filteredPrompts.length === 0 ? (
-            <div className="text-center py-12">
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709" />
-              </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No prompts found</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Try adjusting your search or filter criteria.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPrompts.map((prompt) => (
-                <PromptCard
-                  key={prompt._id}
-                  prompt={prompt}
-                  isFavorite={favorites.has(prompt._id)}
-                  onToggleFavorite={toggleFavorite}
-                  onCopy={copyToClipboard}
-                  onOpenModal={setSelectedPrompt}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Portfolio Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              About the Developer
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              This project is part of my portfolio showcasing modern web development skills and AI integration.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                Built by Ismile Bharmal
-              </h3>
-              <p className="text-gray-600 mb-6">
-                A passionate Full Stack Developer with expertise in React, Node.js, and modern web technologies. 
-                This Prompt Techniques Hub demonstrates my skills in building scalable applications with 
-                database integration, authentication, and modern UI/UX design.
-              </p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt', 'React'].map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white">
+        {/* Navigation */}
+        <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          isScrolled ? 'bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+        }`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-4">
+              <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Ismile Bharmal
+              </div>
+              
+              {/* Desktop Menu */}
+              <div className="hidden md:flex space-x-8">
+                {['home', 'about', 'skills', 'projects', 'prompts', 'contact'].map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => scrollToSection(item)}
+                    className={`capitalize transition-colors duration-200 hover:text-blue-400 ${
+                      activeSection === item ? 'text-blue-400' : 'text-gray-300'
+                    }`}
                   >
-                    {tech}
-                  </span>
+                    {item}
+                  </button>
                 ))}
               </div>
-              <div className="flex gap-4">
-                <Link
-                  href="/portfolio"
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-                >
-                  View Full Portfolio
-                </Link>
-                <a
-                  href="https://github.com/ismilebharmal/prompt_techniques"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                >
-                  View on GitHub
-                </a>
-              </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden text-white"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
             </div>
-            <div className="relative">
-              <div className="bg-white rounded-2xl shadow-xl p-8">
-                <div className="text-center">
-                  <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                    <span className="text-3xl font-bold text-white">IB</span>
+
+            {/* Mobile Menu */}
+            {isMenuOpen && (
+              <div className="md:hidden bg-gray-900/95 backdrop-blur-md rounded-lg mt-2 p-4">
+                {['home', 'about', 'skills', 'projects', 'prompts', 'contact'].map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => scrollToSection(item)}
+                    className="block w-full text-left py-2 capitalize transition-colors duration-200 hover:text-blue-400"
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <section id="home" className="min-h-screen flex items-center justify-center px-4">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="mb-8">
+              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 p-1">
+                <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center">
+                  <span className="text-4xl font-bold">IB</span>
+                </div>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Ismile Bharmal
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-300 mb-6">
+                Full Stack Developer & AI Enthusiast
+              </p>
+              <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
+                Crafting digital experiences with modern technologies. 
+                Passionate about building scalable applications and exploring AI innovations.
+              </p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => scrollToSection('projects')}
+                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
+              >
+                View My Work
+              </button>
+              <button
+                onClick={() => scrollToSection('contact')}
+                className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300"
+              >
+                Get In Touch
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              About Me
+            </h2>
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h3 className="text-2xl font-semibold mb-6">Hello, I'm Ismile! 👋</h3>
+                <p className="text-gray-300 mb-4 text-lg leading-relaxed">
+                  I'm a passionate Full Stack Developer with a love for creating innovative solutions 
+                  and exploring the latest technologies. With expertise in modern web development 
+                  and AI applications, I enjoy building products that make a difference.
+                </p>
+                <p className="text-gray-300 mb-6 text-lg leading-relaxed">
+                  When I'm not coding, you'll find me experimenting with AI tools, contributing to 
+                  open-source projects, or sharing knowledge with the developer community. I believe 
+                  in continuous learning and staying updated with the latest tech trends.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <div className="bg-gray-800/50 rounded-lg px-4 py-2">
+                    <span className="text-blue-400">📍</span> Based in India
                   </div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-2">Ismile Bharmal</h4>
-                  <p className="text-gray-600 mb-4">Full Stack Developer & AI Enthusiast</p>
-                  <div className="space-y-2 text-sm text-gray-500">
-                    <div className="flex justify-between">
-                      <span>Experience:</span>
-                      <span className="font-medium">3+ Years</span>
+                  <div className="bg-gray-800/50 rounded-lg px-4 py-2">
+                    <span className="text-green-400">💼</span> Available for Work
+                  </div>
+                  <div className="bg-gray-800/50 rounded-lg px-4 py-2">
+                    <span className="text-purple-400">🎯</span> Open to Collaborations
+                  </div>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl p-8 backdrop-blur-sm">
+                  <h4 className="text-xl font-semibold mb-4">Quick Stats</h4>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span>Projects Completed</span>
+                      <span className="text-blue-400 font-bold">50+</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Projects:</span>
-                      <span className="font-medium">50+</span>
+                    <div className="flex justify-between items-center">
+                      <span>Years Experience</span>
+                      <span className="text-blue-400 font-bold">3+</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Status:</span>
-                      <span className="font-medium text-green-600">Available</span>
+                    <div className="flex justify-between items-center">
+                      <span>Technologies Mastered</span>
+                      <span className="text-blue-400 font-bold">15+</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Happy Clients</span>
+                      <span className="text-blue-400 font-bold">25+</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Modal */}
-      {selectedPrompt && (
-        <PromptModal
-          prompt={selectedPrompt}
-          onClose={() => setSelectedPrompt(null)}
-          onCopy={copyToClipboard}
-        />
-      )}
-    </div>
+        {/* Skills Section */}
+        <section id="skills" className="py-20 px-4 bg-gray-800/30">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Skills & Technologies
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {skills.map((skill, index) => (
+                <div
+                  key={skill.name}
+                  className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="text-center">
+                    <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-2xl font-bold text-white`}>
+                      {skill.name.charAt(0)}
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2">{skill.name}</h3>
+                    <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+                      <div
+                        className={`h-2 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
+                        style={{ width: `${skill.level}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-sm text-gray-400">{skill.level}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Projects Section */}
+        <section id="projects" className="py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Featured Projects
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project, index) => (
+                <div
+                  key={project.title}
+                  className={`bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 ${
+                    project.featured ? 'md:col-span-2 lg:col-span-1' : ''
+                  }`}
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                  <div className="h-48 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
+                        <span className="text-2xl">🚀</span>
+                      </div>
+                      <p className="text-gray-400">Project Preview</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-xl font-semibold">{project.title}</h3>
+                      {project.featured && (
+                        <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-2 py-1 rounded-full text-xs font-bold">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-gray-300 mb-4">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.technologies.map((tech) => (
+                        <span
+                          key={tech}
+                          className="bg-gray-700/50 text-blue-400 px-2 py-1 rounded text-xs"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-3">
+                      <a
+                        href={project.liveUrl}
+                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-center py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+                      >
+                        Live Demo
+                      </a>
+                      <a
+                        href={project.githubUrl}
+                        className="flex-1 border border-gray-600 text-center py-2 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-300"
+                      >
+                        GitHub
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Prompts Section */}
+        <section id="prompts" className="py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              AI Prompt Templates
+            </h2>
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h3 className="text-3xl font-semibold mb-6">
+                  Discover Powerful AI Prompts
+                </h3>
+                <p className="text-gray-300 mb-6 text-lg leading-relaxed">
+                  Explore my curated collection of AI prompt templates designed to help you get the most out of 
+                  AI tools like ChatGPT, Claude, and other language models. Each prompt is carefully crafted 
+                  and tested for optimal results.
+                </p>
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span className="text-gray-300">50+ Professional prompt templates</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span className="text-gray-300">Categorized by use case and industry</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span className="text-gray-300">Copy-paste ready with examples</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span className="text-gray-300">Regularly updated with new prompts</span>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    href="/prompts"
+                    className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 text-center"
+                  >
+                    Explore Prompt Library
+                  </Link>
+                  <a
+                    href="https://github.com/ismilebharmal/prompt_techniques"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300 text-center"
+                  >
+                    View on GitHub
+                  </a>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl p-8 backdrop-blur-sm">
+                  <div className="text-center mb-6">
+                    <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                      <span className="text-3xl">🤖</span>
+                    </div>
+                    <h4 className="text-2xl font-semibold mb-2">AI Prompt Hub</h4>
+                    <p className="text-gray-300">Curated collection of powerful AI prompts</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div className="bg-gray-800/50 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-blue-400">50+</div>
+                      <div className="text-sm text-gray-400">Prompt Templates</div>
+                    </div>
+                    <div className="bg-gray-800/50 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-purple-400">6</div>
+                      <div className="text-sm text-gray-400">Categories</div>
+                    </div>
+                    <div className="bg-gray-800/50 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-green-400">100%</div>
+                      <div className="text-sm text-gray-400">Free to Use</div>
+                    </div>
+                    <div className="bg-gray-800/50 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-yellow-400">∞</div>
+                      <div className="text-sm text-gray-400">Possibilities</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Section */}
+        <section id="contact" className="py-20 px-4 bg-gray-800/30">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl font-bold mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Let's Work Together
+            </h2>
+            <p className="text-xl text-gray-300 mb-12">
+              Have a project in mind? I'd love to hear about it. Let's create something amazing together!
+            </p>
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              <div className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  📧
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Email</h3>
+                <p className="text-gray-400">ismile@example.com</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  💼
+                </div>
+                <h3 className="text-lg font-semibold mb-2">LinkedIn</h3>
+                <p className="text-gray-400">linkedin.com/in/ismilebharmal</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  🐙
+                </div>
+                <h3 className="text-lg font-semibold mb-2">GitHub</h3>
+                <p className="text-gray-400">github.com/ismilebharmal</p>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="mailto:ismile@example.com"
+                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
+              >
+                Send Email
+              </a>
+              <a
+                href="/resume.pdf"
+                className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300"
+              >
+                Download Resume
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-8 px-4 border-t border-gray-700">
+          <div className="max-w-6xl mx-auto text-center">
+            <p className="text-gray-400">
+              © 2024 Ismile Bharmal. Built with Next.js and lots of ☕
+            </p>
+          </div>
+        </footer>
+
+        {/* Floating Action Button */}
+        {showBackToTop && (
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-110 flex items-center justify-center"
+          >
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+          </button>
+        )}
+
+        {/* Floating Contact Button */}
+        <div className="fixed bottom-8 left-8 z-50">
+          <div className="flex flex-col space-y-3">
+            <a
+              href="mailto:ismile@example.com"
+              className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-600 rounded-full shadow-lg hover:from-green-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-110 flex items-center justify-center"
+              title="Send Email"
+            >
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </a>
+            <a
+              href="https://github.com/ismilebharmal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 bg-gradient-to-r from-gray-700 to-gray-900 rounded-full shadow-lg hover:from-gray-800 hover:to-black transition-all duration-300 transform hover:scale-110 flex items-center justify-center"
+              title="GitHub Profile"
+            >
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a>
+            <a
+              href="https://linkedin.com/in/ismilebharmal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 transform hover:scale-110 flex items-center justify-center"
+              title="LinkedIn Profile"
+            >
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
