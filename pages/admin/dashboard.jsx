@@ -20,6 +20,7 @@ export default function AdminDashboard() {
     exampleInput: '',
     exampleOutput: ''
   })
+  const [currentUser, setCurrentUser] = useState(null)
   const router = useRouter()
 
   const fetchPrompts = useCallback(async () => {
@@ -38,13 +39,25 @@ export default function AdminDashboard() {
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('admin_authenticated')
     const loginTime = localStorage.getItem('admin_login_time')
+    const userData = localStorage.getItem('admin_user')
     
     // Check if login is older than 24 hours
     if (!isAuthenticated || !loginTime || Date.now() - parseInt(loginTime) > 24 * 60 * 60 * 1000) {
       localStorage.removeItem('admin_authenticated')
       localStorage.removeItem('admin_login_time')
+      localStorage.removeItem('admin_user')
+      localStorage.removeItem('admin_session_token')
       router.push('/admin/login')
       return
+    }
+
+    // Set current user data
+    if (userData) {
+      try {
+        setCurrentUser(JSON.parse(userData))
+      } catch (error) {
+        console.error('Error parsing user data:', error)
+      }
     }
 
     fetchPrompts()
@@ -186,6 +199,8 @@ export default function AdminDashboard() {
   const handleLogout = () => {
     localStorage.removeItem('admin_authenticated')
     localStorage.removeItem('admin_login_time')
+    localStorage.removeItem('admin_user')
+    localStorage.removeItem('admin_session_token')
     router.push('/admin/login')
   }
 
@@ -254,6 +269,9 @@ export default function AdminDashboard() {
               </div>
               <div className="hidden md:block">
                 <p className="text-sm text-gray-500">Prompt Techniques Hub Management</p>
+                {currentUser && (
+                  <p className="text-xs text-gray-400">Logged in as: {currentUser.username}</p>
+                )}
               </div>
             </div>
             <div className="flex items-center space-x-3">
