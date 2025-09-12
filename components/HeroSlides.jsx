@@ -6,7 +6,6 @@ const HeroSlides = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isPlaying, setIsPlaying] = useState(true)
   const [loading, setLoading] = useState(true)
-  const [imageAspectRatios, setImageAspectRatios] = useState({})
 
   useEffect(() => {
     fetchSlides()
@@ -14,68 +13,13 @@ const HeroSlides = () => {
 
   const fetchSlides = async () => {
     try {
-      console.log('🔄 Fetching hero slides...')
       const response = await fetch('/api/hero-slides')
-      console.log('📡 Response status:', response.status)
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      
       const data = await response.json()
-      console.log('✅ Hero slides data:', data)
-      console.log('📊 Number of slides:', data?.length || 0)
-      
-      if (data && data.length > 0) {
-        console.log('🖼️ First slide image settings:', {
-          image_fit: data[0].image_fit,
-          image_position: data[0].image_position,
-          text_position: data[0].text_position,
-          image_id: data[0].image_id
-        })
-      }
-      
       setSlides(data || [])
       setLoading(false)
     } catch (error) {
-      console.error('❌ Error fetching hero slides:', error)
+      console.error('Error fetching hero slides:', error)
       setLoading(false)
-    }
-  }
-
-  const detectImageAspectRatio = (imageId) => {
-    return new Promise((resolve) => {
-      const img = new Image()
-      img.onload = () => {
-        const aspectRatio = img.width / img.height
-        setImageAspectRatios(prev => ({
-          ...prev,
-          [imageId]: aspectRatio
-        }))
-        resolve(aspectRatio)
-      }
-      img.onerror = () => {
-        resolve(1) // Default to square if error
-      }
-      img.src = `/api/images/${imageId}`
-    })
-  }
-
-  const getOptimalImageFit = (slide) => {
-    const aspectRatio = imageAspectRatios[slide.image_id]
-    if (!aspectRatio) return slide.image_fit || 'contain'
-    
-    // If it's a portrait image (height > width), use contain
-    if (aspectRatio < 1) {
-      return 'contain'
-    }
-    // If it's a landscape image (width > height), use cover
-    else if (aspectRatio > 1.5) {
-      return 'cover'
-    }
-    // For square or near-square images, use contain
-    else {
-      return 'contain'
     }
   }
 
@@ -101,36 +45,24 @@ const HeroSlides = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
   }
 
-  console.log('🎬 HeroSlides render - loading:', loading, 'slides:', slides.length)
-
   if (loading) {
-    console.log('⏳ Showing loading state')
     return (
       <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
-          <p className="mt-4 text-white">Loading slides...</p>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-700 rounded w-1/3 mx-auto mb-4"></div>
+              <div className="h-4 bg-gray-700 rounded w-1/2 mx-auto"></div>
+            </div>
+          </div>
         </div>
       </section>
     )
   }
 
   if (slides.length === 0) {
-    console.log('❌ No slides available - showing empty state')
-    return (
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
-            <span className="text-2xl">📸</span>
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-4">No Slides Available</h2>
-          <p className="text-gray-300">Check back later for updates!</p>
-        </div>
-      </section>
-    )
+    return null // Don't show section if no slides
   }
-
-  console.log('✅ Rendering slideshow with', slides.length, 'slides')
 
   return (
     <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 relative overflow-hidden">
@@ -152,8 +84,8 @@ const HeroSlides = () => {
 
         {/* Slideshow Container */}
         <div className="relative">
-          {/* Main Slide Display - Dynamic Height for Portrait Images */}
-          <div className="relative min-h-96 md:min-h-[500px] max-h-[80vh] rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
+          {/* Main Slide Display */}
+          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900" style={{ aspectRatio: '16/9' }}>
             {slides.map((slide, index) => (
               <div
                 key={slide.id}
@@ -161,58 +93,52 @@ const HeroSlides = () => {
                   index === currentSlide ? 'opacity-100' : 'opacity-0'
                 }`}
               >
-                {/* Image Container with Smart Fitting */}
-                <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
-                  <DatabaseImage
-                    imageId={slide.image_id}
-                    alt={slide.title}
-                    className="max-w-full max-h-full"
-                    onLoad={() => {
-                      // Detect aspect ratio when image loads
-                      detectImageAspectRatio(slide.image_id)
-                    }}
-                    style={{
-                      objectFit: getOptimalImageFit(slide),
-                      objectPosition: (() => {
-                        const position = slide.image_position || 'center'
-                        // Convert our position values to valid CSS object-position values
-                        switch (position) {
-                          case 'top': return 'center top'
-                          case 'bottom': return 'center bottom'
-                          case 'left': return 'left center'
-                          case 'right': return 'right center'
-                          case 'top-left': return 'left top'
-                          case 'top-right': return 'right top'
-                          case 'bottom-left': return 'left bottom'
-                          case 'bottom-right': return 'right bottom'
-                          case 'center': return 'center center'
-                          default: return 'center center'
-                        }
-                      })(),
-                      width: 'auto',
-                      height: 'auto',
-                      maxWidth: '100%',
-                      maxHeight: '100%'
-                    }}
-                    fallback={
-                      <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                        <div className="text-center text-white">
-                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center">
-                            <span className="text-2xl">🖼️</span>
+                {/* Image Container with Proper Aspect Ratio */}
+                <div className="relative w-full h-full overflow-hidden">
+                  <div className="w-full h-full">
+                    <DatabaseImage
+                      imageId={slide.image_id}
+                      alt={slide.title}
+                      className="w-full h-full"
+                      style={{
+                        objectFit: slide.image_fit || 'cover',
+                        objectPosition: (() => {
+                          const position = slide.image_position || 'center'
+                          // Convert our position values to valid CSS object-position values
+                          switch (position) {
+                            case 'top': return 'center top'
+                            case 'bottom': return 'center bottom'
+                            case 'left': return 'left center'
+                            case 'right': return 'right center'
+                            case 'top-left': return 'left top'
+                            case 'top-right': return 'right top'
+                            case 'bottom-left': return 'left bottom'
+                            case 'bottom-right': return 'right bottom'
+                            case 'center': return 'center center'
+                            default: return 'center center'
+                          }
+                        })(),
+                        width: '100%',
+                        height: '100%',
+                        display: 'block',
+                        maxWidth: '100%',
+                        maxHeight: '100%'
+                      }}
+                      fallback={
+                        <div className="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                          <div className="text-center text-white">
+                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center">
+                              <span className="text-2xl">🖼️</span>
+                            </div>
+                            <p className="text-lg font-medium">{slide.title}</p>
                           </div>
-                          <p className="text-lg font-medium">{slide.title}</p>
                         </div>
-                      </div>
-                    }
-                  />
+                      }
+                    />
+                  </div>
                   
                   {/* Image Overlay for Better Text Readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
-                  
-                  {/* Debug Info - Remove in production */}
-                  <div className="absolute top-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                    {getOptimalImageFit(slide)} {imageAspectRatios[slide.image_id] ? `(${(imageAspectRatios[slide.image_id]).toFixed(2)})` : ''}
-                  </div>
                 </div>
                 
                 {/* Slide Overlay Content with Dynamic Positioning */}
