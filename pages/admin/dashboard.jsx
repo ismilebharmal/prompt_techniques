@@ -2330,10 +2330,29 @@ export default function AdminDashboard() {
                       if (response.ok) {
                         const newSlide = await response.json()
                         // Handle image associations for new slides
-                        if ((slideFormData.images || []).length > 0) {
-                          for (const image of slideFormData.images) {
-                            await addImageToSlide(newSlide.id, image.id, image.is_cover, image.display_order)
+                        try {
+                          console.log('Managing images for new slide:', {
+                            slideId: newSlide.id,
+                            imagesCount: (slideFormData.images || []).length,
+                            images: slideFormData.images
+                          })
+                          
+                          if ((slideFormData.images || []).length > 0) {
+                            for (const image of slideFormData.images) {
+                              console.log('Adding image to slide:', {
+                                slideId: newSlide.id,
+                                imageId: image.id,
+                                isCover: image.is_cover,
+                                displayOrder: image.display_order
+                              })
+                              await addImageToSlide(newSlide.id, image.id, image.is_cover, image.display_order)
+                            }
                           }
+                          
+                          console.log('Image management for new slide completed successfully')
+                        } catch (imageError) {
+                          console.error('Error managing images for new slide:', imageError)
+                          // Continue with success even if image management fails
                         }
                         fetchSlides()
                         alert('Slide added successfully!')
