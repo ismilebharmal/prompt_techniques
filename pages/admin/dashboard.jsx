@@ -2253,7 +2253,6 @@ export default function AdminDashboard() {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                          id: editingSlide.id,
                           title: slideFormData.title,
                           description: slideFormData.description,
                           detailed_description: slideFormData.detailedDescription,
@@ -2262,8 +2261,9 @@ export default function AdminDashboard() {
                           participants_count: slideFormData.participantsCount,
                           workshop_type: slideFormData.workshopType,
                           category: slideFormData.category,
-                          order_index: slideFormData.orderIndex,
-                          image_id: slideFormData.imageId,
+                          orderIndex: slideFormData.orderIndex,
+                          imageUrl: slideFormData.imageUrl,
+                          imageId: slideFormData.imageId,
                           cover_image_id: slideFormData.coverImageId
                         })
                       })
@@ -2292,8 +2292,9 @@ export default function AdminDashboard() {
                           participants_count: slideFormData.participantsCount,
                           workshop_type: slideFormData.workshopType,
                           category: slideFormData.category,
-                          order_index: slideFormData.orderIndex,
-                          image_id: slideFormData.imageId,
+                          orderIndex: slideFormData.orderIndex,
+                          imageUrl: slideFormData.imageUrl,
+                          imageId: slideFormData.imageId,
                           cover_image_id: slideFormData.coverImageId
                         })
                       })

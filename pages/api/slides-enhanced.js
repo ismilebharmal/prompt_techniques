@@ -32,7 +32,8 @@ export default async function handler(req, res) {
         break
 
       case 'PUT':
-        const { id, ...updateData } = req.body
+        const id = query.id
+        const updateData = req.body
         await updateSlide(id, updateData)
         res.status(200).json({ id, ...updateData })
         break
