@@ -1398,11 +1398,19 @@ export default function AdminDashboard() {
                               onClick={() => {
                                 setEditingSlide(slide)
                                 setSlideFormData({
-                                  title: slide.title,
-                                  description: slide.description,
-                                  imageUrl: slide.imageUrl,
-                                  category: slide.category,
-                                  orderIndex: slide.orderIndex
+                                  title: slide.title || '',
+                                  description: slide.description || '',
+                                  detailedDescription: slide.detailed_description || '',
+                                  imageUrl: slide.image_url || '',
+                                  imageId: slide.image_id || null,
+                                  coverImageId: slide.cover_image_id || null,
+                                  images: slide.images || [],
+                                  category: slide.category || '',
+                                  orderIndex: slide.order_index || 0,
+                                  workshopDate: slide.workshop_date || '',
+                                  durationHours: slide.duration_hours || '',
+                                  participantsCount: slide.participants_count || '',
+                                  workshopType: slide.workshop_type || ''
                                 })
                                 setShowAddForm(true)
                               }}
