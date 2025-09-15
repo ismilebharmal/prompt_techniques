@@ -438,6 +438,7 @@ export default function AdminDashboard() {
       imagePosition: slide.image_position || 'center',
       textPosition: slide.text_position || 'bottom-left'
     })
+    setShowAddForm(true)
   }
 
   const handleDeleteHeroSlide = async (id) => {
