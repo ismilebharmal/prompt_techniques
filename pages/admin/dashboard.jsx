@@ -1407,7 +1407,7 @@ export default function AdminDashboard() {
                                   images: slide.images || [],
                                   category: slide.category || '',
                                   orderIndex: slide.order_index || 0,
-                                  workshopDate: slide.workshop_date || '',
+                                  workshopDate: slide.workshop_date ? slide.workshop_date.split('T')[0] : '',
                                   durationHours: slide.duration_hours || '',
                                   participantsCount: slide.participants_count || '',
                                   workshopType: slide.workshop_type || ''
