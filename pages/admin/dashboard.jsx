@@ -2277,11 +2277,24 @@ export default function AdminDashboard() {
                       })
                       if (response.ok) {
                         // Handle image associations for existing slides
-                        if ((slideFormData.images || []).length > 0) {
-                          for (const image of slideFormData.images) {
-                            await addImageToSlide(editingSlide.id, image.id, image.is_cover, image.display_order)
+                        try {
+                          // First, remove all existing images for this slide
+                          const existingImages = editingSlide.images || []
+                          for (const existingImage of existingImages) {
+                            await removeImageFromSlide(existingImage.id)
                           }
+                          
+                          // Then add all current images
+                          if ((slideFormData.images || []).length > 0) {
+                            for (const image of slideFormData.images) {
+                              await addImageToSlide(editingSlide.id, image.id, image.is_cover, image.display_order)
+                            }
+                          }
+                        } catch (imageError) {
+                          console.error('Error managing images:', imageError)
+                          // Continue with success even if image management fails
                         }
+                        
                         fetchSlides()
                         alert('Slide updated successfully!')
                       } else {
