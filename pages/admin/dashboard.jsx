@@ -2373,7 +2373,7 @@ export default function AdminDashboard() {
                               }
                               setSlideFormData({
                                 ...slideFormData,
-                                images: [...slideFormData.images, newImage],
+                                images: [...(slideFormData.images || []), newImage],
                                 coverImageId: (slideFormData.images || []).length === 0 ? uploadedImage.id : slideFormData.coverImageId,
                                 imageId: slideFormData.imageId || uploadedImage.id, // Keep first image as main
                                 imageUrl: slideFormData.imageUrl || `/api/images/${uploadedImage.id}`
@@ -2416,7 +2416,7 @@ export default function AdminDashboard() {
                                     <button
                                       type="button"
                                       onClick={() => {
-                                        const updatedImages = slideFormData.images.map(img => ({
+                                        const updatedImages = (slideFormData.images || []).map(img => ({
                                           ...img,
                                           is_cover: img.id === image.id
                                         }))
@@ -2434,11 +2434,11 @@ export default function AdminDashboard() {
                                   <button
                                     type="button"
                                     onClick={() => {
-                                      const updatedImages = slideFormData.images.filter(img => img.id !== image.id)
+                                      const updatedImages = (slideFormData.images || []).filter(img => img.id !== image.id)
                                       setSlideFormData({
                                         ...slideFormData,
                                         images: updatedImages,
-                                        coverImageId: image.is_cover && (updatedImages || []).length > 0 ? updatedImages[0].id : slideFormData.coverImageId
+                                        coverImageId: image.is_cover && updatedImages.length > 0 ? updatedImages[0].id : slideFormData.coverImageId
                                       })
                                     }}
                                     className="bg-red-500 text-white px-3 py-1 rounded text-xs font-medium hover:bg-red-600"
