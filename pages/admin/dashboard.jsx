@@ -2278,6 +2278,12 @@ export default function AdminDashboard() {
                       if (response.ok) {
                         // Handle image associations for existing slides
                         try {
+                          console.log('Managing images for slide update:', {
+                            slideId: editingSlide.id,
+                            existingImagesCount: (editingSlide.images || []).length,
+                            newImagesCount: (slideFormData.images || []).length
+                          })
+                          
                           // First, remove all existing images for this slide
                           const existingImages = editingSlide.images || []
                           for (const existingImage of existingImages) {
@@ -2290,6 +2296,8 @@ export default function AdminDashboard() {
                               await addImageToSlide(editingSlide.id, image.id, image.is_cover, image.display_order)
                             }
                           }
+                          
+                          console.log('Image management completed successfully')
                         } catch (imageError) {
                           console.error('Error managing images:', imageError)
                           // Continue with success even if image management fails
@@ -2373,25 +2381,43 @@ export default function AdminDashboard() {
                         multiple
                         onChange={async (e) => {
                           const files = Array.from(e.target.files)
+                          const uploadedImages = []
+                          
+                          // Upload all files first
                           for (const file of files) {
                             const uploadedImage = await uploadImage(file)
                             if (uploadedImage) {
-                              const newImage = {
-                                id: uploadedImage.id,
-                                filename: uploadedImage.filename,
-                                mime_type: uploadedImage.mime_type,
-                                size: uploadedImage.size,
-                                is_cover: (slideFormData.images || []).length === 0, // First image is cover by default
-                                display_order: (slideFormData.images || []).length
-                              }
-                              setSlideFormData({
-                                ...slideFormData,
-                                images: [...(slideFormData.images || []), newImage],
-                                coverImageId: (slideFormData.images || []).length === 0 ? uploadedImage.id : slideFormData.coverImageId,
-                                imageId: slideFormData.imageId || uploadedImage.id, // Keep first image as main
-                                imageUrl: slideFormData.imageUrl || `/api/images/${uploadedImage.id}`
-                              })
+                              uploadedImages.push(uploadedImage)
                             }
+                          }
+                          
+                          // Then update the form data with all uploaded images
+                          if (uploadedImages.length > 0) {
+                            const currentImages = slideFormData.images || []
+                            const newImages = uploadedImages.map((uploadedImage, index) => ({
+                              id: uploadedImage.id,
+                              filename: uploadedImage.filename,
+                              mime_type: uploadedImage.mime_type,
+                              size: uploadedImage.size,
+                              is_cover: currentImages.length === 0 && index === 0, // First image is cover by default
+                              display_order: currentImages.length + index
+                            }))
+                            
+                            console.log('Uploading images:', {
+                              filesCount: files.length,
+                              uploadedCount: uploadedImages.length,
+                              currentImagesCount: currentImages.length,
+                              newImagesCount: newImages.length,
+                              totalImagesCount: currentImages.length + newImages.length
+                            })
+                            
+                            setSlideFormData({
+                              ...slideFormData,
+                              images: [...currentImages, ...newImages],
+                              coverImageId: currentImages.length === 0 ? uploadedImages[0].id : slideFormData.coverImageId,
+                              imageId: slideFormData.imageId || uploadedImages[0].id, // Keep first image as main
+                              imageUrl: slideFormData.imageUrl || `/api/images/${uploadedImages[0].id}`
+                            })
                           }
                         }}
                         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
