@@ -387,48 +387,122 @@ model = keras.Sequential([
                 'Technologies': { color: 'from-slate-500 to-gray-600', icon: '⚡' }
               }
 
-              return Object.keys(groupedSkills).sort().map((category, categoryIndex) => {
-                const categoryStyle = categoryStyles[category] || categoryStyles['Technologies']
-                return (
-                  <div key={category} className="mb-12">
-                    <div className="flex items-center justify-center mb-8">
-                      <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${categoryStyle.color} flex items-center justify-center text-2xl mr-4`}>
-                        {categoryStyle.icon}
-                      </div>
-                      <h3 className="text-2xl font-bold text-white">{category}</h3>
-                      <div className="ml-4 px-3 py-1 bg-gray-700/50 rounded-full text-sm text-gray-300">
-                        {groupedSkills[category].length} skills
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                      {groupedSkills[category].map((skill, skillIndex) => (
-                        <div
-                          key={skill.name}
-                          className="bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 group"
-                          style={{ animationDelay: `${(categoryIndex * 0.2) + (skillIndex * 0.1)}s` }}
+              const categories = Object.keys(groupedSkills).sort()
+              const [activeTab, setActiveTab] = useState(categories[0] || '')
+              const [isAutoRotating, setIsAutoRotating] = useState(true)
+
+              // Auto-rotation effect
+              useEffect(() => {
+                if (!isAutoRotating || categories.length <= 1) return
+
+                const interval = setInterval(() => {
+                  setActiveTab(prev => {
+                    const currentIndex = categories.indexOf(prev)
+                    return categories[(currentIndex + 1) % categories.length]
+                  })
+                }, 4000) // Change tab every 4 seconds
+
+                return () => clearInterval(interval)
+              }, [isAutoRotating, categories])
+
+              if (categories.length === 0) return null
+
+              return (
+                <div className="relative">
+                  {/* Tab Navigation */}
+                  <div className="flex flex-wrap justify-center gap-2 mb-8">
+                    {categories.map((category) => {
+                      const categoryStyle = categoryStyles[category] || categoryStyles['Technologies']
+                      const isActive = activeTab === category
+                      
+                      return (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            setActiveTab(category)
+                            setIsAutoRotating(false)
+                          }}
+                          className={`flex items-center px-4 py-2 rounded-full transition-all duration-300 ${
+                            isActive
+                              ? `bg-gradient-to-r ${categoryStyle.color} text-white shadow-lg transform scale-105`
+                              : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white'
+                          }`}
                         >
-                          <div className="text-center">
-                            <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white group-hover:scale-110 transition-transform duration-300`}>
-                              {skill.name.charAt(0)}
-                            </div>
-                            <h4 className="text-sm font-semibold mb-2 text-white group-hover:text-blue-300 transition-colors">
-                              {skill.name}
-                            </h4>
-                            <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
-                              <div
-                                className={`h-1.5 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
-                                style={{ width: `${skill.level}%` }}
-                              ></div>
-                            </div>
-                            <span className="text-xs text-gray-400">{skill.level}%</span>
+                          <span className="text-lg mr-2">{categoryStyle.icon}</span>
+                          <span className="font-medium">{category}</span>
+                          <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                            isActive ? 'bg-white/20' : 'bg-gray-600/50'
+                          }`}>
+                            {groupedSkills[category].length}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Auto-rotation Controls */}
+                  <div className="flex justify-center mb-6">
+                    <button
+                      onClick={() => setIsAutoRotating(!isAutoRotating)}
+                      className={`flex items-center px-4 py-2 rounded-full transition-all duration-300 ${
+                        isAutoRotating
+                          ? 'bg-green-600/20 text-green-400 border border-green-500/30'
+                          : 'bg-gray-700/50 text-gray-400 border border-gray-600/30'
+                      }`}
+                    >
+                      <span className="mr-2">
+                        {isAutoRotating ? '⏸️' : '▶️'}
+                      </span>
+                      {isAutoRotating ? 'Auto-rotating' : 'Start rotation'}
+                    </button>
+                  </div>
+
+                  {/* Active Tab Content */}
+                  <div className="min-h-[400px]">
+                    {activeTab && groupedSkills[activeTab] && (
+                      <div className="animate-fadeIn">
+                        <div className="flex items-center justify-center mb-8">
+                          <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${categoryStyles[activeTab]?.color || categoryStyles['Technologies'].color} flex items-center justify-center text-3xl mr-4`}>
+                            {categoryStyles[activeTab]?.icon || categoryStyles['Technologies'].icon}
+                          </div>
+                          <div>
+                            <h3 className="text-3xl font-bold text-white">{activeTab}</h3>
+                            <p className="text-gray-400 text-center">
+                              {groupedSkills[activeTab].length} skills in this category
+                            </p>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                          {groupedSkills[activeTab].map((skill, skillIndex) => (
+                            <div
+                              key={skill.name}
+                              className="bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 group"
+                              style={{ animationDelay: `${skillIndex * 0.1}s` }}
+                            >
+                              <div className="text-center">
+                                <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white group-hover:scale-110 transition-transform duration-300`}>
+                                  {skill.name.charAt(0)}
+                                </div>
+                                <h4 className="text-sm font-semibold mb-2 text-white group-hover:text-blue-300 transition-colors">
+                                  {skill.name}
+                                </h4>
+                                <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
+                                  <div
+                                    className={`h-1.5 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
+                                    style={{ width: `${skill.level}%` }}
+                                  ></div>
+                                </div>
+                                <span className="text-xs text-gray-400">{skill.level}%</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )
-              })
+                </div>
+              )
             })()}
           </div>
         </section>
