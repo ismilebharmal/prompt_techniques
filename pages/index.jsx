@@ -15,6 +15,7 @@ export default function Portfolio() {
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [projects, setProjects] = useState([])
   const [slides, setSlides] = useState([])
+  const [skills, setSkills] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedProject, setSelectedProject] = useState(null)
   const [selectedSlide, setSelectedSlide] = useState(null)
@@ -31,16 +32,19 @@ export default function Portfolio() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [projectsRes, slidesRes] = await Promise.all([
+        const [projectsRes, slidesRes, skillsRes] = await Promise.all([
           fetch('/api/projects-enhanced?withImages=true'),
-          fetch('/api/slides-enhanced?withImages=true')
+          fetch('/api/slides-enhanced?withImages=true'),
+          fetch('/api/skills')
         ])
         
         const projectsData = await projectsRes.json()
         const slidesData = await slidesRes.json()
+        const skillsData = await skillsRes.json()
         
         setProjects(projectsData || [])
         setSlides(slidesData || [])
+        setSkills(skillsData || [])
       } catch (error) {
         console.error('Error fetching data:', error)
         // Fallback to hardcoded data if API fails
@@ -94,20 +98,6 @@ export default function Portfolio() {
     setSelectedSlide(null)
   }
 
-  const skills = [
-    { name: 'Flutter', level: 95, color: 'from-blue-400 to-cyan-500' },
-    { name: 'Dart', level: 90, color: 'from-blue-500 to-indigo-600' },
-    { name: 'Python', level: 90, color: 'from-yellow-400 to-orange-500' },
-    { name: 'AI/ML', level: 85, color: 'from-purple-400 to-pink-500' },
-    { name: 'LangChain', level: 80, color: 'from-green-400 to-emerald-500' },
-    { name: 'FastAPI', level: 85, color: 'from-red-400 to-pink-500' },
-    { name: 'StreamLit', level: 80, color: 'from-orange-400 to-red-500' },
-    { name: 'Firebase', level: 85, color: 'from-yellow-500 to-orange-600' },
-    { name: 'MySQL', level: 80, color: 'from-blue-600 to-blue-800' },
-    { name: 'PostgreSQL', level: 75, color: 'from-indigo-400 to-purple-500' },
-    { name: 'Git/GitLab', level: 90, color: 'from-gray-400 to-gray-600' },
-    { name: 'Figma', level: 75, color: 'from-pink-400 to-purple-500' }
-  ]
 
 
   return (
@@ -368,7 +358,7 @@ model = keras.Sequential([
               Skills & Technologies
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {skills.map((skill, index) => (
+              {(skills || []).map((skill, index) => (
                 <div
                   key={skill.name}
                   className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105"

@@ -76,6 +76,14 @@ export default function AdminDashboard() {
   const [editingHeroSlide, setEditingHeroSlide] = useState(null)
   const [resumes, setResumes] = useState([])
   const [uploadingResume, setUploadingResume] = useState(false)
+  const [skills, setSkills] = useState([])
+  const [editingSkill, setEditingSkill] = useState(null)
+  const [skillFormData, setSkillFormData] = useState({
+    name: '',
+    level: 50,
+    color: 'from-blue-400 to-cyan-500',
+    display_order: 0
+  })
   const router = useRouter()
 
   const fetchPrompts = useCallback(async () => {
@@ -127,6 +135,16 @@ export default function AdminDashboard() {
       setResumes(data || [])
     } catch (error) {
       console.error('Error fetching resumes:', error)
+    }
+  }, [])
+
+  const fetchSkills = useCallback(async () => {
+    try {
+      const response = await fetch('/api/skills')
+      const data = await response.json()
+      setSkills(data || [])
+    } catch (error) {
+      console.error('Error fetching skills:', error)
     }
   }, [])
 
@@ -472,7 +490,8 @@ export default function AdminDashboard() {
     fetchSlides()
     fetchHeroSlides()
     fetchResumes()
-  }, [router, fetchPrompts, fetchProjects, fetchSlides, fetchHeroSlides, fetchResumes])
+    fetchSkills()
+  }, [router, fetchPrompts, fetchProjects, fetchSlides, fetchHeroSlides, fetchResumes, fetchSkills])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -637,6 +656,79 @@ export default function AdminDashboard() {
     router.push('/admin/login')
   }
 
+  // Skills Management Functions
+  const handleSkillSubmit = async (e) => {
+    e.preventDefault()
+    
+    try {
+      if (editingSkill) {
+        const response = await fetch(`/api/skills?id=${editingSkill.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(skillFormData)
+        })
+        
+        if (response.ok) {
+          fetchSkills()
+          alert('Skill updated successfully!')
+        } else {
+          alert('Error updating skill')
+        }
+      } else {
+        const response = await fetch('/api/skills', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(skillFormData)
+        })
+        
+        if (response.ok) {
+          fetchSkills()
+          alert('Skill added successfully!')
+        } else {
+          alert('Error adding skill')
+        }
+      }
+      
+      handleCloseModal()
+    } catch (error) {
+      console.error('Error saving skill:', error)
+      alert('Error saving skill')
+    }
+  }
+
+  const handleEditSkill = (skill) => {
+    setEditingSkill(skill)
+    setSkillFormData({
+      name: skill.name || '',
+      level: skill.level || 50,
+      color: skill.color || 'from-blue-400 to-cyan-500',
+      display_order: skill.display_order || 0
+    })
+    setShowAddForm(true)
+  }
+
+  const handleDeleteSkill = async (id) => {
+    if (!confirm('Are you sure you want to delete this skill?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/skills?id=${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        fetchSkills()
+        alert('Skill deleted successfully!')
+      } else {
+        alert('Error deleting skill')
+      }
+    } catch (error) {
+      console.error('Error deleting skill:', error)
+      alert('Error deleting skill')
+    }
+  }
+
   // Filter prompts based on search and category
   const filteredPrompts = (prompts || []).filter(prompt => {
     const matchesSearch = searchTerm === '' || 
@@ -741,6 +833,7 @@ export default function AdminDashboard() {
               { id: 'projects', name: 'Featured Projects', icon: '🚀' },
               { id: 'slides', name: 'Work Slides', icon: '🖼️' },
               { id: 'hero-slides', name: 'Hero Slides', icon: '🎨' },
+              { id: 'skills', name: 'Skills & Technologies', icon: '⚡' },
               { id: 'resume', name: 'Resume Management', icon: '📄' },
               { id: 'analytics', name: 'Analytics', icon: '📈' },
               { id: 'settings', name: 'Settings', icon: '⚙️' }
@@ -1567,6 +1660,78 @@ export default function AdminDashboard() {
                       </button>
                     </div>
                   )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Skills Management Tab */}
+        {activeTab === 'skills' && (
+          <div className="space-y-6">
+            {/* Skills Header */}
+            <div className="bg-white shadow rounded-lg p-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Skills & Technologies</h2>
+                  <p className="text-gray-600 mt-1">Manage your technical skills and proficiency levels</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setEditingSkill(null)
+                    setSkillFormData({
+                      name: '',
+                      level: 50,
+                      color: 'from-blue-400 to-cyan-500',
+                      display_order: 0
+                    })
+                    setShowAddForm(true)
+                  }}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                >
+                  Add New Skill
+                </button>
+              </div>
+            </div>
+
+            {/* Skills List */}
+            <div className="bg-white shadow rounded-lg">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">All Skills ({(skills || []).length})</h3>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {(skills || []).map((skill) => (
+                    <div key={skill.id} className="bg-gray-50 rounded-lg p-4 border">
+                      <div className="text-center">
+                        <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white`}>
+                          {skill.name.charAt(0)}
+                        </div>
+                        <h4 className="text-lg font-semibold mb-2">{skill.name}</h4>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                          <div
+                            className={`h-2 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
+                            style={{ width: `${skill.level}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-sm text-gray-600">{skill.level}%</span>
+                        <div className="mt-3 flex space-x-2">
+                          <button
+                            onClick={() => handleEditSkill(skill)}
+                            className="flex-1 bg-indigo-600 text-white px-3 py-2 rounded text-sm hover:bg-indigo-700 transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteSkill(skill.id)}
+                            className="flex-1 bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700 transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -2837,6 +3002,144 @@ export default function AdminDashboard() {
                       className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       {editingHeroSlide ? 'Update Hero Slide' : 'Add Hero Slide'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Skills Form Modal */}
+        {showAddForm && (editingSkill !== null || activeTab === 'skills') && (
+          <div 
+            className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+            onClick={handleCloseModal}
+          >
+            <div 
+              className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mt-3">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {editingSkill ? 'Edit Skill' : 'Add New Skill'}
+                  </h3>
+                  <button
+                    onClick={handleCloseModal}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <form onSubmit={handleSkillSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Skill Name
+                    </label>
+                    <input
+                      type="text"
+                      value={skillFormData.name}
+                      onChange={(e) => setSkillFormData({...skillFormData, name: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="e.g., React, Python, Machine Learning"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Proficiency Level: {skillFormData.level}%
+                    </label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={skillFormData.level}
+                      onChange={(e) => setSkillFormData({...skillFormData, level: parseInt(e.target.value)})}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>0%</span>
+                      <span>50%</span>
+                      <span>100%</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Color Gradient
+                    </label>
+                    <select
+                      value={skillFormData.color}
+                      onChange={(e) => setSkillFormData({...skillFormData, color: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="from-blue-400 to-cyan-500">Blue to Cyan</option>
+                      <option value="from-blue-500 to-indigo-600">Blue to Indigo</option>
+                      <option value="from-yellow-400 to-orange-500">Yellow to Orange</option>
+                      <option value="from-purple-400 to-pink-500">Purple to Pink</option>
+                      <option value="from-green-400 to-emerald-500">Green to Emerald</option>
+                      <option value="from-red-400 to-pink-500">Red to Pink</option>
+                      <option value="from-orange-400 to-red-500">Orange to Red</option>
+                      <option value="from-yellow-500 to-orange-600">Yellow to Orange Dark</option>
+                      <option value="from-blue-600 to-blue-800">Blue Dark</option>
+                      <option value="from-indigo-400 to-purple-500">Indigo to Purple</option>
+                      <option value="from-gray-400 to-gray-600">Gray</option>
+                      <option value="from-pink-400 to-purple-500">Pink to Purple</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Display Order
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={skillFormData.display_order}
+                      onChange={(e) => setSkillFormData({...skillFormData, display_order: parseInt(e.target.value) || 0})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  {/* Preview */}
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">Preview:</h4>
+                    <div className="flex items-center space-x-4">
+                      <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${skillFormData.color} flex items-center justify-center text-lg font-bold text-white`}>
+                        {skillFormData.name.charAt(0) || 'S'}
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-semibold">{skillFormData.name || 'Skill Name'}</h5>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                          <div
+                            className={`h-2 rounded-full bg-gradient-to-r ${skillFormData.color} transition-all duration-1000`}
+                            style={{ width: `${skillFormData.level}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-xs text-gray-600">{skillFormData.level}%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      type="button"
+                      onClick={handleCloseModal}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      {editingSkill ? 'Update Skill' : 'Add Skill'}
                     </button>
                   </div>
                 </form>
