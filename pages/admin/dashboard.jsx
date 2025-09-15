@@ -82,6 +82,7 @@ export default function AdminDashboard() {
     name: '',
     level: 50,
     color: 'from-blue-400 to-cyan-500',
+    category: 'Technologies',
     display_order: 0
   })
   const router = useRouter()
@@ -703,6 +704,7 @@ export default function AdminDashboard() {
       name: skill.name || '',
       level: skill.level || 50,
       color: skill.color || 'from-blue-400 to-cyan-500',
+      category: skill.category || 'Technologies',
       display_order: skill.display_order || 0
     })
     setShowAddForm(true)
@@ -1701,39 +1703,62 @@ export default function AdminDashboard() {
                 <h3 className="text-lg font-medium text-gray-900">All Skills ({(skills || []).length})</h3>
               </div>
               <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {(skills || []).map((skill) => (
-                    <div key={skill.id} className="bg-gray-50 rounded-lg p-4 border">
-                      <div className="text-center">
-                        <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white`}>
-                          {skill.name.charAt(0)}
-                        </div>
-                        <h4 className="text-lg font-semibold mb-2">{skill.name}</h4>
-                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                          <div
-                            className={`h-2 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
-                            style={{ width: `${skill.level}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-sm text-gray-600">{skill.level}%</span>
-                        <div className="mt-3 flex space-x-2">
-                          <button
-                            onClick={() => handleEditSkill(skill)}
-                            className="flex-1 bg-indigo-600 text-white px-3 py-2 rounded text-sm hover:bg-indigo-700 transition-colors"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDeleteSkill(skill.id)}
-                            className="flex-1 bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700 transition-colors"
-                          >
-                            Delete
-                          </button>
-                        </div>
+                {(() => {
+                  // Group skills by category
+                  const groupedSkills = (skills || []).reduce((acc, skill) => {
+                    const category = skill.category || 'Technologies'
+                    if (!acc[category]) {
+                      acc[category] = []
+                    }
+                    acc[category].push(skill)
+                    return acc
+                  }, {})
+
+                  return Object.keys(groupedSkills).sort().map(category => (
+                    <div key={category} className="mb-8">
+                      <h4 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                        <span className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
+                        {category}
+                        <span className="ml-2 text-sm font-normal text-gray-500">
+                          ({groupedSkills[category].length} skills)
+                        </span>
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {groupedSkills[category].map((skill) => (
+                          <div key={skill.id} className="bg-gray-50 rounded-lg p-4 border hover:shadow-md transition-shadow">
+                            <div className="text-center">
+                              <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white`}>
+                                {skill.name.charAt(0)}
+                              </div>
+                              <h5 className="text-lg font-semibold mb-2">{skill.name}</h5>
+                              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                                <div
+                                  className={`h-2 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
+                                  style={{ width: `${skill.level}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-sm text-gray-600">{skill.level}%</span>
+                              <div className="mt-3 flex space-x-2">
+                                <button
+                                  onClick={() => handleEditSkill(skill)}
+                                  className="flex-1 bg-indigo-600 text-white px-3 py-2 rounded text-sm hover:bg-indigo-700 transition-colors"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteSkill(skill.id)}
+                                  className="flex-1 bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700 transition-colors"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
+                  ))
+                })()}
               </div>
             </div>
           </div>
@@ -3072,6 +3097,32 @@ export default function AdminDashboard() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category
+                    </label>
+                    <select
+                      value={skillFormData.category}
+                      onChange={(e) => setSkillFormData({...skillFormData, category: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="Programming Languages">Programming Languages</option>
+                      <option value="Frontend Frameworks">Frontend Frameworks</option>
+                      <option value="Backend Frameworks">Backend Frameworks</option>
+                      <option value="Mobile Development">Mobile Development</option>
+                      <option value="Databases">Databases</option>
+                      <option value="Cloud Platforms">Cloud Platforms</option>
+                      <option value="DevOps">DevOps</option>
+                      <option value="CI/CD">CI/CD</option>
+                      <option value="Version Control">Version Control</option>
+                      <option value="AI Frameworks">AI Frameworks</option>
+                      <option value="Artificial Intelligence">Artificial Intelligence</option>
+                      <option value="Web Frameworks">Web Frameworks</option>
+                      <option value="Design Tools">Design Tools</option>
+                      <option value="Technologies">Technologies</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Color Gradient
                     </label>
                     <select
@@ -3117,6 +3168,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex-1">
                         <h5 className="font-semibold">{skillFormData.name || 'Skill Name'}</h5>
+                        <p className="text-xs text-gray-500 mb-1">{skillFormData.category}</p>
                         <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                           <div
                             className={`h-2 rounded-full bg-gradient-to-r ${skillFormData.color} transition-all duration-1000`}

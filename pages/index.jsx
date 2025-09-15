@@ -353,34 +353,84 @@ model = keras.Sequential([
 
         {/* Skills Section */}
         <section id="skills" className="py-20 px-4 bg-gray-800/30">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Skills & Technologies
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {(skills || []).map((skill, index) => (
-                <div
-                  key={skill.name}
-                  className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="text-center">
-                    <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-2xl font-bold text-white`}>
-                      {skill.name.charAt(0)}
+            
+            {(() => {
+              // Group skills by category
+              const groupedSkills = (skills || []).reduce((acc, skill) => {
+                const category = skill.category || 'Technologies'
+                if (!acc[category]) {
+                  acc[category] = []
+                }
+                acc[category].push(skill)
+                return acc
+              }, {})
+
+              // Category colors and icons
+              const categoryStyles = {
+                'Programming Languages': { color: 'from-blue-500 to-cyan-500', icon: '💻' },
+                'Frontend Frameworks': { color: 'from-cyan-400 to-blue-500', icon: '🎨' },
+                'Backend Frameworks': { color: 'from-green-500 to-emerald-500', icon: '⚙️' },
+                'Mobile Development': { color: 'from-purple-500 to-pink-500', icon: '📱' },
+                'Databases': { color: 'from-yellow-500 to-orange-500', icon: '🗄️' },
+                'Cloud Platforms': { color: 'from-orange-500 to-red-500', icon: '☁️' },
+                'DevOps': { color: 'from-indigo-500 to-purple-500', icon: '🔧' },
+                'CI/CD': { color: 'from-pink-500 to-rose-500', icon: '🔄' },
+                'Version Control': { color: 'from-gray-500 to-gray-700', icon: '📝' },
+                'AI Frameworks': { color: 'from-purple-600 to-indigo-600', icon: '🤖' },
+                'Artificial Intelligence': { color: 'from-violet-500 to-purple-500', icon: '🧠' },
+                'Web Frameworks': { color: 'from-emerald-500 to-teal-500', icon: '🌐' },
+                'Design Tools': { color: 'from-pink-400 to-purple-400', icon: '🎭' },
+                'Technologies': { color: 'from-slate-500 to-gray-600', icon: '⚡' }
+              }
+
+              return Object.keys(groupedSkills).sort().map((category, categoryIndex) => {
+                const categoryStyle = categoryStyles[category] || categoryStyles['Technologies']
+                return (
+                  <div key={category} className="mb-12">
+                    <div className="flex items-center justify-center mb-8">
+                      <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${categoryStyle.color} flex items-center justify-center text-2xl mr-4`}>
+                        {categoryStyle.icon}
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">{category}</h3>
+                      <div className="ml-4 px-3 py-1 bg-gray-700/50 rounded-full text-sm text-gray-300">
+                        {groupedSkills[category].length} skills
+                      </div>
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">{skill.name}</h3>
-                    <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
-                      <div
-                        className={`h-2 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
-                        style={{ width: `${skill.level}%` }}
-                      ></div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                      {groupedSkills[category].map((skill, skillIndex) => (
+                        <div
+                          key={skill.name}
+                          className="bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 group"
+                          style={{ animationDelay: `${(categoryIndex * 0.2) + (skillIndex * 0.1)}s` }}
+                        >
+                          <div className="text-center">
+                            <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white group-hover:scale-110 transition-transform duration-300`}>
+                              {skill.name.charAt(0)}
+                            </div>
+                            <h4 className="text-sm font-semibold mb-2 text-white group-hover:text-blue-300 transition-colors">
+                              {skill.name}
+                            </h4>
+                            <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
+                              <div
+                                className={`h-1.5 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
+                                style={{ width: `${skill.level}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-xs text-gray-400">{skill.level}%</span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <span className="text-sm text-gray-400">{skill.level}%</span>
                   </div>
-                </div>
-              ))}
+                )
+              })
+            })()}
           </div>
-        </div>
         </section>
 
         {/* Projects Section */}
