@@ -40,21 +40,32 @@ const SkillsSection = ({ skills }) => {
 
   const categories = Object.keys(groupedSkills).sort()
   const [activeTab, setActiveTab] = useState(categories[0] || '')
-  const [isAutoRotating, setIsAutoRotating] = useState(true)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Auto-rotation effect
+  // Continuous auto-rotation effect
   useEffect(() => {
-    if (!isAutoRotating || categories.length <= 1) return
+    if (categories.length <= 1) return
 
     const interval = setInterval(() => {
-      setActiveTab(prev => {
-        const currentIndex = categories.indexOf(prev)
-        return categories[(currentIndex + 1) % categories.length]
-      })
-    }, 4000) // Change tab every 4 seconds
+      setIsTransitioning(true)
+      
+      setTimeout(() => {
+        setCurrentIndex(prev => (prev + 1) % categories.length)
+        setActiveTab(categories[(currentIndex + 1) % categories.length])
+        setIsTransitioning(false)
+      }, 300) // Half of transition duration
+    }, 5000) // Change tab every 5 seconds
 
     return () => clearInterval(interval)
-  }, [isAutoRotating, categories])
+  }, [categories, currentIndex])
+
+  // Update activeTab when currentIndex changes
+  useEffect(() => {
+    if (categories.length > 0) {
+      setActiveTab(categories[currentIndex])
+    }
+  }, [currentIndex, categories])
 
   if (categories.length === 0) return null
 
@@ -68,7 +79,7 @@ const SkillsSection = ({ skills }) => {
         <div className="relative">
           {/* Tab Navigation */}
           <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {categories.map((category) => {
+            {categories.map((category, index) => {
               const categoryStyle = categoryStyles[category] || categoryStyles['Technologies']
               const isActive = activeTab === category
               
@@ -76,18 +87,18 @@ const SkillsSection = ({ skills }) => {
                 <button
                   key={category}
                   onClick={() => {
+                    setCurrentIndex(index)
                     setActiveTab(category)
-                    setIsAutoRotating(false)
                   }}
-                  className={`flex items-center px-4 py-2 rounded-full transition-all duration-300 ${
+                  className={`flex items-center px-4 py-2 rounded-full transition-all duration-500 ${
                     isActive
                       ? `bg-gradient-to-r ${categoryStyle.color} text-white shadow-lg transform scale-105`
-                      : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white'
+                      : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white hover:scale-105'
                   }`}
                 >
                   <span className="text-lg mr-2">{categoryStyle.icon}</span>
                   <span className="font-medium">{category}</span>
-                  <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                  <span className={`ml-2 px-2 py-1 rounded-full text-xs transition-all duration-300 ${
                     isActive ? 'bg-white/20' : 'bg-gray-600/50'
                   }`}>
                     {groupedSkills[category].length}
@@ -97,34 +108,47 @@ const SkillsSection = ({ skills }) => {
             })}
           </div>
 
-          {/* Auto-rotation Controls */}
-          <div className="flex justify-center mb-6">
-            <button
-              onClick={() => setIsAutoRotating(!isAutoRotating)}
-              className={`flex items-center px-4 py-2 rounded-full transition-all duration-300 ${
-                isAutoRotating
-                  ? 'bg-green-600/20 text-green-400 border border-green-500/30'
-                  : 'bg-gray-700/50 text-gray-400 border border-gray-600/30'
-              }`}
-            >
-              <span className="mr-2">
-                {isAutoRotating ? '⏸️' : '▶️'}
-              </span>
-              {isAutoRotating ? 'Auto-rotating' : 'Start rotation'}
-            </button>
+          {/* Progress Indicator */}
+          <div className="flex justify-center mb-8">
+            <div className="flex space-x-2">
+              {categories.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-2 rounded-full transition-all duration-500 ${
+                    index === currentIndex
+                      ? 'w-8 bg-gradient-to-r from-blue-400 to-purple-400'
+                      : 'w-2 bg-gray-600'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Active Tab Content */}
-          <div className="min-h-[400px]">
+          {/* Active Tab Content with Smooth Transitions */}
+          <div className="min-h-[400px] relative overflow-hidden">
             {activeTab && groupedSkills[activeTab] && (
-              <div className="animate-fadeIn">
+              <div 
+                className={`transition-all duration-500 transform ${
+                  isTransitioning 
+                    ? 'opacity-0 translate-x-8 scale-95' 
+                    : 'opacity-100 translate-x-0 scale-100'
+                }`}
+              >
                 <div className="flex items-center justify-center mb-8">
-                  <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${categoryStyles[activeTab]?.color || categoryStyles['Technologies'].color} flex items-center justify-center text-3xl mr-4`}>
+                  <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${categoryStyles[activeTab]?.color || categoryStyles['Technologies'].color} flex items-center justify-center text-3xl mr-4 transition-all duration-500 ${
+                    isTransitioning ? 'scale-90' : 'scale-100'
+                  }`}>
                     {categoryStyles[activeTab]?.icon || categoryStyles['Technologies'].icon}
                   </div>
-                  <div>
-                    <h3 className="text-3xl font-bold text-white">{activeTab}</h3>
-                    <p className="text-gray-400 text-center">
+                  <div className="text-center">
+                    <h3 className={`text-3xl font-bold text-white transition-all duration-500 ${
+                      isTransitioning ? 'translate-y-2 opacity-70' : 'translate-y-0 opacity-100'
+                    }`}>
+                      {activeTab}
+                    </h3>
+                    <p className={`text-gray-400 transition-all duration-500 ${
+                      isTransitioning ? 'translate-y-1 opacity-50' : 'translate-y-0 opacity-100'
+                    }`}>
                       {groupedSkills[activeTab].length} skills in this category
                     </p>
                   </div>
@@ -134,29 +158,52 @@ const SkillsSection = ({ skills }) => {
                   {groupedSkills[activeTab].map((skill, skillIndex) => (
                     <div
                       key={skill.name}
-                      className="bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 group"
-                      style={{ animationDelay: `${skillIndex * 0.1}s` }}
+                      className={`bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-500 transform hover:scale-105 group ${
+                        isTransitioning ? 'opacity-60 scale-95' : 'opacity-100 scale-100'
+                      }`}
+                      style={{ 
+                        animationDelay: `${skillIndex * 0.05}s`,
+                        transitionDelay: `${skillIndex * 0.02}s`
+                      }}
                     >
                       <div className="text-center">
-                        <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white group-hover:scale-110 transition-transform duration-300`}>
+                        <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white group-hover:scale-110 transition-all duration-300 ${
+                          isTransitioning ? 'scale-90' : 'scale-100'
+                        }`}>
                           {skill.name.charAt(0)}
                         </div>
-                        <h4 className="text-sm font-semibold mb-2 text-white group-hover:text-blue-300 transition-colors">
+                        <h4 className={`text-sm font-semibold mb-2 text-white group-hover:text-blue-300 transition-all duration-300 ${
+                          isTransitioning ? 'opacity-70' : 'opacity-100'
+                        }`}>
                           {skill.name}
                         </h4>
                         <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
                           <div
-                            className={`h-1.5 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000`}
+                            className={`h-1.5 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000 ${
+                              isTransitioning ? 'opacity-60' : 'opacity-100'
+                            }`}
                             style={{ width: `${skill.level}%` }}
                           ></div>
                         </div>
-                        <span className="text-xs text-gray-400">{skill.level}%</span>
+                        <span className={`text-xs text-gray-400 transition-all duration-300 ${
+                          isTransitioning ? 'opacity-50' : 'opacity-100'
+                        }`}>
+                          {skill.level}%
+                        </span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Auto-rotation Indicator */}
+          <div className="flex justify-center mt-6">
+            <div className="flex items-center space-x-2 text-gray-400 text-sm">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span>Auto-rotating through {categories.length} categories</span>
+            </div>
           </div>
         </div>
       </div>
