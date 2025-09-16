@@ -465,7 +465,7 @@ model = keras.Sequential([
                     alt="Ismile Bharmal - Flutter & AI/ML Developer"
                     width={120}
                     height={120}
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full object-cover object-center scale-150"
                     priority
                   />
                 </div>
