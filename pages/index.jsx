@@ -873,42 +873,108 @@ model = keras.Sequential([
         <section id="featured-projects" className="py-20 px-4 bg-gray-900/50">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Featured Projects
-              </h2>
-              <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-                Showcasing my expertise in Flutter development, AI/ML solutions, and full-stack applications. 
-                Each project demonstrates different aspects of my technical skills and problem-solving approach.
-              </p>
+              <div className="relative">
+                {/* Animated background elements */}
+                <div className="absolute -top-10 -left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+                <div className="absolute -top-5 -right-10 w-16 h-16 bg-purple-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+                <div className="absolute -bottom-5 left-1/4 w-12 h-12 bg-pink-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
+                
+                <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent relative z-10">
+                  <span className="inline-block animate-bounce" style={{animationDuration: '3s'}}>✨</span>
+                  <span className="mx-2">Featured Projects</span>
+                  <span className="inline-block animate-bounce" style={{animationDuration: '3s', animationDelay: '1.5s'}}>✨</span>
+                </h2>
+                
+                <div className="relative">
+                  <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                    <span className="inline-block opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                      Showcasing my expertise in 
+                    </span>
+                    <span className="inline-block opacity-0 animate-fade-in-up text-blue-400 font-semibold" style={{animationDelay: '0.4s'}}>
+                      Flutter development
+                    </span>
+                    <span className="inline-block opacity-0 animate-fade-in-up" style={{animationDelay: '0.6s'}}>
+                      , 
+                    </span>
+                    <span className="inline-block opacity-0 animate-fade-in-up text-purple-400 font-semibold" style={{animationDelay: '0.8s'}}>
+                      AI/ML solutions
+                    </span>
+                    <span className="inline-block opacity-0 animate-fade-in-up" style={{animationDelay: '1s'}}>
+                      , and 
+                    </span>
+                    <span className="inline-block opacity-0 animate-fade-in-up text-pink-400 font-semibold" style={{animationDelay: '1.2s'}}>
+                      full-stack applications
+                    </span>
+                    <span className="inline-block opacity-0 animate-fade-in-up" style={{animationDelay: '1.4s'}}>
+                      . Each project demonstrates different aspects of my technical skills and problem-solving approach.
+                    </span>
+                  </p>
+                  
+                  {/* Floating tech icons */}
+                  <div className="absolute -top-8 left-1/4 text-2xl opacity-20 animate-float" style={{animationDelay: '0s'}}>🚀</div>
+                  <div className="absolute -top-4 right-1/4 text-xl opacity-20 animate-float" style={{animationDelay: '1s'}}>💻</div>
+                  <div className="absolute top-2 left-1/6 text-lg opacity-20 animate-float" style={{animationDelay: '2s'}}>⚡</div>
+                  <div className="absolute top-4 right-1/6 text-xl opacity-20 animate-float" style={{animationDelay: '3s'}}>🎯</div>
+                </div>
+              </div>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredProjects.map((project) => (
-                <div key={project.id} className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                  <div className={`relative h-48 bg-gradient-to-br from-${project.gradient_from} to-${project.gradient_to}`}>
+              {featuredProjects.map((project, index) => (
+                <div 
+                  key={project.id} 
+                  className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 opacity-0 animate-fade-in-up"
+                  style={{
+                    animationDelay: `${0.5 + index * 0.1}s`,
+                    animationFillMode: 'forwards'
+                  }}
+                >
+                  <div className={`relative h-48 bg-gradient-to-br from-${project.gradient_from} to-${project.gradient_to} group-hover:shadow-2xl group-hover:shadow-blue-500/20 transition-all duration-500`}>
+                    {/* Animated background pattern */}
+                    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+                      <div className="absolute top-4 left-4 w-2 h-2 bg-white rounded-full animate-ping"></div>
+                      <div className="absolute top-8 right-8 w-1 h-1 bg-white rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
+                      <div className="absolute bottom-6 left-8 w-1.5 h-1.5 bg-white rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+                    </div>
+                    
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <span className="text-3xl">{project.icon}</span>
+                      <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg group-hover:shadow-xl group-hover:shadow-blue-400/30">
+                        <span className="text-3xl group-hover:animate-bounce">{project.icon}</span>
                       </div>
                     </div>
+                    
                     <div className="absolute top-4 right-4">
-                      <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg group-hover:shadow-green-400/30 group-hover:scale-110 transition-all duration-300">
                         {project.category}
                       </span>
                     </div>
+                    
+                    {/* Hover glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-blue-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 transition-all duration-500 rounded-t-2xl"></div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-white mb-3">{project.title}</h3>
-                    <p className="text-gray-400 mb-4">
+                  <div className="p-6 group-hover:bg-gradient-to-br group-hover:from-gray-800/20 group-hover:to-gray-700/20 transition-all duration-500">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors duration-300">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-400 mb-4 group-hover:text-gray-300 transition-colors duration-300 leading-relaxed">
                       {project.description}
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {project.technologies.map((tech, index) => (
-                        <span key={index} className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">
+                      {project.technologies.map((tech, techIndex) => (
+                        <span 
+                          key={techIndex} 
+                          className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs group-hover:bg-blue-500/30 group-hover:text-blue-300 group-hover:scale-105 transition-all duration-300 shadow-sm group-hover:shadow-blue-400/20"
+                          style={{
+                            animationDelay: `${techIndex * 0.1}s`
+                          }}
+                        >
                           {tech}
                         </span>
                       ))}
                     </div>
+                    
+                    {/* Animated border on hover */}
+                    <div className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-500"></div>
                   </div>
                 </div>
               ))}
