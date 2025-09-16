@@ -329,7 +329,7 @@ export default function Portfolio() {
               
               {/* Desktop Menu */}
               <div className="hidden md:flex space-x-8">
-                {['home', 'about', 'skills', 'portfolio', 'featured-work', 'workshops', 'prompts', 'contact'].map((item) => (
+                {['home', 'about', 'skills', 'featured-work', 'workshops', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -356,7 +356,7 @@ export default function Portfolio() {
             {/* Mobile Menu */}
             {isMenuOpen && (
               <div className="md:hidden bg-gray-900/95 backdrop-blur-md rounded-lg mt-2 p-4">
-                {['home', 'about', 'skills', 'portfolio', 'featured-work', 'workshops', 'prompts', 'contact'].map((item) => (
+                {['home', 'about', 'skills', 'featured-work', 'workshops', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -566,121 +566,6 @@ model = keras.Sequential([
         {/* Skills Section */}
         <SkillsSection skills={skills} />
 
-        {/* Projects Section */}
-        <section id="portfolio" className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              My Portfolio
-            </h2>
-            <p className="text-center text-gray-400 mb-12 max-w-3xl mx-auto">
-              Explore my complete collection of projects, from mobile apps to AI solutions. 
-              Each project represents a unique challenge and innovative solution. Browse through 
-              Flutter applications, AI/ML implementations, web development projects, and more.
-            </p>
-            {loading ? (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
-                <p className="mt-4 text-gray-400">Loading projects...</p>
-              </div>
-            ) : projects.length > 0 ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map((project, index) => (
-                  <div
-                    key={project.id}
-                    className={`bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105 cursor-pointer ${
-                      project.featured ? 'md:col-span-2 lg:col-span-1' : ''
-                    }`}
-                    style={{ animationDelay: `${index * 0.2}s` }}
-                    onClick={() => handleProjectClick(project)}
-                  >
-                    <div className="h-48 relative overflow-hidden">
-                      {project.images && project.images.length > 0 ? (
-                        <ImageSlideshow
-                          images={project.images}
-                          autoPlay={true}
-                          interval={3000}
-                          showThumbnails={false}
-                          showControls={false}
-                          className="h-full"
-                        />
-                      ) : (
-                        <DatabaseImage
-                          imageId={project.imageId}
-                          imageUrl={project.image_url}
-                          alt={project.title}
-                          className="w-full h-full object-cover"
-                          fallback={
-                            <div className="h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                              <div className="text-center">
-                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
-                                  <span className="text-2xl">🚀</span>
-                                </div>
-                                <p className="text-gray-400">Project Preview</p>
-                              </div>
-                            </div>
-                          }
-                        />
-                      )}
-                    </div>
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-xl font-semibold">{project.title}</h3>
-                        {project.featured && (
-                          <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-2 py-1 rounded-full text-xs font-bold">
-                            Featured
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-gray-300 mb-4">
-                        {project.shortDescription || project.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {project.technologies && project.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="bg-gray-700/50 text-blue-400 px-2 py-1 rounded text-xs"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex gap-3">
-                        {project.liveUrl && (
-                          <a
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-center py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
-                          >
-                            Live Demo
-                          </a>
-                        )}
-                        {project.githubUrl && (
-                          <a
-                            href={project.githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 border border-gray-600 text-center py-2 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-300"
-                          >
-                            GitHub
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-            <div className="text-center py-12">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-700/50 flex items-center justify-center">
-                  <span className="text-2xl">📁</span>
-                </div>
-                <p className="text-gray-400">No projects available at the moment.</p>
-                <p className="text-gray-500 text-sm mt-2">Check back later for updates!</p>
-              </div>
-            )}
-          </div>
-        </section>
 
         {/* Prompts Section */}
         <section id="prompts" className="py-20 px-4 bg-gray-800/30">
@@ -886,7 +771,7 @@ model = keras.Sequential([
                 
                 <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent relative z-10">
                   <span className="inline-block animate-bounce" style={{animationDuration: '3s'}}>✨</span>
-                  <span className="mx-2">Featured Work</span>
+                  <span className="mx-2">My Projects</span>
                   <span
                     className="inline-block animate-bounce"
                     style={{
@@ -965,7 +850,7 @@ model = keras.Sequential([
                     {/* Hover glow effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-blue-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 transition-all duration-500 rounded-t-2xl"></div>
                   </div>
-                  <div className="p-6 group-hover:bg-gradient-to-br group-hover:from-gray-800/20 group-hover:to-gray-700/20 transition-all duration-500">
+                    <div className="p-6 group-hover:bg-gradient-to-br group-hover:from-gray-800/20 group-hover:to-gray-700/20 transition-all duration-500">
                     <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors duration-300">
                       {project.title}
                     </h3>
@@ -984,6 +869,32 @@ model = keras.Sequential([
                           {tech}
                         </span>
                       ))}
+                    </div>
+                    
+                    {/* Project References */}
+                    <div className="flex gap-2 mb-4">
+                      <a
+                        href="#"
+                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-center py-2 px-3 rounded-lg text-sm font-medium hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // You can add project details modal or external link here
+                          alert(`View details for ${project.title}`);
+                        }}
+                      >
+                        View Details
+                      </a>
+                      <a
+                        href="#"
+                        className="flex-1 border border-gray-500 text-gray-300 text-center py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:border-gray-400 transition-all duration-300"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // You can add code repository link here
+                          alert(`View code for ${project.title}`);
+                        }}
+                      >
+                        View Code
+                      </a>
                     </div>
                     
                     {/* Animated border on hover */}
