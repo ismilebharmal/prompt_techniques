@@ -329,7 +329,7 @@ export default function Portfolio() {
               
               {/* Desktop Menu */}
               <div className="hidden md:flex space-x-8">
-                {['home', 'about', 'skills', 'featured-projects', 'projects', 'workshops', 'prompts', 'contact'].map((item) => (
+                {['home', 'about', 'skills', 'portfolio', 'featured-work', 'workshops', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -356,7 +356,7 @@ export default function Portfolio() {
             {/* Mobile Menu */}
             {isMenuOpen && (
               <div className="md:hidden bg-gray-900/95 backdrop-blur-md rounded-lg mt-2 p-4">
-                {['home', 'about', 'skills', 'featured-projects', 'projects', 'workshops', 'prompts', 'contact'].map((item) => (
+                {['home', 'about', 'skills', 'portfolio', 'featured-work', 'workshops', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -567,11 +567,16 @@ model = keras.Sequential([
         <SkillsSection skills={skills} />
 
         {/* Projects Section */}
-        <section id="projects" className="py-20 px-4">
+        <section id="portfolio" className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Featured Projects
+              My Portfolio
             </h2>
+            <p className="text-center text-gray-400 mb-12 max-w-3xl mx-auto">
+              Explore my complete collection of projects, from mobile apps to AI solutions. 
+              Each project represents a unique challenge and innovative solution. Browse through 
+              Flutter applications, AI/ML implementations, web development projects, and more.
+            </p>
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
@@ -869,8 +874,8 @@ model = keras.Sequential([
           </div>
         </section>
 
-        {/* Featured Projects Section */}
-        <section id="featured-projects" className="py-20 px-4 bg-gray-900/50">
+        {/* Featured Work Section */}
+        <section id="featured-work" className="py-20 px-4 bg-gray-900/50">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <div className="relative">
@@ -881,8 +886,16 @@ model = keras.Sequential([
                 
                 <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent relative z-10">
                   <span className="inline-block animate-bounce" style={{animationDuration: '3s'}}>✨</span>
-                  <span className="mx-2">Featured Projects</span>
-                  <span className="inline-block animate-bounce" style={{animationDuration: '3s', animationDelay: '1.5s'}}>✨</span>
+                  <span className="mx-2">Featured Work</span>
+                  <span
+                    className="inline-block animate-bounce"
+                    style={{
+                      animationDuration: '3s',
+                      animationDelay: '1.5s',
+                      color: '#FFD700',
+                      textShadow: '0 0 8px #fff, 0 0 16px #FFD700, 0 0 24px #FFD700'
+                    }}
+                  >🚀</span>
                 </h2>
                 
                 <div className="relative">
@@ -1033,12 +1046,13 @@ model = keras.Sequential([
                     </div>
                     
                     <h3 className="text-3xl font-bold text-white mb-4">
-                      Want to See More Projects?
+                      Want to See More Work?
                     </h3>
                     
                     <p className="text-xl text-gray-300 mb-8 leading-relaxed">
                       I have many more exciting projects, case studies, and detailed implementations 
-                      that showcase my expertise across different technologies and domains.
+                      that showcase my expertise across different technologies and domains. 
+                      Each project represents unique challenges and innovative solutions.
                     </p>
                     
                     {/* Project Categories Preview */}
