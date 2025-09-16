@@ -871,31 +871,6 @@ model = keras.Sequential([
                       ))}
                     </div>
                     
-                    {/* Project References */}
-                    <div className="flex gap-2 mb-4">
-                      <a
-                        href="#"
-                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-center py-2 px-3 rounded-lg text-sm font-medium hover:from-blue-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // You can add project details modal or external link here
-                          alert(`View details for ${project.title}`);
-                        }}
-                      >
-                        View Details
-                      </a>
-                      <a
-                        href="#"
-                        className="flex-1 border border-gray-500 text-gray-300 text-center py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-700 hover:border-gray-400 transition-all duration-300"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // You can add code repository link here
-                          alert(`View code for ${project.title}`);
-                        }}
-                      >
-                        View Code
-                      </a>
-                    </div>
                     
                     {/* Animated border on hover */}
                     <div className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-500"></div>
