@@ -876,12 +876,12 @@ model = keras.Sequential([
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* AI-Powered Chatbot Platform */}
+              {/* AI-Powered Personalization System */}
               <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
                 <div className="relative h-48 bg-gradient-to-br from-blue-500/20 to-purple-500/20">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">🤖</span>
+                      <span className="text-3xl">🎨</span>
                     </div>
                   </div>
                   <div className="absolute top-4 right-4">
@@ -891,209 +891,248 @@ model = keras.Sequential([
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">AI-Powered Chatbot Platform</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">AI-Powered Personalization System</h3>
                   <p className="text-gray-400 mb-4">
-                    A comprehensive chatbot platform built with Flutter and FastAPI, featuring LangChain integration, 
-                    multiple LLM support, and real-time conversation management.
+                    Developed an AI-powered chatbot for guided product personalization with OpenAI APIs, 
+                    real-time product previews using Pillow, and gRPC-based backend for scalable communication.
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Flutter</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">FastAPI</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">LangChain</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">PostgreSQL</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <button className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300">
-                      View Details
-                    </button>
-                    <button className="px-4 py-2 border border-blue-400 rounded-lg font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300">
-                      Code
-                    </button>
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">OpenAI</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">gRPC</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">Pillow</span>
                   </div>
                 </div>
               </div>
 
-              {/* Cross-Platform E-Commerce App */}
+              {/* AI Pharmacy Chatbot */}
               <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
                 <div className="relative h-48 bg-gradient-to-br from-green-500/20 to-teal-500/20">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-teal-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">🛒</span>
+                      <span className="text-3xl">💊</span>
                     </div>
                   </div>
                   <div className="absolute top-4 right-4">
                     <span className="bg-gradient-to-r from-blue-400 to-cyan-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      Healthcare AI
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-3">AI Pharmacy Chatbot</h3>
+                  <p className="text-gray-400 mb-4">
+                    Healthcare-focused chatbot with LangChain's GraphQAChain for safe drug recommendations, 
+                    SurrealDB integration, and safety filtering for contraindications based on patient profiles.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">LangChain</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">SurrealDB</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">FastAPI</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Object Detection and Replacement System */}
+              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="relative h-48 bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl">🔍</span>
+                    </div>
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-gradient-to-r from-purple-400 to-pink-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      Computer Vision
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-3">Object Detection & Replacement System</h3>
+                  <p className="text-gray-400 mb-4">
+                    Advanced object detection using YOLOv11 and SAM for dynamic variant replacement, 
+                    with Roboflow integration and instance-specific object modification capabilities.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">YOLOv11</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">SAM</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">OpenCV</span>
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">StreamLit</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Time Series Analysis Platform */}
+              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="relative h-48 bg-gradient-to-br from-orange-500/20 to-red-500/20">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl">📈</span>
+                    </div>
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-gradient-to-r from-orange-400 to-red-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      Time Series ML
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-3">Time Series Analysis Platform</h3>
+                  <p className="text-gray-400 mb-4">
+                    Advanced time series forecasting using ARIMA, SARIMA, and Prophet models with 
+                    dynamic feature engineering and automated P,D,Q parameter optimization.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">ARIMA</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">Prophet</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">FastAPI</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Model Agnostic Chatbot */}
+              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="relative h-48 bg-gradient-to-br from-indigo-500/20 to-blue-500/20">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl">🤖</span>
+                    </div>
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-gradient-to-r from-indigo-400 to-blue-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      LangGraph
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-3">Model Agnostic Chatbot</h3>
+                  <p className="text-gray-400 mb-4">
+                    Advanced chatbot system with LangGraph integration, text-to-query generation, 
+                    and graph-based UI for complex conversational workflows and query processing.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">LangGraph</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">PostgreSQL</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">StreamLit</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* PDF RAG Application */}
+              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="relative h-48 bg-gradient-to-br from-pink-500/20 to-rose-500/20">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl">📄</span>
+                    </div>
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-gradient-to-r from-pink-400 to-rose-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      RAG System
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-3">PDF RAG Application</h3>
+                  <p className="text-gray-400 mb-4">
+                    Intelligent document processing system with ChromaDB integration, 
+                    advanced embeddings, and hallucination-free retrieval for accurate information extraction.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">ChromaDB</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">FastAPI</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">Embeddings</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cross-Platform Flutter Apps */}
+              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="relative h-48 bg-gradient-to-br from-cyan-500/20 to-blue-500/20">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl">📱</span>
+                    </div>
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-gradient-to-r from-cyan-400 to-blue-500 text-black px-3 py-1 rounded-full text-xs font-bold">
                       Flutter
                     </span>
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Cross-Platform E-Commerce App</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">Cross-Platform Flutter Applications</h3>
                   <p className="text-gray-400 mb-4">
-                    A full-featured e-commerce application built with Flutter for both mobile and web platforms, 
-                    featuring real-time inventory management and secure payment processing.
+                    Multiple production Flutter apps including field management, inventory systems, 
+                    and admin panels with Firebase integration, real-time features, and multi-language support.
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Flutter</span>
                     <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs">Firebase</span>
-                    <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs">Stripe API</span>
-                    <span className="bg-indigo-500/20 text-indigo-400 px-2 py-1 rounded text-xs">Provider</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <button className="flex-1 bg-gradient-to-r from-green-500 to-teal-600 py-2 rounded-lg font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-300">
-                      View Details
-                    </button>
-                    <button className="px-4 py-2 border border-green-400 rounded-lg font-semibold hover:bg-green-400 hover:text-gray-900 transition-all duration-300">
-                      Code
-                    </button>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">REST APIs</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">Push Notifications</span>
                   </div>
                 </div>
               </div>
 
-              {/* Machine Learning Model Deployment */}
+              {/* Advanced Chatbot with Memory */}
               <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                <div className="relative h-48 bg-gradient-to-br from-emerald-500/20 to-teal-500/20">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">🧠</span>
+                    <div className="w-20 h-20 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl">💬</span>
                     </div>
                   </div>
                   <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-purple-400 to-pink-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      ML/AI
+                    <span className="bg-gradient-to-r from-emerald-400 to-teal-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      Conversational AI
                     </span>
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">ML Model Deployment Platform</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">Advanced Chatbot with Memory</h3>
                   <p className="text-gray-400 mb-4">
-                    A comprehensive platform for deploying and managing machine learning models with real-time 
-                    inference, model versioning, and performance monitoring using StreamLit and FastAPI.
+                    Interactive chatbot with ChainLit UI, LangGraph agent workflows, 
+                    conversation memory, and comprehensive DML operations for complex interactions.
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">Python</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">StreamLit</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">TensorFlow</span>
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Docker</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-600 py-2 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-300">
-                      View Details
-                    </button>
-                    <button className="px-4 py-2 border border-purple-400 rounded-lg font-semibold hover:bg-purple-400 hover:text-gray-900 transition-all duration-300">
-                      Code
-                    </button>
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">ChainLit</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">LangGraph</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">SQLite</span>
                   </div>
                 </div>
               </div>
 
-              {/* Real-time Analytics Dashboard */}
+              {/* Data Integration Platform */}
               <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-orange-500/20 to-red-500/20">
+                <div className="relative h-48 bg-gradient-to-br from-violet-500/20 to-purple-500/20">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">📊</span>
+                    <div className="w-20 h-20 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl">🔗</span>
                     </div>
                   </div>
                   <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-orange-400 to-red-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      Full-Stack
+                    <span className="bg-gradient-to-r from-violet-400 to-purple-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                      Data Platform
                     </span>
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Real-time Analytics Dashboard</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">Data Integration Platform</h3>
                   <p className="text-gray-400 mb-4">
-                    A comprehensive analytics dashboard with real-time data visualization, interactive charts, 
-                    and automated reporting using React, Node.js, and WebSocket connections.
+                    Multi-platform data integration system with MongoDB, RabbitMQ messaging, 
+                    GraphQL APIs, and pandas-based data transformation for enterprise applications.
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">React</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">Node.js</span>
-                    <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs">Chart.js</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">WebSocket</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <button className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-700 transition-all duration-300">
-                      View Details
-                    </button>
-                    <button className="px-4 py-2 border border-orange-400 rounded-lg font-semibold hover:bg-orange-400 hover:text-gray-900 transition-all duration-300">
-                      Code
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Mobile Banking App */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-indigo-500/20 to-blue-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">🏦</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-indigo-400 to-blue-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      Mobile
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Secure Mobile Banking App</h3>
-                  <p className="text-gray-400 mb-4">
-                    A secure mobile banking application with biometric authentication, transaction management, 
-                    and real-time notifications built with Flutter and advanced security protocols.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Flutter</span>
-                    <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs">Firebase Auth</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">Biometric</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">Encryption</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <button className="flex-1 bg-gradient-to-r from-indigo-500 to-blue-600 py-2 rounded-lg font-semibold hover:from-indigo-600 hover:to-blue-700 transition-all duration-300">
-                      View Details
-                    </button>
-                    <button className="px-4 py-2 border border-indigo-400 rounded-lg font-semibold hover:bg-indigo-400 hover:text-gray-900 transition-all duration-300">
-                      Code
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* AI Content Generation Tool */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-pink-500/20 to-rose-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">✨</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-pink-400 to-rose-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      AI Tool
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">AI Content Generation Tool</h3>
-                  <p className="text-gray-400 mb-4">
-                    An intelligent content generation platform using LangChain and OpenAI APIs, featuring 
-                    customizable templates, batch processing, and content quality analysis.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Next.js</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">LangChain</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">OpenAI API</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">PostgreSQL</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <button className="flex-1 bg-gradient-to-r from-pink-500 to-rose-600 py-2 rounded-lg font-semibold hover:from-pink-600 hover:to-rose-700 transition-all duration-300">
-                      View Details
-                    </button>
-                    <button className="px-4 py-2 border border-pink-400 rounded-lg font-semibold hover:bg-pink-400 hover:text-gray-900 transition-all duration-300">
-                      Code
-                    </button>
+                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">MongoDB</span>
+                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">RabbitMQ</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">GraphQL</span>
                   </div>
                 </div>
               </div>
