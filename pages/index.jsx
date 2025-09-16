@@ -462,11 +462,13 @@ model = keras.Sequential([
                 Ismile Bharmal
               </h1>
               <p className="text-xl md:text-2xl text-gray-300 mb-6 animate-fade-in" style={{animationDelay: '0.5s'}}>
-                Flutter & AI/ML Developer
+                Flutter & AI/ML Developer | Full Stack Engineer
               </p>
-              <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8 animate-fade-in" style={{animationDelay: '1s'}}>
-                More than two years of experience in Flutter, AI, and Machine Learning development. 
-                Specializing in cross-platform applications and AI/ML-driven solutions.
+              <p className="text-lg text-gray-400 max-w-4xl mx-auto mb-6 animate-fade-in" style={{animationDelay: '1s'}}>
+                Passionate Flutter & AI/ML Developer with 3+ years of experience in designing, developing, and deploying mobile applications and AI-driven solutions. I specialize in building cross-platform applications with Flutter for both mobile and web, and in AI/ML technologies.
+              </p>
+              <p className="text-base text-gray-500 max-w-4xl mx-auto mb-8 animate-fade-in" style={{animationDelay: '1.5s'}}>
+                My expertise covers the full development lifecycle, from architecture and design to deployment and monitoring. I have a solid understanding of implementing design patterns and developing model-agnostic chatbots using technologies like FastAPI, StreamLit, LangChain, and various LLM models.
               </p>
             </div>
             
@@ -669,81 +671,140 @@ model = keras.Sequential([
         </section>
 
         {/* Prompts Section */}
-        <section id="prompts" className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
+        <section id="prompts" className="py-20 px-4 bg-gray-800/30">
+          <div className="max-w-7xl mx-auto">
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              AI Prompt Templates
+              AI Prompt Library
             </h2>
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h3 className="text-3xl font-semibold mb-6">
-                  Discover Powerful AI Prompts
-                </h3>
-                <p className="text-gray-300 mb-6 text-lg leading-relaxed">
-                  Explore my curated collection of AI prompt templates designed to help you get the most out of 
-                  AI tools like ChatGPT, Claude, and other language models. Each prompt is carefully crafted 
-                  and tested for optimal results.
-                </p>
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <span className="text-gray-300">50+ Professional prompt templates</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <span className="text-gray-300">Categorized by use case and industry</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <span className="text-gray-300">Copy-paste ready with examples</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <span className="text-gray-300">Regularly updated with new prompts</span>
-                  </div>
+            
+            {/* Prompt Categories with Thumbnails */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+              {/* Writing & Content Creation */}
+              <div className="group bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">✍️</span>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    href="/prompts"
-                    className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 text-center"
-                  >
-                    Explore Prompt Library
-                  </Link>
-                  <a
-                    href="https://github.com/ismilebharmal/prompt_techniques"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300 text-center"
-                  >
-                    View on GitHub
-                  </a>
+                <h3 className="text-xl font-bold text-white mb-3">Writing & Content</h3>
+                <p className="text-gray-400 mb-4">Blog posts, articles, creative writing, and content marketing prompts</p>
+                <div className="bg-gray-700/50 rounded-lg p-3 mb-4">
+                  <p className="text-sm text-gray-300 italic">"Write a compelling blog post about [topic] that engages readers and drives action..."</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-blue-400 font-medium">15+ Prompts</span>
+                  <span className="text-xs text-gray-500">Copy & Use</span>
                 </div>
               </div>
-              <div className="relative">
-                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl p-8 backdrop-blur-sm">
-                  <div className="text-center mb-6">
-                    <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                      <span className="text-3xl">🤖</span>
+
+              {/* Code & Development */}
+              <div className="group bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">💻</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">Code & Development</h3>
+                <p className="text-gray-400 mb-4">Programming assistance, code review, debugging, and technical documentation</p>
+                <div className="bg-gray-700/50 rounded-lg p-3 mb-4">
+                  <p className="text-sm text-gray-300 italic">"Review this [language] code for best practices and suggest improvements..."</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-green-400 font-medium">12+ Prompts</span>
+                  <span className="text-xs text-gray-500">Copy & Use</span>
+                </div>
+              </div>
+
+              {/* Business & Strategy */}
+              <div className="group bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">📊</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">Business & Strategy</h3>
+                <p className="text-gray-400 mb-4">Business plans, market analysis, strategy development, and decision making</p>
+                <div className="bg-gray-700/50 rounded-lg p-3 mb-4">
+                  <p className="text-sm text-gray-300 italic">"Analyze the market opportunity for [product/service] and create a go-to-market strategy..."</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-purple-400 font-medium">10+ Prompts</span>
+                  <span className="text-xs text-gray-500">Copy & Use</span>
+                </div>
+              </div>
+
+              {/* AI & Machine Learning */}
+              <div className="group bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">🤖</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">AI & Machine Learning</h3>
+                <p className="text-gray-400 mb-4">ML model development, AI strategy, data analysis, and automation</p>
+                <div className="bg-gray-700/50 rounded-lg p-3 mb-4">
+                  <p className="text-sm text-gray-300 italic">"Design a machine learning pipeline for [use case] with data preprocessing steps..."</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-orange-400 font-medium">8+ Prompts</span>
+                  <span className="text-xs text-gray-500">Copy & Use</span>
+                </div>
+              </div>
+
+              {/* Design & UX */}
+              <div className="group bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">🎨</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">Design & UX</h3>
+                <p className="text-gray-400 mb-4">UI/UX design, user research, wireframing, and design system creation</p>
+                <div className="bg-gray-700/50 rounded-lg p-3 mb-4">
+                  <p className="text-sm text-gray-300 italic">"Create a user journey map for [app/website] focusing on [user persona]..."</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-pink-400 font-medium">6+ Prompts</span>
+                  <span className="text-xs text-gray-500">Copy & Use</span>
+                </div>
+              </div>
+
+              {/* Research & Analysis */}
+              <div className="group bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">🔬</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">Research & Analysis</h3>
+                <p className="text-gray-400 mb-4">Data analysis, research methodology, hypothesis testing, and insights</p>
+                <div className="bg-gray-700/50 rounded-lg p-3 mb-4">
+                  <p className="text-sm text-gray-300 italic">"Analyze this dataset and provide insights about [specific aspect] with visualizations..."</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-indigo-400 font-medium">9+ Prompts</span>
+                  <span className="text-xs text-gray-500">Copy & Use</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="text-center">
+              <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl p-8 backdrop-blur-sm max-w-4xl mx-auto">
+                <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  <span className="text-3xl">🚀</span>
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-4">Ready to Boost Your AI Productivity?</h3>
+                <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+                  Access 60+ carefully crafted AI prompts across 6 categories. Each prompt is designed to deliver specific, high-quality results for your projects.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link
+                    href="/prompts"
+                    className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 text-center text-lg"
+                  >
+                    🎯 Explore All Prompts
+                  </Link>
+                  <div className="flex items-center space-x-4 text-sm text-gray-400">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span>100% Free</span>
                     </div>
-                    <h4 className="text-2xl font-semibold mb-2">AI Prompt Hub</h4>
-                    <p className="text-gray-300">Curated collection of powerful AI prompts</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div className="bg-gray-800/50 rounded-lg p-4">
-                      <div className="text-2xl font-bold text-blue-400">50+</div>
-                      <div className="text-sm text-gray-400">Prompt Templates</div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <span>Copy & Paste</span>
                     </div>
-                    <div className="bg-gray-800/50 rounded-lg p-4">
-                      <div className="text-2xl font-bold text-purple-400">6</div>
-                      <div className="text-sm text-gray-400">Categories</div>
-                    </div>
-                    <div className="bg-gray-800/50 rounded-lg p-4">
-                      <div className="text-2xl font-bold text-green-400">100%</div>
-                      <div className="text-sm text-gray-400">Free to Use</div>
-                    </div>
-                    <div className="bg-gray-800/50 rounded-lg p-4">
-                      <div className="text-2xl font-bold text-yellow-400">∞</div>
-                      <div className="text-sm text-gray-400">Possibilities</div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                      <span>Regular Updates</span>
                     </div>
                   </div>
                 </div>
