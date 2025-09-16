@@ -469,7 +469,7 @@ model = keras.Sequential([
                 Flutter & AI/ML Developer | Full Stack Engineer
               </p>
               <p className="text-lg text-gray-400 max-w-4xl mx-auto mb-6 animate-fade-in" style={{animationDelay: '1s'}}>
-                Passionate Flutter & AI/ML Developer with 3+ years of experience in designing, developing, and deploying mobile applications and AI-driven solutions. I specialize in building cross-platform applications with Flutter for both mobile and web, and in AI/ML technologies.
+                Passionate Flutter & AI/ML Developer with 4+ years of experience in designing, developing, and deploying mobile applications and AI-driven solutions. I specialize in building cross-platform applications with Flutter for both mobile and web, and in AI/ML technologies.
               </p>
               <p className="text-base text-gray-500 max-w-4xl mx-auto mb-8 animate-fade-in" style={{animationDelay: '1.5s'}}>
                 My expertise covers the full development lifecycle, from architecture and design to deployment and monitoring. I have a solid understanding of implementing design patterns and developing model-agnostic chatbots using technologies like FastAPI, StreamLit, LangChain, and various LLM models.
@@ -512,7 +512,7 @@ model = keras.Sequential([
               <div>
                 <h3 className="text-2xl font-semibold mb-6">Hello, I'm Ismile! 👋</h3>
                 <p className="text-gray-300 mb-4 text-lg leading-relaxed">
-                  I'm a passionate Flutter & AI/ML Developer with more than 3+ years of experience 
+                  I'm a passionate Flutter & AI/ML Developer with more than 4+ years of experience 
                   in designing, developing, and deploying mobile applications and AI/ML-driven solutions. 
                   I specialize in building cross-platform applications with Flutter for both mobile and web and in AI.
                 </p>
@@ -543,7 +543,7 @@ model = keras.Sequential([
                     </div>
                     <div className="flex justify-between items-center">
                       <span>Years Experience</span>
-                      <span className="text-blue-400 font-bold">3+</span>
+                      <span className="text-blue-400 font-bold">4+</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span>Technologies Mastered</span>
@@ -551,7 +551,7 @@ model = keras.Sequential([
                     </div>
                     <div className="flex justify-between items-center">
                       <span>Happy Clients</span>
-                      <span className="text-blue-400 font-bold">25+</span>
+                      <span className="text-blue-400 font-bold">20+</span>
                     </div>
                   </div>
                 </div>
