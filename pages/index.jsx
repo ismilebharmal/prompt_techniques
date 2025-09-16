@@ -909,6 +909,106 @@ model = keras.Sequential([
                   </div>
                 </div>
               ))}
+              
+              {/* More Projects Card with Blur Effect */}
+              <div className="group relative bg-gray-800/30 rounded-2xl overflow-hidden backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105">
+                {/* Blurred Background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm"></div>
+                
+                {/* Blurred Content */}
+                <div className="relative h-48 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                      <span className="text-3xl opacity-50">🚀</span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-600/30 rounded w-32 mx-auto backdrop-blur-sm"></div>
+                      <div className="h-3 bg-gray-600/20 rounded w-24 mx-auto backdrop-blur-sm"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Overlay Content */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-2xl">✨</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">More Projects</h3>
+                    <p className="text-gray-300 text-sm mb-4">
+                      Explore additional projects and case studies
+                    </p>
+                    <button 
+                      onClick={() => setActiveSection('contact')}
+                      className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
+                    >
+                      Discover More
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* More Projects Section */}
+            <div className="mt-16">
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm border border-gray-700/50">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_50%)]"></div>
+                
+                {/* Content */}
+                <div className="relative p-12 text-center">
+                  <div className="max-w-4xl mx-auto">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6">
+                      <span className="text-3xl">🚀</span>
+                    </div>
+                    
+                    <h3 className="text-3xl font-bold text-white mb-4">
+                      Want to See More Projects?
+                    </h3>
+                    
+                    <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+                      I have many more exciting projects, case studies, and detailed implementations 
+                      that showcase my expertise across different technologies and domains.
+                    </p>
+                    
+                    {/* Project Categories Preview */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                      {[
+                        { name: 'AI/ML Solutions', count: '15+', icon: '🤖' },
+                        { name: 'Flutter Apps', count: '12+', icon: '📱' },
+                        { name: 'Web Applications', count: '8+', icon: '🌐' },
+                        { name: 'Data Projects', count: '6+', icon: '📊' }
+                      ].map((category, index) => (
+                        <div key={index} className="bg-gray-800/30 rounded-xl p-4 backdrop-blur-sm border border-gray-700/30 hover:border-purple-500/30 transition-all duration-300">
+                          <div className="text-2xl mb-2">{category.icon}</div>
+                          <div className="text-sm text-gray-300 mb-1">{category.name}</div>
+                          <div className="text-xs text-purple-400 font-medium">{category.count} Projects</div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <button 
+                        onClick={() => scrollToSection('contact')}
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/25"
+                      >
+                        Explore All Projects
+                      </button>
+                      <button 
+                        onClick={() => scrollToSection('contact')}
+                        className="border border-gray-500 text-gray-300 px-8 py-4 rounded-full font-medium hover:bg-gray-800/50 transition-all duration-300 hover:border-purple-500/50"
+                      >
+                        Schedule a Call
+                      </button>
+                    </div>
+                    
+                    <p className="text-sm text-gray-500 mt-6">
+                      💡 <strong>Pro Tip:</strong> Contact me to discuss your specific requirements and see relevant project examples!
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Call to Action */}
