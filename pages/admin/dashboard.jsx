@@ -78,12 +78,26 @@ export default function AdminDashboard() {
   const [uploadingResume, setUploadingResume] = useState(false)
   const [skills, setSkills] = useState([])
   const [editingSkill, setEditingSkill] = useState(null)
+  const [featuredProjects, setFeaturedProjects] = useState([])
+  const [editingFeaturedProject, setEditingFeaturedProject] = useState(null)
   const [skillFormData, setSkillFormData] = useState({
     name: '',
     level: 50,
     color: 'from-blue-400 to-cyan-500',
     category: 'Technologies',
     display_order: 0
+  })
+  const [featuredProjectFormData, setFeaturedProjectFormData] = useState({
+    title: '',
+    description: '',
+    short_description: '',
+    technologies: [],
+    category: 'AI/ML',
+    icon: '🚀',
+    gradient_from: 'blue-500/20',
+    gradient_to: 'purple-500/20',
+    display_order: 0,
+    active: true
   })
   const router = useRouter()
 
@@ -146,6 +160,16 @@ export default function AdminDashboard() {
       setSkills(data || [])
     } catch (error) {
       console.error('Error fetching skills:', error)
+    }
+  }, [])
+
+  const fetchFeaturedProjects = useCallback(async () => {
+    try {
+      const response = await fetch('/api/featured-projects')
+      const data = await response.json()
+      setFeaturedProjects(data || [])
+    } catch (error) {
+      console.error('Error fetching featured projects:', error)
     }
   }, [])
 
@@ -493,7 +517,8 @@ export default function AdminDashboard() {
     fetchHeroSlides()
     fetchResumes()
     fetchSkills()
-  }, [router, fetchPrompts, fetchProjects, fetchSlides, fetchHeroSlides, fetchResumes, fetchSkills])
+    fetchFeaturedProjects()
+  }, [router, fetchPrompts, fetchProjects, fetchSlides, fetchHeroSlides, fetchResumes, fetchSkills, fetchFeaturedProjects])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -729,6 +754,96 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error deleting skill:', error)
       alert('Error deleting skill')
+    }
+  }
+
+  // Featured Projects Management Functions
+  const handleFeaturedProjectSubmit = async (e) => {
+    e.preventDefault()
+    
+    try {
+      if (editingFeaturedProject) {
+        const response = await fetch(`/api/featured-projects?id=${editingFeaturedProject.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(featuredProjectFormData)
+        })
+        
+        if (response.ok) {
+          fetchFeaturedProjects()
+          alert('Featured project updated successfully!')
+        } else {
+          alert('Error updating featured project')
+        }
+      } else {
+        const response = await fetch('/api/featured-projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(featuredProjectFormData)
+        })
+        
+        if (response.ok) {
+          fetchFeaturedProjects()
+          alert('Featured project added successfully!')
+        } else {
+          alert('Error adding featured project')
+        }
+      }
+      
+      setEditingFeaturedProject(null)
+      setFeaturedProjectFormData({
+        title: '',
+        description: '',
+        short_description: '',
+        technologies: [],
+        category: 'AI/ML',
+        icon: '🚀',
+        gradient_from: 'blue-500/20',
+        gradient_to: 'purple-500/20',
+        display_order: 0,
+        active: true
+      })
+      setShowAddForm(false)
+    } catch (error) {
+      console.error('Error saving featured project:', error)
+      alert('Error saving featured project')
+    }
+  }
+
+  const handleEditFeaturedProject = (project) => {
+    setEditingFeaturedProject(project)
+    setFeaturedProjectFormData({
+      title: project.title,
+      description: project.description,
+      short_description: project.short_description,
+      technologies: project.technologies,
+      category: project.category,
+      icon: project.icon,
+      gradient_from: project.gradient_from,
+      gradient_to: project.gradient_to,
+      display_order: project.display_order,
+      active: project.active
+    })
+    setShowAddForm(true)
+  }
+
+  const handleDeleteFeaturedProject = async (id) => {
+    if (!confirm('Are you sure you want to delete this featured project?')) return
+    
+    try {
+      const response = await fetch(`/api/featured-projects?id=${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        fetchFeaturedProjects()
+        alert('Featured project deleted successfully!')
+      } else {
+        alert('Error deleting featured project')
+      }
+    } catch (error) {
+      console.error('Error deleting featured project:', error)
+      alert('Error deleting featured project')
     }
   }
 
@@ -1288,79 +1403,79 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Projects Tab */}
+        {/* Featured Projects Tab */}
         {activeTab === 'projects' && (
           <div className="space-y-6">
-            {/* Projects Header */}
+            {/* Featured Projects Header */}
             <div className="bg-white shadow rounded-lg p-6">
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">Featured Projects</h2>
-                  <p className="text-gray-600 mt-1">Manage your portfolio projects</p>
+                  <p className="text-gray-600 mt-1">Manage your featured portfolio projects</p>
                 </div>
                 <button
                   onClick={() => {
-                    setEditingProject(null)
-                    setProjectFormData({
+                    setEditingFeaturedProject(null)
+                    setFeaturedProjectFormData({
                       title: '',
                       description: '',
-                      shortDescription: '',
-                      detailedDescription: '',
-                      imageUrl: '',
-                      imageId: null,
-                      coverImageId: null,
-                      images: [],
-                      githubUrl: '',
-                      liveUrl: '',
-                      technologies: '',
-                      toolsUsed: '',
-                      category: '',
-                      featured: false,
-                      orderIndex: 0,
-                      projectDate: '',
-                      clientName: '',
-                      projectStatus: 'completed'
+                      short_description: '',
+                      technologies: [],
+                      category: 'AI/ML',
+                      icon: '🚀',
+                      gradient_from: 'blue-500/20',
+                      gradient_to: 'purple-500/20',
+                      display_order: 0,
+                      active: true
                     })
                     setShowAddForm(true)
                   }}
                   className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
                 >
-                  Add New Project
+                  Add New Featured Project
                 </button>
               </div>
             </div>
 
-            {/* Projects List */}
+            {/* Featured Projects List */}
             <div className="bg-white shadow rounded-lg">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">All Projects ({(projects || []).length})</h3>
+                <h3 className="text-lg font-medium text-gray-900">All Featured Projects ({(featuredProjects || []).length})</h3>
               </div>
               <div className="divide-y divide-gray-200">
-                {(projects || []).map((project) => (
+                {(featuredProjects || []).map((project) => (
                   <div key={project.id} className="p-6 hover:bg-gray-50">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3">
+                          <span className="text-2xl">{project.icon}</span>
                           <h4 className="text-lg font-medium text-gray-900">{project.title}</h4>
-                          {project.featured && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                              Featured
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            {project.category}
+                          </span>
+                          {project.active ? (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              Active
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                              Inactive
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">{project.shortDescription}</p>
+                        <p className="text-sm text-gray-600 mt-1">{project.short_description || project.description}</p>
                         <div className="flex items-center space-x-4 mt-2">
-                          <span className="text-sm text-gray-500">Category: {project.category}</span>
-                          <span className="text-sm text-gray-500">Order: {project.orderIndex}</span>
-                          {project.technologies && (project.technologies || []).length > 0 && (
+                          <span className="text-sm text-gray-500">Order: {project.display_order}</span>
+                          <span className="text-sm text-gray-500">Gradient: {project.gradient_from} → {project.gradient_to}</span>
+                          {project.technologies && project.technologies.length > 0 && (
                             <div className="flex space-x-1">
-                              {project.technologies.slice(0, 3).map((tech, index) => (
+                              {project.technologies.slice(0, 4).map((tech, index) => (
                                 <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                   {tech}
                                 </span>
                               ))}
-                              {(project.technologies || []).length > 3 && (
-                                <span className="text-xs text-gray-500">+{(project.technologies || []).length - 3} more</span>
+                              {project.technologies.length > 4 && (
+                                <span className="text-xs text-gray-500">+{project.technologies.length - 4} more</span>
                               )}
                             </div>
                           )}
@@ -1368,45 +1483,13 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => {
-                            setEditingProject(project)
-                            setProjectFormData({
-                              title: project.title,
-                              description: project.description,
-                              shortDescription: project.shortDescription,
-                              imageUrl: project.imageUrl,
-                              githubUrl: project.githubUrl,
-                              liveUrl: project.liveUrl,
-                              technologies: project.technologies.join(', '),
-                              category: project.category,
-                              featured: project.featured,
-                              orderIndex: project.orderIndex
-                            })
-                            setShowAddForm(true)
-                          }}
+                          onClick={() => handleEditFeaturedProject(project)}
                           className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
                         >
                           Edit
                         </button>
                         <button
-                          onClick={async () => {
-                            if (confirm('Are you sure you want to delete this project?')) {
-                              try {
-                                const response = await fetch(`/api/projects?id=${project.id}`, {
-                                  method: 'DELETE'
-                                })
-                                if (response.ok) {
-                                  fetchProjects()
-                                  alert('Project deleted successfully!')
-                                } else {
-                                  alert('Error deleting project')
-                                }
-                              } catch (error) {
-                                console.error('Error deleting project:', error)
-                                alert('Error deleting project')
-                              }
-                            }
-                          }}
+                          onClick={() => handleDeleteFeaturedProject(project.id)}
                           className="text-red-600 hover:text-red-900 text-sm font-medium"
                         >
                           Delete
@@ -1415,9 +1498,9 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
-                {(projects || []).length === 0 && (
+                {(featuredProjects || []).length === 0 && (
                   <div className="p-6 text-center text-gray-500">
-                    No projects found. Add your first project to get started.
+                    No featured projects found. Add your first featured project to get started.
                   </div>
                 )}
               </div>
@@ -2038,8 +2121,8 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Project Form Modal */}
-        {showAddForm && (editingProject !== null || activeTab === 'projects') && (
+        {/* Featured Project Form Modal */}
+        {showAddForm && (editingFeaturedProject !== null || activeTab === 'projects') && (
           <div 
             className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
             onClick={handleCloseModal}
@@ -2051,7 +2134,7 @@ export default function AdminDashboard() {
               <div className="mt-3">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-gray-900">
-                    {editingProject ? 'Edit Project' : 'Add New Project'}
+                    {editingFeaturedProject ? 'Edit Featured Project' : 'Add New Featured Project'}
                   </h3>
                   <button
                     onClick={handleCloseModal}

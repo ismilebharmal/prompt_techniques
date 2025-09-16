@@ -219,6 +219,7 @@ export default function Portfolio() {
   const [projects, setProjects] = useState([])
   const [slides, setSlides] = useState([])
   const [skills, setSkills] = useState([])
+  const [featuredProjects, setFeaturedProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedProject, setSelectedProject] = useState(null)
   const [selectedSlide, setSelectedSlide] = useState(null)
@@ -235,19 +236,22 @@ export default function Portfolio() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [projectsRes, slidesRes, skillsRes] = await Promise.all([
+        const [projectsRes, slidesRes, skillsRes, featuredProjectsRes] = await Promise.all([
           fetch('/api/projects-enhanced?withImages=true'),
           fetch('/api/slides-enhanced?withImages=true'),
-          fetch('/api/skills')
+          fetch('/api/skills'),
+          fetch('/api/featured-projects')
         ])
         
         const projectsData = await projectsRes.json()
         const slidesData = await slidesRes.json()
         const skillsData = await skillsRes.json()
+        const featuredProjectsData = await featuredProjectsRes.json()
         
         setProjects(projectsData || [])
         setSlides(slidesData || [])
         setSkills(skillsData || [])
+        setFeaturedProjects(featuredProjectsData || [])
       } catch (error) {
         console.error('Error fetching data:', error)
         // Fallback to hardcoded data if API fails
@@ -876,266 +880,35 @@ model = keras.Sequential([
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* AI-Powered Personalization System */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-blue-500/20 to-purple-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">🎨</span>
+              {featuredProjects.map((project) => (
+                <div key={project.id} className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
+                  <div className={`relative h-48 bg-gradient-to-br from-${project.gradient_from} to-${project.gradient_to}`}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <span className="text-3xl">{project.icon}</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                        {project.category}
+                      </span>
                     </div>
                   </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      AI/ML
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">AI-Powered Personalization System</h3>
-                  <p className="text-gray-400 mb-4">
-                    Developed an AI-powered chatbot for guided product personalization with OpenAI APIs, 
-                    real-time product previews using Pillow, and gRPC-based backend for scalable communication.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">OpenAI</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">gRPC</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">Pillow</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* AI Pharmacy Chatbot */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-green-500/20 to-teal-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-teal-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">💊</span>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-white mb-3">{project.title}</h3>
+                    <p className="text-gray-400 mb-4">
+                      {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.technologies.map((tech, index) => (
+                        <span key={index} className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">
+                          {tech}
+                        </span>
+                      ))}
                     </div>
                   </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-blue-400 to-cyan-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      Healthcare AI
-                    </span>
-                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">AI Pharmacy Chatbot</h3>
-                  <p className="text-gray-400 mb-4">
-                    Healthcare-focused chatbot with LangChain's GraphQAChain for safe drug recommendations, 
-                    SurrealDB integration, and safety filtering for contraindications based on patient profiles.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">LangChain</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">SurrealDB</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">FastAPI</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Object Detection and Replacement System */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-purple-500/20 to-pink-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">🔍</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-purple-400 to-pink-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      Computer Vision
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Object Detection & Replacement System</h3>
-                  <p className="text-gray-400 mb-4">
-                    Advanced object detection using YOLOv11 and SAM for dynamic variant replacement, 
-                    with Roboflow integration and instance-specific object modification capabilities.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">YOLOv11</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">SAM</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">OpenCV</span>
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">StreamLit</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Time Series Analysis Platform */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-orange-500/20 to-red-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">📈</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-orange-400 to-red-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      Time Series ML
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Time Series Analysis Platform</h3>
-                  <p className="text-gray-400 mb-4">
-                    Advanced time series forecasting using ARIMA, SARIMA, and Prophet models with 
-                    dynamic feature engineering and automated P,D,Q parameter optimization.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">ARIMA</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">Prophet</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">FastAPI</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Model Agnostic Chatbot */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-indigo-500/20 to-blue-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">🤖</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-indigo-400 to-blue-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      LangGraph
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Model Agnostic Chatbot</h3>
-                  <p className="text-gray-400 mb-4">
-                    Advanced chatbot system with LangGraph integration, text-to-query generation, 
-                    and graph-based UI for complex conversational workflows and query processing.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">LangGraph</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">PostgreSQL</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">StreamLit</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* PDF RAG Application */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-pink-500/20 to-rose-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">📄</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-pink-400 to-rose-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      RAG System
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">PDF RAG Application</h3>
-                  <p className="text-gray-400 mb-4">
-                    Intelligent document processing system with ChromaDB integration, 
-                    advanced embeddings, and hallucination-free retrieval for accurate information extraction.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">ChromaDB</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">FastAPI</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">Embeddings</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Cross-Platform Flutter Apps */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-cyan-500/20 to-blue-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">📱</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-cyan-400 to-blue-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      Flutter
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Cross-Platform Flutter Applications</h3>
-                  <p className="text-gray-400 mb-4">
-                    Multiple production Flutter apps including field management, inventory systems, 
-                    and admin panels with Firebase integration, real-time features, and multi-language support.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Flutter</span>
-                    <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs">Firebase</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">REST APIs</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">Push Notifications</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Advanced Chatbot with Memory */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-emerald-500/20 to-teal-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">💬</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-emerald-400 to-teal-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      Conversational AI
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Advanced Chatbot with Memory</h3>
-                  <p className="text-gray-400 mb-4">
-                    Interactive chatbot with ChainLit UI, LangGraph agent workflows, 
-                    conversation memory, and comprehensive DML operations for complex interactions.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">ChainLit</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">LangGraph</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">SQLite</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Data Integration Platform */}
-              <div className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300 transform hover:scale-105">
-                <div className="relative h-48 bg-gradient-to-br from-violet-500/20 to-purple-500/20">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">🔗</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-violet-400 to-purple-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                      Data Platform
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3">Data Integration Platform</h3>
-                  <p className="text-gray-400 mb-4">
-                    Multi-platform data integration system with MongoDB, RabbitMQ messaging, 
-                    GraphQL APIs, and pandas-based data transformation for enterprise applications.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">Python</span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs">MongoDB</span>
-                    <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">RabbitMQ</span>
-                    <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">GraphQL</span>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* Call to Action */}
