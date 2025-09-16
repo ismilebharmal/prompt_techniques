@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
+import Image from 'next/image'
 import { useScrollPosition } from '../hooks/useScrollAnimation'
 import DatabaseImage from '../components/DatabaseImage'
 import ImageSlideshow from '../components/ImageSlideshow'
@@ -458,8 +459,15 @@ model = keras.Sequential([
           <div className="relative z-10 text-center max-w-4xl mx-auto">
             <div className="mb-8">
               <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 p-1 animate-pulse">
-                <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center">
-                  <span className="text-4xl font-bold">IB</span>
+                <div className="w-full h-full rounded-full overflow-hidden bg-gray-800 flex items-center justify-center">
+                  <Image
+                    src="/face_image.png"
+                    alt="Ismile Bharmal - Flutter & AI/ML Developer"
+                    width={120}
+                    height={120}
+                    className="w-full h-full object-cover object-top"
+                    priority
+                  />
                 </div>
               </div>
               <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-fade-in">
@@ -970,8 +978,8 @@ model = keras.Sequential([
                       >
                         Schedule a Call
                       </button>
-                    </div>
-                    
+        </div>
+
                     <p className="text-sm text-gray-500 mt-6">
                       💡 <strong>Pro Tip:</strong> Contact me to discuss your specific requirements and see relevant project examples!
                     </p>
