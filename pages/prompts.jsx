@@ -222,9 +222,9 @@ export default function Home({ showToast }) {
                 Built by Ismile Bharmal
               </h3>
               <p className="text-gray-600 mb-6">
-                A passionate Full Stack Developer with expertise in React, Node.js, and modern web technologies. 
-                This Prompt Techniques Hub demonstrates my skills in building scalable applications with 
-                database integration, authentication, and modern UI/UX design.
+                Passionate Flutter & AI/ML Developer with 4+ years of experience in designing, developing, and deploying mobile applications and AI-driven solutions. I specialize in building cross-platform applications with Flutter for both mobile and web, as well as in AI/ML technologies.
+
+                My expertise covers the full development lifecycle, from architecture and design to deployment and monitoring. I have a solid understanding of implementing design patterns and developing model-agnostic chatbots using technologies like FastAPI, StreamLit, LangChain, and various LLM models.
               </p>
               <div className="flex flex-wrap gap-2 mb-6">
                 {['Next.js', 'PostgreSQL', 'Neon', 'TailwindCSS', 'bcrypt', 'React'].map((tech) => (
@@ -238,19 +238,12 @@ export default function Home({ showToast }) {
               </div>
               <div className="flex gap-4">
                 <Link
-                  href="/portfolio"
+                  href="/"
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
                   View Full Portfolio
                 </Link>
-                <a
-                  href="https://github.com/ismilebharmal/prompt_techniques"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                >
-                  View on GitHub
-                </a>
+                
               </div>
             </div>
             <div className="relative">
@@ -264,7 +257,7 @@ export default function Home({ showToast }) {
                   <div className="space-y-2 text-sm text-gray-500">
                     <div className="flex justify-between">
                       <span>Experience:</span>
-                      <span className="font-medium">3+ Years</span>
+                      <span className="font-medium">4+ Years</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Projects:</span>
