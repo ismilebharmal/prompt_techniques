@@ -13,15 +13,6 @@ export default function Home({ showToast }) {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedPrompt, setSelectedPrompt] = useState(null)
-  const [favorites, setFavorites] = useState(new Set())
-
-  // Load favorites from localStorage
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem('prompt-favorites')
-    if (savedFavorites) {
-      setFavorites(new Set(JSON.parse(savedFavorites)))
-    }
-  }, [])
 
   // Fetch prompts from API
   const fetchPrompts = useCallback(async () => {
@@ -96,16 +87,6 @@ export default function Home({ showToast }) {
     setSearchQuery(e.target.value)
   }
 
-  const toggleFavorite = (promptId) => {
-    const newFavorites = new Set(favorites)
-    if (newFavorites.has(promptId)) {
-      newFavorites.delete(promptId)
-    } else {
-      newFavorites.add(promptId)
-    }
-    setFavorites(newFavorites)
-    localStorage.setItem('prompt-favorites', JSON.stringify([...newFavorites]))
-  }
 
   const copyToClipboard = async (text) => {
     try {
@@ -229,8 +210,6 @@ export default function Home({ showToast }) {
                 >
                   <PromptCard
                     prompt={prompt}
-                    isFavorite={favorites.has(prompt._id)}
-                    onToggleFavorite={toggleFavorite}
                     onCopy={copyToClipboard}
                     onOpenModal={setSelectedPrompt}
                   />
