@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import PromptCard from '../components/PromptCard'
 import PromptModal from '../components/PromptModal'
 import FilterTabs from '../components/FilterTabs'
