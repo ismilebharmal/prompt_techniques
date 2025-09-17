@@ -71,15 +71,15 @@ const SkillsSection = ({ skills }) => {
   if (categories.length === 0) return null
 
   return (
-    <section id="skills" className="py-20 px-4 bg-gray-800/30">
+    <section id="skills" className="py-12 sm:py-16 lg:py-20 px-4 bg-gray-800/30">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Skills & Technologies
         </h2>
         
         <div className="relative">
           {/* Tab Navigation */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
             {categories.map((category, index) => {
               const categoryStyle = categoryStyles[category] || categoryStyles['Technologies']
               const isActive = activeTab === category
@@ -91,15 +91,16 @@ const SkillsSection = ({ skills }) => {
                     setCurrentIndex(index)
                     setActiveTab(category)
                   }}
-                  className={`flex items-center px-4 py-2 rounded-full transition-all duration-500 ${
+                  className={`flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all duration-500 text-sm sm:text-base ${
                     isActive
                       ? `bg-gradient-to-r ${categoryStyle.color} text-white shadow-lg transform scale-105`
                       : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white hover:scale-105'
                   }`}
                 >
-                  <span className="text-lg mr-2">{categoryStyle.icon}</span>
-                  <span className="font-medium">{category}</span>
-                  <span className={`ml-2 px-2 py-1 rounded-full text-xs transition-all duration-300 ${
+                  <span className="text-sm sm:text-lg mr-1 sm:mr-2">{categoryStyle.icon}</span>
+                  <span className="font-medium hidden sm:inline">{category}</span>
+                  <span className="font-medium sm:hidden">{category.split(' ')[0]}</span>
+                  <span className={`ml-1 sm:ml-2 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs transition-all duration-300 ${
                     isActive ? 'bg-white/20' : 'bg-gray-600/50'
                   }`}>
                     {groupedSkills[category].length}
@@ -126,7 +127,7 @@ const SkillsSection = ({ skills }) => {
           </div>
 
           {/* Active Tab Content with Smooth Transitions */}
-          <div className="min-h-[400px] relative overflow-hidden">
+          <div className="min-h-[300px] sm:min-h-[400px] relative overflow-hidden">
             {activeTab && groupedSkills[activeTab] && (
               <div 
                 className={`transition-all duration-500 transform ${
@@ -135,19 +136,19 @@ const SkillsSection = ({ skills }) => {
                     : 'opacity-100 translate-x-0 scale-100'
                 }`}
               >
-                <div className="flex items-center justify-center mb-8">
-                  <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${categoryStyles[activeTab]?.color || categoryStyles['Technologies'].color} flex items-center justify-center text-3xl mr-4 transition-all duration-500 ${
+                <div className="flex flex-col sm:flex-row items-center justify-center mb-6 sm:mb-8">
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-r ${categoryStyles[activeTab]?.color || categoryStyles['Technologies'].color} flex items-center justify-center text-2xl sm:text-3xl mr-0 sm:mr-4 mb-2 sm:mb-0 transition-all duration-500 ${
                     isTransitioning ? 'scale-90' : 'scale-100'
                   }`}>
                     {categoryStyles[activeTab]?.icon || categoryStyles['Technologies'].icon}
                   </div>
                   <div className="text-center">
-                    <h3 className={`text-3xl font-bold text-white transition-all duration-500 ${
+                    <h3 className={`text-xl sm:text-2xl lg:text-3xl font-bold text-white transition-all duration-500 ${
                       isTransitioning ? 'translate-y-2 opacity-70' : 'translate-y-0 opacity-100'
                     }`}>
                       {activeTab}
                     </h3>
-                    <p className={`text-gray-400 transition-all duration-500 ${
+                    <p className={`text-sm sm:text-base text-gray-400 transition-all duration-500 ${
                       isTransitioning ? 'translate-y-1 opacity-50' : 'translate-y-0 opacity-100'
                     }`}>
                       {groupedSkills[activeTab].length} skills in this category
@@ -155,11 +156,11 @@ const SkillsSection = ({ skills }) => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                   {groupedSkills[activeTab].map((skill, skillIndex) => (
                     <div
                       key={skill.name}
-                      className={`bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-500 transform hover:scale-105 group ${
+                      className={`bg-gray-800/50 rounded-lg sm:rounded-xl p-3 sm:p-4 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-500 transform hover:scale-105 group ${
                         isTransitioning ? 'opacity-60 scale-95' : 'opacity-100 scale-100'
                       }`}
                       style={{ 
@@ -168,19 +169,19 @@ const SkillsSection = ({ skills }) => {
                       }}
                     >
                       <div className="text-center">
-                        <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-lg font-bold text-white group-hover:scale-110 transition-all duration-300 ${
+                        <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 mx-auto mb-2 sm:mb-3 rounded-full bg-gradient-to-r ${skill.color} flex items-center justify-center text-sm sm:text-base lg:text-lg font-bold text-white group-hover:scale-110 transition-all duration-300 ${
                           isTransitioning ? 'scale-90' : 'scale-100'
                         }`}>
                           {skill.name.charAt(0)}
                         </div>
-                        <h4 className={`text-sm font-semibold mb-2 text-white group-hover:text-blue-300 transition-all duration-300 ${
+                        <h4 className={`text-xs sm:text-sm font-semibold mb-1 sm:mb-2 text-white group-hover:text-blue-300 transition-all duration-300 ${
                           isTransitioning ? 'opacity-70' : 'opacity-100'
                         }`}>
                           {skill.name}
                         </h4>
-                        <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
+                        <div className="w-full bg-gray-700 rounded-full h-1 sm:h-1.5 mb-1 sm:mb-2">
                           <div
-                            className={`h-1.5 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000 ${
+                            className={`h-1 sm:h-1.5 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000 ${
                               isTransitioning ? 'opacity-60' : 'opacity-100'
                             }`}
                             style={{ width: `${skill.level}%` }}
@@ -456,9 +457,9 @@ model = keras.Sequential([
           </div>
           
           {/* Main Content */}
-          <div className="relative z-10 text-center max-w-4xl mx-auto">
-            <div className="mb-8">
-              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 p-1 animate-pulse">
+          <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
+            <div className="mb-6 sm:mb-8">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 mx-auto mb-4 sm:mb-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 p-1 animate-pulse">
                 <div className="w-full h-full rounded-full overflow-hidden bg-gray-800 flex items-center justify-center">
                   <Image
                     src="/face_image.png"
@@ -466,40 +467,40 @@ model = keras.Sequential([
                     width={120}
                     height={120}
                     className="w-full h-full object-cover object-center scale-150"
-ˀ                    priority
+                    priority
                   />
                 </div>
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-fade-in">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-fade-in leading-tight">
                 Ismile Bharmal
               </h1>
-              <p className="text-xl md:text-2xl text-gray-300 mb-6 animate-fade-in" style={{animationDelay: '0.5s'}}>
+              <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-4 sm:mb-6 animate-fade-in" style={{animationDelay: '0.5s'}}>
                 Flutter & AI/ML Developer | Full Stack Engineer
               </p>
-              <p className="text-lg text-gray-400 max-w-4xl mx-auto mb-6 animate-fade-in" style={{animationDelay: '1s'}}>
+              <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-4xl mx-auto mb-4 sm:mb-6 animate-fade-in leading-relaxed" style={{animationDelay: '1s'}}>
                 Passionate Flutter & AI/ML Developer with 4+ years of experience in designing, developing, and deploying mobile applications and AI-driven solutions. I specialize in building cross-platform applications with Flutter for both mobile and web, and in AI/ML technologies.
               </p>
-              <p className="text-base text-gray-500 max-w-4xl mx-auto mb-8 animate-fade-in" style={{animationDelay: '1.5s'}}>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-500 max-w-4xl mx-auto mb-6 sm:mb-8 animate-fade-in leading-relaxed" style={{animationDelay: '1.5s'}}>
                 My expertise covers the full development lifecycle, from architecture and design to deployment and monitoring. I have a solid understanding of implementing design patterns and developing model-agnostic chatbots using technologies like FastAPI, StreamLit, LangChain, and various LLM models.
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{animationDelay: '1.5s'}}>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in" style={{animationDelay: '1.5s'}}>
               <button
                 onClick={() => scrollToSection('projects')}
-                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
               >
                 View My Work
               </button>
               <button
                 onClick={() => window.open('/api/resume-download', '_blank')}
-                className="px-8 py-3 bg-gradient-to-r from-green-500 to-teal-600 rounded-full font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-green-500 to-teal-600 rounded-full font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
               >
                 📄 Download Resume
               </button>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="px-6 sm:px-8 py-2.5 sm:py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
               >
                 Get In Touch
               </button>
@@ -509,53 +510,53 @@ model = keras.Sequential([
 
         
 {/* About Section */}
-<section id="about" className="py-20 px-4">
+<section id="about" className="py-12 sm:py-16 lg:py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               About Me
             </h2>
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div>
-                <h3 className="text-2xl font-semibold mb-6">Hello, I'm Ismile! 👋</h3>
-                <p className="text-gray-300 mb-4 text-lg leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Hello, I'm Ismile! 👋</h3>
+                <p className="text-gray-300 mb-3 sm:mb-4 text-base sm:text-lg leading-relaxed">
                   I'm a passionate Flutter & AI/ML Developer with more than 4+ years of experience 
                   in designing, developing, and deploying mobile applications and AI/ML-driven solutions. 
                   I specialize in building cross-platform applications with Flutter for both mobile and web and in AI.
                 </p>
-                <p className="text-gray-300 mb-6 text-lg leading-relaxed">
+                <p className="text-gray-300 mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed">
                   My expertise covers the full development lifecycle, from architecture and design to 
                   deployment and monitoring. I have a solid understanding of implementing design patterns 
                   and developing model-agnostic chatbots using technologies like FastAPI and StreamLit.
                 </p>
-                <div className="flex flex-wrap gap-4">
-                  <div className="bg-gray-800/50 rounded-lg px-4 py-2">
+                <div className="flex flex-wrap gap-2 sm:gap-4">
+                  <div className="bg-gray-800/50 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base">
                     <span className="text-blue-400">📍</span> Based in India
                   </div>
-                  <div className="bg-gray-800/50 rounded-lg px-4 py-2">
+                  <div className="bg-gray-800/50 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base">
                     <span className="text-green-400">💼</span> Available for Work
                   </div>
-                  <div className="bg-gray-800/50 rounded-lg px-4 py-2">
+                  <div className="bg-gray-800/50 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base">
                     <span className="text-purple-400">🎯</span> Open to Collaborations
-            </div>
-          </div>
-        </div>
-          <div className="relative">
-                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl p-8 backdrop-blur-sm">
-                  <h4 className="text-xl font-semibold mb-4">Quick Stats</h4>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
+                  </div>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
+                  <h4 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Quick Stats</h4>
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex justify-between items-center text-sm sm:text-base">
                       <span>Projects Completed</span>
                       <span className="text-blue-400 font-bold">50+</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center text-sm sm:text-base">
                       <span>Years Experience</span>
                       <span className="text-blue-400 font-bold">4+</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center text-sm sm:text-base">
                       <span>Technologies Mastered</span>
                       <span className="text-blue-400 font-bold">15+</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center text-sm sm:text-base">
                       <span>Happy Clients</span>
                       <span className="text-blue-400 font-bold">20+</span>
                     </div>
