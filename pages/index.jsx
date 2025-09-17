@@ -324,8 +324,8 @@ export default function Portfolio() {
           isScrolled ? 'bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
         }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <div className="flex justify-between items-center py-3 sm:py-4">
+              <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Ismile Bharmal
               </div>
               
@@ -346,10 +346,11 @@ export default function Portfolio() {
 
               {/* Mobile Menu Button */}
               <button
-                className="md:hidden text-white"
+                className="md:hidden text-white p-2 -mr-2"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Toggle menu"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -357,12 +358,12 @@ export default function Portfolio() {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-              <div className="md:hidden bg-gray-900/95 backdrop-blur-md rounded-lg mt-2 p-4">
+              <div className="md:hidden bg-gray-900/95 backdrop-blur-md rounded-lg mt-2 p-4 border border-gray-700/50">
                 {['home', 'about', 'skills', 'featured-work', 'workshops', 'prompts', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
-                    className="block w-full text-left py-2 capitalize transition-colors duration-200 hover:text-blue-400"
+                    className="block w-full text-left py-3 px-2 capitalize transition-colors duration-200 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg text-sm sm:text-base"
                   >
                     {item}
                   </button>
@@ -373,7 +374,7 @@ export default function Portfolio() {
         </nav>
 
         {/* Hero Section with Animated Background */}
-        <section id="home" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+        <section id="home" className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pt-16 sm:pt-20">
           {/* Animated Gradient Mesh Backgrounds */}
           <div className="absolute inset-0">
             {/* Gradient Mesh 1 */}
@@ -769,16 +770,16 @@ model = keras.Sequential([
         </section>
 
         {/* Featured Work Section */}
-        <section id="featured-work" className="py-20 px-4 bg-gray-900/50">
+        <section id="featured-work" className="py-12 sm:py-16 lg:py-20 px-4 bg-gray-900/50">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
+            <div className="text-center mb-8 sm:mb-12 lg:mb-16">
               <div className="relative">
                 {/* Animated background elements */}
-                <div className="absolute -top-10 -left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
-                <div className="absolute -top-5 -right-10 w-16 h-16 bg-purple-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
-                <div className="absolute -bottom-5 left-1/4 w-12 h-12 bg-pink-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
+                <div className="absolute -top-10 -left-10 w-16 h-16 sm:w-20 sm:h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+                <div className="absolute -top-5 -right-10 w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+                <div className="absolute -bottom-5 left-1/4 w-8 h-8 sm:w-12 sm:h-12 bg-pink-500/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
                 
-                <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent relative z-10">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent relative z-10">
                   <span className="inline-block animate-bounce" style={{animationDuration: '3s'}}>✨</span>
                   <span className="mx-2">My Projects</span>
                   <span
@@ -793,7 +794,7 @@ model = keras.Sequential([
                 </h2>
                 
                 <div className="relative">
-                  <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                  <p className="text-sm sm:text-base lg:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
                     <span className="inline-block opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
                       Showcasing my expertise in 
                     </span>
@@ -826,17 +827,17 @@ model = keras.Sequential([
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               {featuredProjects.map((project, index) => (
                 <div 
                   key={project.id} 
-                  className="group bg-gray-800/50 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 opacity-0 animate-fade-in-up"
+                  className="group bg-gray-800/50 rounded-xl sm:rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 opacity-0 animate-fade-in-up"
                   style={{
                     animationDelay: `${0.5 + index * 0.1}s`,
                     animationFillMode: 'forwards'
                   }}
                 >
-                  <div className={`relative h-48 bg-gradient-to-br from-${project.gradient_from} to-${project.gradient_to} group-hover:shadow-2xl group-hover:shadow-blue-500/20 transition-all duration-500`}>
+                  <div className={`relative h-40 sm:h-48 bg-gradient-to-br from-${project.gradient_from} to-${project.gradient_to} group-hover:shadow-2xl group-hover:shadow-blue-500/20 transition-all duration-500`}>
                     {/* Animated background pattern */}
                     <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500">
                       <div className="absolute top-4 left-4 w-2 h-2 bg-white rounded-full animate-ping"></div>
@@ -845,32 +846,32 @@ model = keras.Sequential([
                     </div>
                     
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg group-hover:shadow-xl group-hover:shadow-blue-400/30">
-                        <span className="text-3xl group-hover:animate-bounce">{project.icon}</span>
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg group-hover:shadow-xl group-hover:shadow-blue-400/30">
+                        <span className="text-2xl sm:text-3xl group-hover:animate-bounce">{project.icon}</span>
                       </div>
                     </div>
                     
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg group-hover:shadow-green-400/30 group-hover:scale-110 transition-all duration-300">
+                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4">
+                      <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-black px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-lg group-hover:shadow-green-400/30 group-hover:scale-110 transition-all duration-300">
                         {project.category}
                       </span>
                     </div>
                     
                     {/* Hover glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-blue-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 transition-all duration-500 rounded-t-2xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-blue-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 transition-all duration-500 rounded-t-xl sm:rounded-t-2xl"></div>
                   </div>
-                    <div className="p-6 group-hover:bg-gradient-to-br group-hover:from-gray-800/20 group-hover:to-gray-700/20 transition-all duration-500">
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors duration-300">
+                    <div className="p-4 sm:p-6 group-hover:bg-gradient-to-br group-hover:from-gray-800/20 group-hover:to-gray-700/20 transition-all duration-500">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-blue-300 transition-colors duration-300">
                       {project.title}
                     </h3>
-                    <p className="text-gray-400 mb-4 group-hover:text-gray-300 transition-colors duration-300 leading-relaxed">
+                    <p className="text-sm sm:text-base text-gray-400 mb-3 sm:mb-4 group-hover:text-gray-300 transition-colors duration-300 leading-relaxed">
                       {project.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                       {project.technologies.map((tech, techIndex) => (
                         <span 
                           key={techIndex} 
-                          className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs group-hover:bg-blue-500/30 group-hover:text-blue-300 group-hover:scale-105 transition-all duration-300 shadow-sm group-hover:shadow-blue-400/20"
+                          className="bg-blue-500/20 text-blue-400 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs group-hover:bg-blue-500/30 group-hover:text-blue-300 group-hover:scale-105 transition-all duration-300 shadow-sm group-hover:shadow-blue-400/20"
                           style={{
                             animationDelay: `${techIndex * 0.1}s`
                           }}
@@ -888,36 +889,36 @@ model = keras.Sequential([
               ))}
               
               {/* More Projects Card with Blur Effect */}
-              <div className="group relative bg-gray-800/30 rounded-2xl overflow-hidden backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105">
+              <div className="group relative bg-gray-800/30 rounded-xl sm:rounded-2xl overflow-hidden backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 transform hover:scale-105">
                 {/* Blurred Background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm"></div>
                 
                 {/* Blurred Content */}
-                <div className="relative h-48 flex items-center justify-center">
+                <div className="relative h-40 sm:h-48 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-20 h-20 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                      <span className="text-3xl opacity-50">🚀</span>
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 backdrop-blur-sm">
+                      <span className="text-2xl sm:text-3xl opacity-50">🚀</span>
                     </div>
-                    <div className="space-y-2">
-                      <div className="h-4 bg-gray-600/30 rounded w-32 mx-auto backdrop-blur-sm"></div>
-                      <div className="h-3 bg-gray-600/20 rounded w-24 mx-auto backdrop-blur-sm"></div>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <div className="h-3 sm:h-4 bg-gray-600/30 rounded w-24 sm:w-32 mx-auto backdrop-blur-sm"></div>
+                      <div className="h-2 sm:h-3 bg-gray-600/20 rounded w-20 sm:w-24 mx-auto backdrop-blur-sm"></div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Overlay Content */}
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
-                  <div className="text-center p-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-2xl">✨</span>
+                  <div className="text-center p-4 sm:p-6">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-lg sm:text-2xl">✨</span>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">More Projects</h3>
-                    <p className="text-gray-300 text-sm mb-4">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">More Projects</h3>
+                    <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4">
                       Explore additional projects and case studies
                     </p>
                     <button 
                       onClick={() => setActiveSection('contact')}
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
+                      className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
                     >
                       Discover More
                     </button>
