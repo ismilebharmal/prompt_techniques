@@ -578,9 +578,9 @@ model = keras.Sequential([
 
 
         {/* Prompts Section */}
-        <section id="prompts" className="py-20 px-4 bg-gray-800/30">
+        <section id="prompts" className="py-12 sm:py-16 lg:py-20 px-4 bg-gray-800/30">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               AI Prompt Library
             </h2>
             
@@ -721,47 +721,47 @@ model = keras.Sequential([
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 px-4 bg-gray-800/30">
+        <section id="contact" className="py-12 sm:py-16 lg:py-20 px-4 bg-gray-800/30">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 lg:mb-16 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Let's Work Together
             </h2>
-            <p className="text-xl text-gray-300 mb-12">
+            <p className="text-lg sm:text-xl text-gray-300 mb-8 sm:mb-12">
               Have a project in mind? I'd love to hear about it. Let's create something amazing together!
             </p>
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
-                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                  📧
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
+              <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  <span className="text-lg sm:text-xl">📧</span>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Email</h3>
-                <p className="text-gray-400">ismileofficebharmal@gmail.com</p>
+                <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">Email</h3>
+                <p className="text-sm sm:text-base text-gray-400 break-all">ismileofficebharmal@gmail.com</p>
               </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
-                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                  💼
+              <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  <span className="text-lg sm:text-xl">💼</span>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">LinkedIn</h3>
-                <p className="text-gray-400">linkedin.com/in/ismile-bharmal-3b82241ab</p>
+                <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">LinkedIn</h3>
+                <p className="text-sm sm:text-base text-gray-400 break-all">linkedin.com/in/ismile-bharmal-3b82241ab</p>
               </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
-                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                  🐙
+              <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6 backdrop-blur-sm sm:col-span-2 lg:col-span-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  <span className="text-lg sm:text-xl">🐙</span>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">GitHub</h3>
-                <p className="text-gray-400">github.com/ismilebharmal</p>
+                <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">GitHub</h3>
+                <p className="text-sm sm:text-base text-gray-400 break-all">github.com/ismilebharmal</p>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <a
                 href="mailto:ismileofficebharmal@gmail.com"
-                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
+                className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
               >
                 Send Email
               </a>
               <button
                 onClick={() => window.open('/api/resume-download', '_blank')}
-                className="px-8 py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300"
+                className="px-6 sm:px-8 py-2.5 sm:py-3 border-2 border-blue-400 rounded-full font-semibold hover:bg-blue-400 hover:text-gray-900 transition-all duration-300 text-sm sm:text-base"
               >
                 📄 Download Resume
               </button>
@@ -1013,13 +1013,13 @@ model = keras.Sequential([
         </section>
 
         {/* Work & Workshop Slides Section */}
-        <section id="workshops" className="py-20 px-4 bg-gray-800/30">
+        <section id="workshops" className="py-12 sm:py-16 lg:py-20 px-4 bg-gray-800/30">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Work & Workshop Slides
               </h2>
-              <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+              <p className="text-base sm:text-lg text-gray-300 max-w-3xl mx-auto">
                 Explore my workshop presentations, training materials, and work-related slides. 
                 Each presentation showcases different aspects of my expertise and teaching approach.
               </p>
