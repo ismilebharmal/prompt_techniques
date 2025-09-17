@@ -11,7 +11,7 @@ export default function FilterTabs({ categories, selectedCategory, onCategoryCha
   }
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap gap-2 sm:gap-3">
       {categories.map((category) => {
         const categoryStyle = categoryStyles[category] || categoryStyles['All']
         const isActive = selectedCategory === category
@@ -20,14 +20,15 @@ export default function FilterTabs({ categories, selectedCategory, onCategoryCha
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`flex items-center px-6 py-3 text-sm font-medium rounded-xl transition-all duration-300 hover:-translate-y-0.5 ${
+            className={`flex items-center px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl transition-all duration-300 hover:-translate-y-0.5 ${
               isActive
                 ? `bg-gradient-to-r ${categoryStyle.color} text-white shadow-lg`
                 : 'bg-gray-800/50 text-gray-300 border border-gray-600/50 hover:bg-gray-700/50 hover:text-white hover:border-gray-500/50 backdrop-blur-sm'
             }`}
           >
-            <span className="text-lg mr-2">{categoryStyle.icon}</span>
-            {category}
+            <span className="text-sm sm:text-lg mr-1 sm:mr-2">{categoryStyle.icon}</span>
+            <span className="hidden sm:inline">{category}</span>
+            <span className="sm:hidden">{category.charAt(0)}</span>
           </button>
         )
       })}
