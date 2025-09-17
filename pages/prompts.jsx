@@ -113,7 +113,7 @@ export default function Home({ showToast }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 cursor-default">
       {/* Header */}
       <header className="relative bg-gradient-to-r from-gray-900/80 via-blue-900/80 to-purple-900/80 backdrop-blur-xl border-b border-white/10">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
@@ -148,7 +148,7 @@ export default function Home({ showToast }) {
       </header>
 
       {/* Search and Filters */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 cursor-default">
         <div className="mb-8">
           <div className="relative group">
             <input
@@ -185,7 +185,7 @@ export default function Home({ showToast }) {
         />
 
         {/* Prompts Grid */}
-        <div className="mt-8">
+        <div className="mt-8 cursor-default">
           {filteredPrompts.length === 0 ? (
             <div className="text-center py-16">
               <div className="relative">
@@ -221,7 +221,7 @@ export default function Home({ showToast }) {
       </div>
 
       {/* Portfolio Section */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-20 relative overflow-hidden cursor-default">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
