@@ -19,28 +19,29 @@ export default function PromptCard({ prompt, isFavorite, onToggleFavorite, onCop
 
   return (
     <div
-      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer group"
+      className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer group hover:scale-105 hover:border-white/30"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
     >
-      <div className="p-6">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 rounded-2xl group-hover:from-blue-600/10 group-hover:to-purple-600/10 transition-all duration-300"></div>
+      <div className="relative p-6">
         {/* Header */}
-        <div className="flex items-start justify-between mb-3">
+        <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+            <h3 className="text-lg font-bold text-white group-hover:text-blue-300 transition-colors duration-300 mb-2">
               {prompt.title}
             </h3>
-            <span className="inline-block px-2 py-1 text-xs font-medium text-primary-600 bg-primary-50 rounded-full mt-1">
+            <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-300 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-400/30 rounded-full">
               {prompt.category}
             </span>
           </div>
           <button
             onClick={handleToggleFavorite}
-            className={`p-1 rounded-full transition-colors ${
+            className={`p-2 rounded-full transition-all duration-300 hover:scale-110 ${
               isFavorite 
-                ? 'text-red-500 hover:text-red-600' 
-                : 'text-gray-400 hover:text-red-500'
+                ? 'text-red-400 hover:text-red-300 bg-red-500/20 hover:bg-red-500/30' 
+                : 'text-gray-400 hover:text-red-400 hover:bg-red-500/10'
             }`}
             title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
           >
@@ -51,23 +52,24 @@ export default function PromptCard({ prompt, isFavorite, onToggleFavorite, onCop
         </div>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+        <p className="text-gray-300 text-sm mb-4 line-clamp-3 leading-relaxed">
           {prompt.description}
         </p>
 
         {/* Tags */}
         {prompt.tags && prompt.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-4">
+          <div className="flex flex-wrap gap-2 mb-6">
             {prompt.tags.slice(0, 3).map((tag, index) => (
               <span
                 key={index}
-                className="inline-block px-2 py-1 text-xs text-gray-600 bg-gray-100 rounded"
+                className="inline-block px-3 py-1 text-xs font-medium text-gray-300 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full hover:bg-white/20 hover:text-white transition-all duration-300"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 #{tag}
               </span>
             ))}
             {prompt.tags.length > 3 && (
-              <span className="inline-block px-2 py-1 text-xs text-gray-500">
+              <span className="inline-block px-3 py-1 text-xs text-gray-400 bg-white/5 rounded-full">
                 +{prompt.tags.length - 3} more
               </span>
             )}
@@ -78,16 +80,20 @@ export default function PromptCard({ prompt, isFavorite, onToggleFavorite, onCop
         <div className="flex items-center justify-between">
           <button
             onClick={handleCopy}
-            className="inline-flex items-center px-3 py-2 text-sm font-medium text-primary-600 bg-primary-50 rounded-md hover:bg-primary-100 transition-colors"
+            className="group/btn inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600/80 to-purple-600/80 backdrop-blur-sm border border-white/20 rounded-xl hover:from-blue-600 hover:to-purple-600 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
           >
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
             Copy
           </button>
           
-          <span className="text-xs text-gray-400">
-            Click to view details
+          <span className="text-xs text-gray-400 flex items-center">
+            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            View details
           </span>
         </div>
       </div>

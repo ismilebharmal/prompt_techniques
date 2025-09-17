@@ -466,7 +466,7 @@ model = keras.Sequential([
                     width={120}
                     height={120}
                     className="w-full h-full object-cover object-center scale-150"
-                    priority
+ˀ                    priority
                   />
                 </div>
               </div>
