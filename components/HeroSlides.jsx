@@ -47,12 +47,12 @@ const HeroSlides = () => {
 
   if (loading) {
     return (
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
         <div className="max-w-6xl mx-auto">
           <div className="text-center">
             <div className="animate-pulse">
-              <div className="h-8 bg-gray-700 rounded w-1/3 mx-auto mb-4"></div>
-              <div className="h-4 bg-gray-700 rounded w-1/2 mx-auto"></div>
+              <div className="h-6 sm:h-8 bg-gray-700 rounded w-1/2 sm:w-1/3 mx-auto mb-3 sm:mb-4"></div>
+              <div className="h-3 sm:h-4 bg-gray-700 rounded w-2/3 sm:w-1/2 mx-auto"></div>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@ const HeroSlides = () => {
   }
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 relative overflow-hidden">
+    <section className="py-12 sm:py-16 lg:py-20 px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
@@ -73,11 +73,11 @@ const HeroSlides = () => {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+        <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Featured Work
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto px-4">
             Explore some of my recent projects and achievements
           </p>
         </div>
@@ -85,7 +85,7 @@ const HeroSlides = () => {
         {/* Slideshow Container */}
         <div className="relative">
           {/* Main Slide Display */}
-          <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900" style={{ aspectRatio: '16/9' }}>
+          <div className="relative h-64 sm:h-80 md:h-96 lg:h-[500px] rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl bg-gray-900" style={{ aspectRatio: '16/9' }}>
             {slides.map((slide, index) => (
               <div
                 key={slide.id}
@@ -153,17 +153,17 @@ const HeroSlides = () => {
                   slide.text_position === 'bottom-center' ? 'flex items-end justify-center' :
                   'flex items-end justify-start' // default: bottom-left
                 }`}>
-                  <div className={`p-8 ${
+                  <div className={`p-4 sm:p-6 lg:p-8 ${
                     slide.text_position === 'center' ? 'text-center' :
                     slide.text_position === 'top-left' || slide.text_position === 'left' ? 'text-left' :
                     slide.text_position === 'top-right' || slide.text_position === 'right' || slide.text_position === 'bottom-right' ? 'text-right' :
                     'text-left' // default
                   }`}>
-                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg leading-tight">
                       {slide.title}
                     </h3>
                     {slide.description && (
-                      <p className="text-lg text-gray-200 max-w-2xl drop-shadow-md">
+                      <p className="text-sm sm:text-base lg:text-lg text-gray-200 max-w-2xl drop-shadow-md leading-relaxed">
                         {slide.description}
                       </p>
                     )}
@@ -177,20 +177,20 @@ const HeroSlides = () => {
               <>
                 <button
                   onClick={goToPrevious}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200"
+                  className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 sm:p-3 rounded-full transition-all duration-200"
                   aria-label="Previous slide"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
                 
                 <button
                   onClick={goToNext}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200"
+                  className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 sm:p-3 rounded-full transition-all duration-200"
                   aria-label="Next slide"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
@@ -198,15 +198,15 @@ const HeroSlides = () => {
                 {/* Play/Pause Button */}
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200"
+                  className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full transition-all duration-200"
                   aria-label={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
                 >
                   {isPlaying ? (
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
                     </svg>
                   ) : (
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"/>
                     </svg>
                   )}
@@ -217,12 +217,12 @@ const HeroSlides = () => {
 
           {/* Slide Indicators */}
           {slides.length > 1 && (
-            <div className="flex justify-center mt-6 space-x-2">
+            <div className="flex justify-center mt-4 sm:mt-6 space-x-2">
               {slides.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                  className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
                     index === currentSlide
                       ? 'bg-blue-400 scale-125'
                       : 'bg-gray-400 hover:bg-gray-300'
@@ -235,8 +235,8 @@ const HeroSlides = () => {
 
           {/* Slide Counter */}
           {slides.length > 1 && (
-            <div className="text-center mt-4">
-              <span className="text-gray-300 text-sm">
+            <div className="text-center mt-3 sm:mt-4">
+              <span className="text-gray-300 text-xs sm:text-sm">
                 {currentSlide + 1} of {slides.length}
               </span>
             </div>
