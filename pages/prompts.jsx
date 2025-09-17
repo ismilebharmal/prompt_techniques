@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import PromptCard from '../components/PromptCard'
@@ -25,7 +25,7 @@ export default function Home({ showToast }) {
   }, [])
 
   // Fetch prompts from API
-  const fetchPrompts = useCallback(async () => {
+  const fetchPrompts = async () => {
     try {
       setLoading(true)
       
@@ -39,39 +39,11 @@ export default function Home({ showToast }) {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }
 
   useEffect(() => {
     fetchPrompts()
-  }, [fetchPrompts])
-
-  // Auto-refresh when page becomes visible (user returns to tab)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        fetchPrompts()
-      }
-    }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [fetchPrompts])
-
-  // Auto-refresh on window focus (user switches back to window)
-  useEffect(() => {
-    const handleFocus = () => {
-      fetchPrompts()
-    }
-
-    window.addEventListener('focus', handleFocus)
-    
-    return () => {
-      window.removeEventListener('focus', handleFocus)
-    }
-  }, [fetchPrompts])
+  }, [])
 
   // Filter prompts based on category and search
   useEffect(() => {
