@@ -1,8 +1,4 @@
-import { useState } from 'react'
-
 export default function PromptCard({ prompt, onCopy, onOpenModal }) {
-  const [isHovered, setIsHovered] = useState(false)
-
   const handleCopy = (e) => {
     e.stopPropagation()
     onCopy(prompt.prompt)
@@ -14,16 +10,14 @@ export default function PromptCard({ prompt, onCopy, onOpenModal }) {
 
   return (
     <div
-      className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 group hover:scale-105 hover:border-white/30"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl transition-all duration-300 group"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 rounded-2xl group-hover:from-blue-600/10 group-hover:to-purple-600/10 transition-all duration-300"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 rounded-2xl transition-all duration-300"></div>
       <div className="relative p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-white group-hover:text-blue-300 transition-colors duration-300 mb-2">
+            <h3 className="text-lg font-bold text-white mb-2">
               {prompt.title}
             </h3>
             <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-300 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-400/30 rounded-full">
