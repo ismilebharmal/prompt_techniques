@@ -314,7 +314,11 @@ export default function Portfolio() {
       <Head>
         <title>Ismile Bharmal - Full Stack Developer & AI Enthusiast</title>
         <meta name="description" content="Portfolio of Ismile Bharmal - Full Stack Developer specializing in React, Node.js, and AI applications. Explore my projects and AI prompt templates." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="format-detection" content="telephone=no" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
