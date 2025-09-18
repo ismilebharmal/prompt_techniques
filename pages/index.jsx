@@ -322,7 +322,7 @@ export default function Portfolio() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white overflow-x-hidden">
         {/* Navigation */}
         <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
           isScrolled ? 'bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
@@ -391,15 +391,15 @@ export default function Portfolio() {
             <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 via-fuchsia-600/10 to-rose-600/10 animate-pulse" style={{animationDelay: '2s'}}></div>
             
             {/* Animated Blob Shapes */}
-            <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-            <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-pink-500/30 to-rose-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" style={{animationDelay: '2s'}}></div>
-            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-gradient-to-r from-yellow-500/30 to-pink-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" style={{animationDelay: '4s'}}></div>
+            <div className="absolute top-20 left-4 sm:left-10 w-48 h-48 sm:w-72 sm:h-72 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+            <div className="absolute top-40 right-4 sm:right-10 w-48 h-48 sm:w-72 sm:h-72 bg-gradient-to-r from-pink-500/30 to-rose-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" style={{animationDelay: '2s'}}></div>
+            <div className="absolute -bottom-8 left-8 sm:left-20 w-48 h-48 sm:w-72 sm:h-72 bg-gradient-to-r from-yellow-500/30 to-pink-500/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" style={{animationDelay: '4s'}}></div>
             
             {/* Floating Code Elements */}
             <div className="absolute inset-0 overflow-hidden">
               {/* Dart/Flutter Code */}
-              <div className="absolute top-20 left-10 text-green-400/20 text-xs font-mono animate-float" style={{animationDelay: '0s'}}>
-                <pre>{`class MyApp extends StatelessWidget {
+              <div className="absolute top-20 left-2 sm:left-10 text-green-400/20 text-xs font-mono animate-float hidden sm:block" style={{animationDelay: '0s'}}>
+                <pre className="max-w-48 sm:max-w-none">{`class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -413,8 +413,8 @@ export default function Portfolio() {
               </div>
               
               {/* Python/AI Code */}
-              <div className="absolute top-40 right-10 text-blue-400/20 text-xs font-mono animate-float" style={{animationDelay: '1s'}}>
-                <pre>{`from langchain import LLMChain
+              <div className="absolute top-40 right-2 sm:right-10 text-blue-400/20 text-xs font-mono animate-float hidden sm:block" style={{animationDelay: '1s'}}>
+                <pre className="max-w-48 sm:max-w-none">{`from langchain import LLMChain
 from langchain.llms import OpenAI
 
 def create_chatbot():
@@ -424,8 +424,8 @@ def create_chatbot():
               </div>
               
               {/* JavaScript/Web Code */}
-              <div className="absolute bottom-20 left-20 text-yellow-400/20 text-xs font-mono animate-float" style={{animationDelay: '2s'}}>
-                <pre>{`const express = require('express');
+              <div className="absolute bottom-20 left-4 sm:left-20 text-yellow-400/20 text-xs font-mono animate-float hidden sm:block" style={{animationDelay: '2s'}}>
+                <pre className="max-w-48 sm:max-w-none">{`const express = require('express');
 const app = express();
 
 app.get('/api/ai', async (req, res) => {
@@ -438,8 +438,8 @@ app.get('/api/ai', async (req, res) => {
               </div>
               
               {/* Machine Learning Code */}
-              <div className="absolute bottom-40 right-20 text-purple-400/20 text-xs font-mono animate-float" style={{animationDelay: '3s'}}>
-                <pre>{`import tensorflow as tf
+              <div className="absolute bottom-40 right-4 sm:right-20 text-purple-400/20 text-xs font-mono animate-float hidden sm:block" style={{animationDelay: '3s'}}>
+                <pre className="max-w-48 sm:max-w-none">{`import tensorflow as tf
 from tensorflow import keras
 
 model = keras.Sequential([
